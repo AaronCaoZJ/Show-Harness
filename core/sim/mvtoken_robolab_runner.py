@@ -1,9 +1,8 @@
 """Planner-free / stage-free RoboLab rollout for the MVTOKEN LoRA.
 
-Simulator sibling of
-:class:`core.sim.mvtoken_maniskill_runner.MvTokenManiskillRunner`, driving a RoboLab
-(Isaac Lab) Franka + Robotiq 2F-85 through the relative differential-IK action space
-instead of MuJoCo OSC / ManiSkill ``pd_ee_delta_pos``. The flat MVTOKEN loop is identical:
+Drives a RoboLab
+(Isaac Lab) Franka + Robotiq 2F-85 through the relative differential-IK action space.
+The flat MVTOKEN loop is the same one the real-robot runner uses:
 each step feeds task + gripper state + recent MV_* moves with the agentview
 (``over_shoulder_left_camera``) + wrist (``wrist_cam``) images, maps the returned atomic
 token to a 7-dim ``[dx, dy, dz, 0, 0, 0, gripper]`` action via
@@ -11,9 +10,9 @@ token to a 7-dim ``[dx, dy, dz, 0, 0, 0, gripper]`` action via
 checks RoboLab's own termination predicate. The episode ends on success, ``DONE``, env
 truncation (RoboLab's ``episode_length_s`` time-out) or max_steps.
 
-CROSS-DOMAIN experiment, same caveat as the ManiSkill runs: the LoRA was
+CROSS-DOMAIN experiment: the LoRA was
 trained on REAL Franka/Piper rollouts, so its behaviour in RoboLab's photoreal Isaac Sim
-scenes is exploratory. Two things differ more here than they did on ManiSkill and are worth
+scenes is exploratory. Two things differ from the training rigs and are worth
 watching in the video before reading anything into a number:
 
 * **The embodiment is a Robotiq 2F-85, not a Panda hand.** The gripper looks different in
@@ -54,8 +53,8 @@ FALLBACK_TOKEN = "MV_DOWN"
 RECENT_MOVES_MAX = 5  # match the MVTOKEN training window (MV_* only, newest first)
 
 
-# The full camera transform contract lives in core.record.images.prepare_view -- shared with the
-# ManiSkill runner and with the real2sim generators, so agentview and wrist go through one
+# The full camera transform contract lives in core.record.images.prepare_view -- shared with
+# the real2sim generators, so agentview and wrist go through one
 # code path and stored frames stay byte-identical to sent frames.
 
 
@@ -139,8 +138,7 @@ class MvTokenRobolabRunner:
         self.wrist_square_size = int(wrist_square_size) if wrist_square_size else None
         # RoboLab keeps ONE Isaac Sim app per process and constructing an env is slow
         # (tens of seconds), so a multi-episode driver reuses it: closing is the caller's
-        # call, not the runner's. (ManiSkill's runner closes because there env
-        # construction is cheap and one process == one episode.)
+        # call, not the runner's.
         self.close_env = bool(close_env)
 
     def run(self) -> EpisodeResult:
@@ -333,7 +331,7 @@ class MvTokenRobolabRunner:
         """Reopen the gripper if the auto-release rule fires; return the post-RELEASE obs.
 
         Returns ``None`` when the rule is absent/disabled, the gripper is open, or it is
-        holding something. Mirrors the ManiSkill runner, but reads the width from the
+        holding something. Reads the width from the
         Robotiq ``finger_joint`` (``rl_gripper_width``) and has to step the env for the
         RELEASE to take physical effect.
         """

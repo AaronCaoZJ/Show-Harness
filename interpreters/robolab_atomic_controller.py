@@ -1,8 +1,6 @@
 """7-dim relative differential-IK atomic controller for RoboLab (Isaac Lab).
 
-Sibling of
-:class:`interpreters.maniskill_atomic_controller.ManiskillAtomicController` (ManiSkill,
-``pd_ee_delta_pos``). RoboLab's ``DroidRelIKActionCfg`` action layout is::
+RoboLab's ``DroidRelIKActionCfg`` action layout is::
 
     [dx, dy, dz, drx, dry, drz, gripper]
 
@@ -11,11 +9,11 @@ Sibling of
 ``drx/dry/drz`` are an axis-angle rotation delta. MVTOKEN holds the three rotation DOFs at
 exactly zero, which makes the relative-IK controller re-target the CURRENT orientation
 every step -- the "rotation is locked, only XYZ translation" contract the atomic-token
-policy assumes, same as ManiSkill's ``pd_ee_delta_pos``.
+policy assumes.
 
-Two differences from the ManiSkill controller, both easy to get wrong:
+Two things that are easy to get wrong:
 
-* **Gripper polarity is inverted.** ManiSkill's Panda mimic gripper is +1 open / -1 close.
+* **Gripper polarity is inverted.** A Panda mimic gripper is +1 open / -1 close.
   RoboLab drives a Robotiq 2F-85 through ``BinaryJointPositionZeroToOneAction``, whose rule
   is ``action > 0.5 -> CLOSE``: 1.0 closes, 0.0 opens. The defaults below encode that;
   flipping them would make every GRASP release and every RELEASE grab.
@@ -29,7 +27,7 @@ Two differences from the ManiSkill controller, both easy to get wrong:
 The six ``move_vectors`` (base-frame unit vector per token) come from config so the
 axis/sign mapping stays tunable. RoboLab's Franka sits at the origin with +X forward,
 +Y robot-left, +Z up, matching ``configs/primitives_franka.yaml`` -- but confirm it with
-``scripts/run_robolab_mvtoken.py --probe-axes`` before trusting a rollout, exactly as on ManiSkill.
+``scripts/run_robolab_mvtoken.py --probe-axes`` before trusting a rollout.
 """
 from __future__ import annotations
 

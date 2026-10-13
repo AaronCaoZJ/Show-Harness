@@ -43,8 +43,6 @@ scripts/test/*.png
 scripts/robolab/gen_all_tmux.sh
 scripts/robolab/gen_batch.sh
 scripts/robolab/prepare_lf_dataset.sh
-scripts/trajectory/real2sim/maniskill/build_viz.py
-scripts/trajectory/real2sim/maniskill/gen_blockpap_follow_wood.sh
 scripts/trajectory/upload_data_to_hf.py
 scripts/piper/mix_swap_wrapper.py
 prompts/v0/

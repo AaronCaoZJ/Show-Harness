@@ -79,7 +79,7 @@ https://github.com/user-attachments/assets/bd2d31db-f5c5-4554-85bb-2aa206876ac7
 依托一套接口，闭源前沿模型可**零样本**直接控制机器人；小规模开源模型亦只需**不到几个 H200 GPU 小时**的微调，即可成为可用的策略
 
 - 🤖 **两种模式，一套接口** —— 前沿 VLM 零样本驱动，或由微调后的小模型逐步输出单个动作 token
-- 🦾 **不依赖特定本体** —— Franka、AgileX Piper（单臂与双臂）、ManiSkill、Isaac Lab、LIBERO 共用同一套动作词表与提示词
+- 🦾 **不依赖特定本体** —— Franka、AgileX Piper（单臂与双臂）、Isaac Lab、LIBERO 共用同一套动作词表与提示词
 - 🎮 **GUMI 示教采集** —— 在浏览器中操作机器人即完成一次示教，无需遥操作硬件，数据亦无需后处理
 - 🧩 **插件支持严格消融** —— 一个目录、一个开关；关闭后主循环与「不存在该插件」时逐字节一致
 
@@ -140,7 +140,7 @@ bash scripts/setup.sh base
 | --- | --- |
 | `core/` | 主循环：两种模式各自的 runner、配置分层、日志、共享动作词表，以及与厂商无关的 VLM 客户端与角色定义（`core/vlm/`） |
 | `plugins/` | 各插件——每个挂载于主循环的某一环节，由配置中 `plugins:` 段的开关控制（[plugins/README.md](plugins/README.md)） |
-| `interpreters/` | 各本体的解释器：Franka（阻抗控制）、AgileX Piper（关节流）、ManiSkill / Isaac-Lab 仿真 |
+| `interpreters/` | 各本体的解释器：Franka（阻抗控制）、AgileX Piper（关节流）、Isaac-Lab 仿真 |
 | `gumi/` | GUMI：浏览器遥操作与智能体操作器，每一步均存为可直接用于训练的 (观测, 动作) 对 |
 | `configs/` | 分层配置：内置默认值 + 本地 site 信息 + 可选 overlay（[configs/README.md](configs/README.md)） |
 | `prompts/` | 零样本模式的控制器提示词，以及各微调 checkpoint 对应版本的提示词 |
@@ -163,7 +163,7 @@ bash scripts/setup.sh base
 
 ## 📦 开源模型与数据
 
-在真机语料上训练的五个 LoRA 适配器（每个基座一个）发布于 [showlab/Show-Harness-VLMs](https://huggingface.co/showlab/Show-Harness-VLMs)：`qwen3_5_0_8b`、`qwen3_5_2b`、`qwen3_5_4b`、`qwen3_5_9b`、`gemma4_e4b`；此外还有 `qwen3_5_2b_sim`，以单一策略覆盖两个仿真器。训练所用的示教数据发布于 [showlab/Show-Harness-Data](https://huggingface.co/datasets/showlab/Show-Harness-Data)（真机 Franka/Piper rollout，以及 RoboLab 与 ManiSkill）
+在真机语料上训练的五个 LoRA 适配器（每个基座一个）发布于 [showlab/Show-Harness-VLMs](https://huggingface.co/showlab/Show-Harness-VLMs)：`qwen3_5_0_8b`、`qwen3_5_2b`、`qwen3_5_4b`、`qwen3_5_9b`、`gemma4_e4b`；此外还有 `qwen3_5_2b_sim`，即仿真策略，在 RoboLab 中运行。训练所用的示教数据发布于 [showlab/Show-Harness-Data](https://huggingface.co/datasets/showlab/Show-Harness-Data)（真机 Franka/Piper rollout，以及 RoboLab 与 ManiSkill）
 
 下载适配器及其所需基座，部署服务，随后运行机器人：
 

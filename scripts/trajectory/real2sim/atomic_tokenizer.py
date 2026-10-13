@@ -4,7 +4,7 @@ This is the ONE file that owns "what an atomic token means": the vocabulary, the
 execution that pins one ``MV_*`` token to exactly ``step_m`` metres of end-effector travel,
 the planners that turn a continuous target/path into single-axis token runs, and the writer
 that stores the result in the real-robot teleop layout. **Nothing in here knows about any
-particular simulator.** Swapping ManiSkill for Isaac / a replayed real-robot log
+particular simulator.** Swapping one simulator for another, or for a replayed real-robot log,
 means implementing :class:`AtomicSimEnv` for that backend (see ``backends/``) -- the
 discretisation logic below is unchanged.
 
@@ -174,7 +174,7 @@ class AtomicSimEnv(abc.ABC):
     and stay identical across sims.
 
     ``delta_bound_m`` is the controller's action scale: the metres commanded at action 1.0
-    (0.1 m for ManiSkill's ``pd_ee_delta_pos``). :class:`AtomicExec` never exceeds its own
+    (e.g. 0.1 m for a delta-position controller). :class:`AtomicExec` never exceeds its own
     ``max_cmd_m`` per control step, so this only sets the normalisation.
     """
 
@@ -339,8 +339,8 @@ class AtomicExec:
         # always from the short side, so start-relative targets lose ~0.5 mm per token --
         # 7-10 mm after a descent of a dozen tokens on LIBERO, enough to close above a
         # bowl rim instead of on it. Node-relative targets cannot accumulate, and they pull
-        # the other two axes back onto the lattice as well. Off by default (the ManiSkill
-        # and RoboLab generators predate it and are unchanged).
+        # the other two axes back onto the lattice as well. Off by default (the RoboLab
+        # generators predate it and are unchanged).
         self.lattice_origin = None if lattice_origin is None else np.asarray(lattice_origin, dtype=np.float64)
         self.rot_step_rad = float(rot_step_rad)
         self.rot_tol_rad = float(rot_tol_rad)
@@ -432,7 +432,7 @@ class AtomicExec:
 
         Measured rather than a fixed count on purpose -- the settling time is a property
         of the simulator's controller, and the two differ by an order of magnitude
-        (ManiSkill's ``pd_ee_delta_pos`` converges in a couple of steps; RoboLab's
+        (a delta-position controller converges in a couple of steps; RoboLab's
         relative IK lags for a dozen). A fixed number would be wrong for one of them.
         """
         tol = self.quiesce_tol_m if tol_m is None else float(tol_m)

@@ -92,7 +92,7 @@ MODEL=Qwen/Qwen3.5-2B FAMILY=qwen3_5 \
 
 `FAMILY` selects the jinja that reproduces this run's `template:` at serve time. Adapter names follow
 `<model>_showharness_<split>` for the released checkpoints (`ft` = the real-robot corpus,
-`sim` = RoboLab and ManiSkill trained together) — see
+`sim` = RoboLab and ManiSkill demonstrations trained together) — see
 [docs/finetuned.md](../docs/finetuned.md) for the full table.
 
 ## Layout

@@ -96,14 +96,13 @@ the server registers and what `--model` asks for, while the config backend is th
 short profile key you pass to `--vlm-backend`. That split lets every config offer
 the same backend names while each points at its own weights.
 
-The simulation-only policy is one adapter, not one per simulator: the released `sim` split
-mixes RoboLab and ManiSkill, and both simulators share the 2 cm translation quantum and the
-camera transform, so a single policy covers them. `configs/robot_maniskill.yaml` and
-`configs/robot_robolab.yaml` both select it:
+The simulation-only policy is one adapter: the released `sim` split mixes RoboLab and
+ManiSkill demonstrations, which share the 2 cm translation quantum and the camera
+transform. `configs/robot_robolab.yaml` selects it:
 
 | checkpoint | `MODEL` | `FAMILY` | adapter name | config backend |
 | --- | --- | --- | --- | --- |
-| Qwen3.5-2B (RoboLab + ManiSkill) | `Qwen/Qwen3.5-2B` | `qwen3_5` | `qwen3_5_2b_showharness_sim` | `qwen3_5_2b` |
+| Qwen3.5-2B (sim split) | `Qwen/Qwen3.5-2B` | `qwen3_5` | `qwen3_5_2b_showharness_sim` | `qwen3_5_2b` |
 
 So a full command reads:
 
@@ -161,8 +160,7 @@ python scripts/run_real_dual_mvtoken.py --version v4 --chain   # one image encod
 as alternatives. Whichever you pick has to be the one the served adapter was
 trained under.
 
-Simulators: `scripts/run_maniskill_mvtoken.py` and
-`scripts/run_robolab_mvtoken.py` run the same loop in sim (`docs/simulators.md`); the
+Simulators: `scripts/run_robolab_mvtoken.py` runs the same loop in sim (`docs/simulators.md`); the
 prompt-version and multi-frame flags are identical across all entry points.
 
 ## Collecting training data (GUMI)

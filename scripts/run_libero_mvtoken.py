@@ -233,7 +233,7 @@ def main() -> None:
                     help="OpenAI-compatible endpoint of the served policy")
     ap.add_argument("--model", default=os.environ.get("VLLM_MODEL"),
                     help="the LoRA name the server was started with")
-    # Same pair as the ManiSkill and RoboLab runners: the version is the prompts/ subfolder
+    # Same pair as the RoboLab runner: the version is the prompts/ subfolder
     # matching the served LoRA's training data. --prompt still takes a file directly.
     ap.add_argument("--prompts-dir", default=str(ROOT / "prompts"))
     ap.add_argument("--version", default="v5",

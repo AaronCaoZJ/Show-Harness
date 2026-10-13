@@ -12,7 +12,7 @@ directly:
   policy reasons about anything.
 * **The wrist camera pose.** RoboLab's ``wrist_cam`` sits beside the Robotiq base and looks
   past the fingers at an angle. ManiSkill mounts it centred between the fingers looking
-  straight **down the grasp axis** (``core.sim.maniskill_scenes.WRIST_MOUNTS["centered"]``),
+  straight **down the grasp axis**,
   which is the geometry the training wrist frames have.
 
 This module supplies both. It does NOT patch RoboLab: it declares configs in RoboLab's own
@@ -46,8 +46,8 @@ from isaaclab.utils import configclass, noise
 from robolab.robots.droid import BinaryJointPositionZeroToOneActionCfg, _to_torch
 
 # -- wrist camera -------------------------------------------------------------
-# Geometry COPIED from core.sim.maniskill_scenes.WRIST_MOUNTS["centered"] so the two
-# simulators present the same view:
+# Geometry matched to the ManiSkill wrist mount the training frames were rendered with,
+# so the two simulators present the same view:
 #
 #   mount     : panda_hand -- the camera rides the gripper itself
 #   position  : 3.5 cm along the hand's +X, 3.6 cm along +Z
@@ -106,9 +106,9 @@ _WRIST_CAM = TiledCameraCfg(
 )
 
 # -- front (agentview) camera -------------------------------------------------
-# The ManiSkill agentview, reproduced exactly. On ManiSkill the third-person view is
-# BlockPAP's ``external_cam``: RLinf's calibration of the REAL RealSense D435 that filmed
-# the Franka rig (``real_franka/real2sim_env/pick_and_place.py``, calibrated 2026-02-15).
+# The ManiSkill agentview, reproduced exactly. On ManiSkill the third-person view uses the
+# calibration of the REAL RealSense D435 that filmed the Franka rig (calibrated
+# 2026-02-15).
 # Reusing the same extrinsics AND intrinsics is what makes the two simulators' front views
 # interchangeable to the policy. RoboLab's own ``over_shoulder_left_camera`` is DROID's
 # placement -- off to the LEFT looking across the workspace, focal 2.1, 1280x720 -- i.e. a
@@ -124,8 +124,7 @@ FRONT_CAM_R = (
     (0.99959024, -0.00114196, 0.02860160),
     (0.00511786, -0.97597338, -0.21782968),
 )
-# 1.10 m in front of the robot base, 0.26 m up. ("og" preset; RLinf also carries 0302/0303
-# recalibrations, which ManiSkill exposes as its `cam_t` knob.)
+# 1.10 m in front of the robot base, 0.26 m up.
 FRONT_CAM_POS = (1.1002696, -0.00701879, 0.2589829)
 # RealSense D435 intrinsics, row-major [fx, 0, cx, 0, fy, cy, 0, 0, 1].
 FRONT_CAM_K = (607.875, 0.0, 348.961, 0.0, 607.719, 270.486, 0.0, 0.0, 1.0)

@@ -1,13 +1,12 @@
 #!/usr/bin/env python3
 """Show-Harness RoboLab experiment for the MVTOKEN LoRA (planner-free / stage-free).
 
-Simulator sibling of ``scripts/run_maniskill_mvtoken.py``: the
-same flat MVTOKEN control loop, driving a RoboLab (NVIDIA Isaac Lab) Franka + Robotiq 2F-85
-through the relative differential-IK action space. It reuses ``run.py``'s config + VLM
+The same flat MVTOKEN control loop as the real-robot entry point, driving a RoboLab
+(NVIDIA Isaac Lab) Franka + Robotiq 2F-85 through the relative differential-IK action space. It reuses ``run.py``'s config + VLM
 client wiring, builds a 7-dim :class:`RobolabAtomicController`, and runs
 :class:`MvTokenRobolabRunner`.
 
-Two structural differences from the ManiSkill entry point, both forced by Isaac Sim:
+Two structural points, both forced by Isaac Sim:
 
 * **Isaac Sim is launched before the env is built, and only once per process.** Nothing may
   import ``isaaclab``/``robolab`` before ``AppLauncher`` starts the Kit app, which is why
@@ -17,7 +16,7 @@ Two structural differences from the ManiSkill entry point, both forced by Isaac 
 * **``--episodes N`` runs N episodes in ONE process**, reusing the app and the env
   (``env.reset_eval_state()`` between them, exactly as RoboLab's own ``run_evaluation``
   does). Isaac Sim start-up plus env construction costs tens of seconds; one process per
-  episode -- fine on ManiSkill -- would dominate the wall clock here.
+  episode would dominate the wall clock here.
 
 CROSS-DOMAIN experiment: the LoRA was trained on REAL Franka/Piper rollouts, so behaviour
 in RoboLab's photoreal scenes is exploratory. Before reading anything into a success rate,

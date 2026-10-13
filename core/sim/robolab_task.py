@@ -1,6 +1,6 @@
 """RoboLab (NVIDIA Isaac Lab) task/env glue for the MVTOKEN atomic-token policy.
 
-Sibling of :mod:`core.sim.maniskill_task`: builds a single
+Builds a single
 RoboLab benchmark task in the **relative differential-IK** action mode
 (``DroidRelIKActionCfg``) with the RGB image observation group, and exposes the few
 accessors the runner needs (RGB per camera, success flag, TCP position, gripper width).
@@ -26,9 +26,8 @@ with it (every script in the RoboLab repo carries that same comment). So:
     app = launch_isaac(headless=True)          # MUST come first
     handle = make_robolab_task(task="BananaInBowlTask", ...)
 
-Every robolab/isaaclab import in this file therefore lives inside a function body, exactly
-like ``core.sim.maniskill_task`` defers ``import mani_skill``. Merely importing this module in
-an environment with no Isaac Sim is safe.
+Every robolab/isaaclab import in this file therefore lives inside a function body. Merely
+importing this module in an environment with no Isaac Sim is safe.
 
 The robot is a Franka + Robotiq 2F-85 (RoboLab's "droid" embodiment), not the Panda hand
 used by ManiSkill, so the gripper-width accessor converts the Robotiq
@@ -44,8 +43,7 @@ from typing import Any, Optional
 
 import numpy as np
 
-# Where the RoboLab checkout lives. Override with ROBOLAB_ROOT (the same pattern
-# core.sim.maniskill_scenes uses for RLINF_ROOT).
+# Where the RoboLab checkout lives. Override with ROBOLAB_ROOT.
 DEFAULT_ROBOLAB_ROOT = Path.home() / "RoboLab"
 
 # Robotiq 2F-85 stroke. RoboLab drives the gripper through a single ``finger_joint``
@@ -444,7 +442,7 @@ def _register_franka_rel_ik(
 
     # Swap RoboLab's cameras for the ManiSkill-matched pair:
     #   WristCameraCfg            -> FrankaWristCameraCfg  (gripper-mounted, top-down)
-    #   OverShoulderLeftCameraCfg -> FrankaFrontCameraCfg  (RLinf's calibrated front view)
+    #   OverShoulderLeftCameraCfg -> FrankaFrontCameraCfg  (the real rig's calibrated front view)
     # The over-shoulder camera is DROID's placement (off to the left, different lens); the
     # front camera is the one ManiSkill uses as its agentview, so the third-person view is
     # the same viewpoint in both simulators. `front_cam` is world-fixed, so unlike the
@@ -869,8 +867,7 @@ def probe_move_axes(
 
     Cheap diagnostic (written to ``calibration.json``) documenting which world direction
     each token actually drives AND how many metres one decision travels -- the two numbers
-    that have to match the training data. Mirrors
-    ``core.sim.maniskill_task.probe_move_axes``.
+    that have to match the training data.
 
     ``repeats`` + ``settle_steps`` must be the runner's ``sim_steps_per_decision`` +
     ``settle_steps_per_decision``: the relative-IK controller lags its target, so measuring

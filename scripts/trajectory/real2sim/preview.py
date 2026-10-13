@@ -3,8 +3,8 @@
 Renders one episode's agentview + wrist frames into ``<dataset>/preview.mp4``
 with the step/token/gripper state stamped on each frame -- the quickest way to
 eyeball whether a generated dataset's camera transforms and action labels line
-up before converting it for training. Used by the ManiSkill and RoboLab
-generators after each dataset finishes.
+up before converting it for training. Used by the generators
+after each dataset finishes.
 """
 from __future__ import annotations
 
@@ -49,7 +49,7 @@ def make_preview_mp4(ds_dir: Path, fps: float = 3.0) -> Path | None:
         wr = Image.open(ep / r["wrist"]).convert("RGB")
         h = 360
         # Scale BOTH views by height and keep their aspect. The wrist used to be forced
-        # to a square, which is right for ManiSkill (256x256 hand_camera) but stretches
+        # to a square, which is right for a 256x256 hand camera but stretches
         # RoboLab's 960x720 wrist -- and a distorted preview is exactly the thing you
         # would use to judge whether the wrist flip/crop is correct.
         av = av.resize((int(av.width * h / av.height), h), Image.BILINEAR)

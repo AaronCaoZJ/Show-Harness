@@ -8,7 +8,7 @@ One robot config per (rig × mode):
 | `robot_franka_ft.yaml` | Franka, fine-tuned | `scripts/run_real_mvtoken.py` |
 | `robot_piper.yaml` | Piper dual-arm, zero-shot | `scripts/run_real_dual.py` (single arm: `scripts/run_real.py --arm`) |
 | `robot_piper_ft.yaml` | Piper, fine-tuned | `scripts/run_real_mvtoken.py` / `scripts/run_real_dual_mvtoken.py` |
-| `robot_maniskill.yaml`, `robot_robolab.yaml` | simulators, fine-tuned | `scripts/run_maniskill_mvtoken.py` / `scripts/run_robolab_mvtoken.py` |
+| `robot_robolab.yaml` | RoboLab simulator, fine-tuned | `scripts/run_robolab_mvtoken.py` |
 | `primitives_<embodiment>.yaml` | action-unit → motion mapping (axis signs, step, yaw) | read by the interpreters |
 
 ## Layering
@@ -54,12 +54,12 @@ you switch.
 | --- | --- | --- |
 | `robot_franka.yaml`, `robot_piper.yaml` | `gemini` | `chatgpt` (+ `local` on Franka) |
 | `*_ft.yaml` | `qwen3_5_2b` | the other released adapters, `finetuned_local`, hosted profiles |
-| `robot_maniskill.yaml`, `robot_robolab.yaml` | `qwen3_5_2b` (that sim's adapter) | `finetuned_local` |
+| `robot_robolab.yaml` | `qwen3_5_2b` (the sim adapter) | `finetuned_local` |
 
 The fine-tuned profiles are **placeholders naming a served adapter**, not weights: a
 profile's `model:` must equal the name the server registered (`LORA=<name>=<path>` in
 `scripts/serve_vlm.sh`). Released checkpoints are `<model>_showharness_<split>`, where the
-split is `ft` for the real-robot corpus and `maniskill` / `robolab` for simulation. For
+split is `ft` for the real-robot corpus and `sim` for simulation. For
 your own adapter, use `finetuned_local` and rename its `model:` to whatever you
 registered. See [docs/finetuned.md](../docs/finetuned.md).
 

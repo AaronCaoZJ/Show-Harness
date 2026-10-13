@@ -33,7 +33,7 @@ Per demo:
 4. Before each RELEASE the carried object is steered to where the DEMO put it (the object
    whose position changed most between the demo's grasp and release) -- the follower's
    grasp offset differs from the demo's, so replaying the demo's hand pose would place the
-   object off by that offset (the ManiSkill lesson: 3/6 -> 12/12 once retargeted).
+   object off by that offset (measured on an earlier generator: 3/6 -> 12/12 once retargeted).
 5. After the last RELEASE the hand lifts clear, the scene settles, and the episode is kept
    only if LIBERO's own success predicate holds.
 

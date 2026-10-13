@@ -59,8 +59,8 @@ Train your own adapter from one rig's rollouts and it needs no swap at all — l
 off (`finetuned_local` does).
 
 `qwen3_5_2b_sim` is the simulation-only policy,
-trained on the released `sim` split (RoboLab + ManiSkill together) — one adapter for both
-simulators, served as `qwen3_5_2b_showharness_sim`.
+trained on the released `sim` split (RoboLab and ManiSkill demonstrations together) and
+served as `qwen3_5_2b_showharness_sim`.
 
 Fetch one, or all of them:
 

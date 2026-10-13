@@ -1,11 +1,10 @@
 #!/usr/bin/env python3
 """Scheme A on RoboLab -- scripted privileged oracle emitting 2 cm atomic tokens.
 
-Sibling of ``real2sim/maniskill/oracle.py``, driving a RoboLab (Isaac Lab) Franka +
-Robotiq 2F-85 instead of a ManiSkill Panda. The state machine is the same shape -- align
-XY in Manhattan runs, descend, grasp, carry, place, release, all as single-axis 2 cm tokens
-recorded frame-before-action -- and it reuses the identical
-``AtomicExec`` / ``TokenEpisode`` / ``RolloutWriter`` core. What changes is that the plan is
+Drives a RoboLab (Isaac Lab) Franka + Robotiq 2F-85. The state machine aligns
+XY in Manhattan runs, descends, grasps, carries, places and releases, all as single-axis
+2 cm tokens recorded frame-before-action, on the shared
+``AtomicExec`` / ``TokenEpisode`` / ``RolloutWriter`` core. The plan is
 not hand-written per task: it is read off the RoboLab task's OWN ``subtasks`` declaration
 (see ``real2sim/robolab/tasks.py``), so any single-object ``pick_and_place`` task among
 RoboLab-120 can be generated without touching this file.

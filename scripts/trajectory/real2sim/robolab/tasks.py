@@ -1,8 +1,6 @@
 """RoboLab task construction: what to grasp, where to place it, and at what height.
 
-Sibling of ``real2sim/maniskill/tasks.py``, but the job is different in one important way.
-On ManiSkill the scenes are OURS (the ``core.sim.maniskill_scenes`` table), so that file
-declares a hand-written table of actors, heights and a layout sampler. RoboLab ships 120
+No hand-written table of actors, heights or layouts is needed here. RoboLab ships 120
 authored USD scenes whose success predicates and manipulation targets are already declared
 IN the task class::
 
@@ -192,7 +190,7 @@ def grasp_tcp(backend: Any, obj: str, z_jitter: float = 0.0,
     """Flange pose that puts the fingertips around the object's centre of mass.
 
     ``z_jitter`` adds a small uniform vertical offset so the frames preceding GRASP are not
-    all identical across episodes (the ManiSkill oracle does the same).
+    all identical across episodes.
     """
     centre = object_centroid(backend, obj)
     z = float(centre[2]) + FLANGE_TO_FINGERTIP_M

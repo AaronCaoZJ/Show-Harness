@@ -3,7 +3,6 @@ overlays:
   - {path: experiments/current_sims.yaml, optional: true}
 
 # MVTOKEN atomic-token policy on RoboLab / NVIDIA Isaac Lab (relative differential IK).
-# Sibling of configs/robot_maniskill.yaml.
 #
 # Cross-domain zero-shot: the LoRA was trained on REAL Franka/Piper rollouts, so behaviour
 # here is exploratory. The camera geometry (crop/letterbox), the wrist flip and the
@@ -38,8 +37,8 @@ enable_subtask: false       # RoboLab's per-step subtask predicates: extra physi
 # ---- Cameras ---------------------------------------------------------------
 # With robot: franka, the WRIST_LEFT preset's two cameras are swapped for the
 # ManiSkill-matched pair (see core/sim/robolab_franka.py):
-#   front_cam -- RLinf's calibrated RealSense D435 front view, the SAME extrinsics and
-#                intrinsics ManiSkill uses as its agentview (external_cam). 640x480.
+#   front_cam -- the real rig's calibrated RealSense D435 front view, the SAME extrinsics
+#                and intrinsics the ManiSkill training frames use. 640x480.
 #                RoboLab's stock over_shoulder_left_camera is DROID's off-to-the-left
 #                placement through a different lens -- a different viewpoint entirely.
 #   wrist_cam -- gripper-mounted, looking down the grasp axis, 256x256.
@@ -103,7 +102,7 @@ agentview_square_size: 256
 # step, i.e. rotation is locked.
 #
 # The MVTOKEN convention is 2 cm PHYSICAL per token. `step_m` is the COMMANDED total, not
-# the achieved one -- like configs/robot_maniskill.yaml, the achieved value is what was
+# the achieved one -- the achieved value is what was
 # measured and what matters.
 #
 # MEASURED 2026-07-29 on BananaInBowlTask by sweeping (n_steps x per-step command):
@@ -190,7 +189,7 @@ vlm_backends:
       enable_thinking: false
   qwen3_5_2b:
     # Qwen3.5-2B LoRA fine-tuned on the sim split - RoboLab and ManiSkill
-    # together, one policy for both simulators (FAMILY=qwen3_5).
+    # demonstrations together (FAMILY=qwen3_5).
     provider: vllm
     model: qwen3_5_2b_showharness_sim
     max_tokens: 256

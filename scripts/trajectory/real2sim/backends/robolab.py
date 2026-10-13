@@ -1,11 +1,11 @@
 """RoboLab (NVIDIA Isaac Lab) implementation of the :class:`AtomicSimEnv` contract.
 
-Second backend after ``backends/maniskill.py``, and the file that proves the split works:
+The file that proves the core/backend split works:
 everything above it (``atomic_tokenizer`` -- token vocabulary, closed-loop 2 cm execution,
 Manhattan/RDP/chase planners, the teleop-format writer) is reused byte for byte. Only this
 file knows what RoboLab is.
 
-Like the ManiSkill backend it wraps the DEPLOYMENT modules rather than re-declaring
+It wraps the DEPLOYMENT modules rather than re-declaring
 anything: the env is built through :func:`core.sim.robolab_task.make_robolab_task`, the one the
 eval runner uses, and the camera transform chain is the same
 ``rotate_and_flip -> center_crop_to_aspect`` the runner applies before sending a frame. A
@@ -13,7 +13,7 @@ private copy of either would let training and deployment drift apart silently.
 
 Three RoboLab specifics the contract has to absorb:
 
-* **Gripper polarity.** The core's ``grip_cmd`` is +1 open / -1 close (the ManiSkill mimic
+* **Gripper polarity.** The core's ``grip_cmd`` is +1 open / -1 close (the Panda mimic
   convention). RoboLab's Robotiq binary action is the opposite: 1.0 closes, 0.0 opens.
   Translated in :meth:`apply_delta`, nowhere else.
 * **``delta_bound_m`` is the action config's ``scale``** (0.5), not a controller bound:

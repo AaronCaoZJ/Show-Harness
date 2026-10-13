@@ -4,7 +4,7 @@
 Frame t is stored BEFORE token t executes, so ee_pose[t+1] - ee_pose[t] is what token t did.
 Reports, per token kind: travel along the named axis / off-axis travel / orientation drift
 (MV_*), turn about the named axis / other-axis turn / TCP drift (RT_*), and the share of
-tokens that were clean (single-axis within 5 mm and 2 deg). ManiSkill Scheme D reached 97%.
+tokens that were clean (single-axis within 5 mm and 2 deg).
 
     python scripts/trajectory/real2sim/libero/token_stats.py <dir with rollout_*/>
 """

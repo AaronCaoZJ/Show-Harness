@@ -57,7 +57,6 @@ REAL_CONFIGS = (
     "robot_piper_ft.yaml",
 )
 SIM_CONFIGS = (
-    "robot_maniskill.yaml",
     "robot_robolab.yaml",
 )
 
@@ -66,7 +65,7 @@ SIM_CONFIGS = (
 # rename-me example, one of the released checkpoints, or -- for a real robot
 # only -- a hosted baseline. Sim configs must not default to a paid hosted
 # model. Released adapters are named <model>_showharness_<split>: `_ft` for the real
-# corpus, `_sim` for the simulated one (RoboLab and ManiSkill share a single policy).
+# corpus, `_sim` for the simulated one (RoboLab and ManiSkill demonstrations, one policy).
 RELEASED_MARKER = "_showharness_"
 
 

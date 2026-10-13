@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Record CONTINUOUS scripted demos on RoboLab and export their TCP tracks -- Scheme D step 1.
 
-RoboLab sibling of ``real2sim/maniskill/record_demos.py``. It only records: a smooth
+It only records: a smooth
 privileged waypoint servo drives the task -- continuous, multi-axis motion, the same
 character a motion planner or a human demo has -- and each successful episode's TCP path +
 gripper events go to ``<out>/tracks/<Task>/track_epNNN.json``. ``follow_tokenize.py`` then
@@ -15,8 +15,7 @@ which privileged poses to servo to, in what order -- and RoboLab lets even that 
 the plan comes from the task's own ``subtasks`` declaration via ``robolab/tasks.py``, so
 any single-object pick-and-place task among RoboLab-120 records without new code.
 
-The recorded track does NOT store a layout: unlike the ManiSkill rigs (where this repo
-samples object poses and replays them), a RoboLab scene's layout is produced by the env's
+The recorded track does NOT store a layout: a RoboLab scene's layout is produced by the env's
 own reset events, so the follower reproduces it by resetting with the same seed.
 
 Usage:

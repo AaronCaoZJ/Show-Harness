@@ -7,8 +7,10 @@ identical teleop layout, so sim and real data mix without a special case.
 
     atomic_tokenizer.py   the reusable, simulator-agnostic core: token vocabulary,
                           closed-loop 2 cm execution, planners, rollout writer
-    backends/             one adapter per simulator (``make_backend("maniskill", ...)``)
-    maniskill/            ManiSkill task construction + the generators and dataset tooling
+    backends/             one adapter per simulator (``make_backend("robolab", ...)``)
+    <sim>/                that simulator's task construction + generators
+    make_dataset.py       conversion to training format + quality-gate stats
+    merge_shards.py       merge parallel generator shards
 
 Everything sim-specific is confined to ``backends/<sim>.py`` and ``<sim>/``; changing
 simulator does not touch the discretiser. See README.md for the pipeline and commands.

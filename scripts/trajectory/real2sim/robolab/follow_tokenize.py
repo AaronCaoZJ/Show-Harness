@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Scheme D on RoboLab -- closed-loop follower: re-execute a demo's path with 2 cm tokens.
 
-RoboLab sibling of ``real2sim/maniskill/follow_tokenize.py``. Reads the TCP tracks exported
+Reads the TCP tracks exported
 by ``record_demos.py``, resets the same scene to the same seed, reduces each track to RDP
 waypoints + gripper events, then chases each waypoint with dominant-axis 2 cm tokens. Every
 recorded frame is a state the DISCRETE controller actually reached, so every frame-to-frame
@@ -15,8 +15,7 @@ demo -- diagonal approaches, curved carries, varied ordering -- and only the exe
 quantised. Training on both gives the policy token sequences that do not all look like the
 same state machine.
 
-Scene reproduction differs from ManiSkill: there the recorder sampled object poses and
-stored them in the track for ``apply_layout`` to replay. A RoboLab scene's layout comes
+Scene reproduction: the track stores no layout. A RoboLab scene's layout comes
 from the env's own reset events, so resetting with the recorded seed is what reproduces it
 -- ``RobolabBackend.reset`` seeds the global RNG the events draw from.
 

@@ -23,7 +23,7 @@ from pathlib import Path
 
 import numpy as np
 
-ROOT = Path(__file__).resolve().parents[4]
+ROOT = Path(__file__).resolve().parents[3]
 sys.path.insert(0, str(ROOT))
 
 from scripts.trajectory.real2sim.atomic_tokenizer import OPPOSITE, TOKEN_AXIS  # noqa: E402

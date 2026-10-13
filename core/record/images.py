@@ -30,12 +30,12 @@ def rotate_and_flip(image: np.ndarray, degrees: int = 0, flip: str = "none") -> 
     ``flip`` (case-insensitive): ``none`` | ``vertical`` (flipud) | ``horizontal``
     (fliplr) | ``both``. This is the camera transform CONTRACT shared by deployment and
     data generation: the runner applies it to every frame it sends
-    (``core.sim.mvtoken_maniskill_runner``), and the real2sim generators apply the same one to
+    (``core.sim.mvtoken_robolab_runner``), and the real2sim generators apply the same one to
     every frame they store (``scripts/trajectory/real2sim/backends/``). Training images and
     inference images must be byte-identical, so both sides call this function rather than
     each rolling their own flip -- a second implementation could drift silently.
 
-    E.g. the ManiSkill ``hand_camera`` comes out with the gripper fingertips at the BOTTOM
+    E.g. a simulator's hand camera can come out with the gripper fingertips at the BOTTOM
     and its image-right mirrored relative to the agentview, whereas the MVTOKEN training
     wrist has fingertips at the TOP with left/right matching -- that is ``flip="both"``.
     """
@@ -98,7 +98,7 @@ def prepare_view(
     Every view the policy ever sees goes through this, and **agentview and wrist go
     through the SAME function with the same argument shape** -- only the values differ.
     They used to be handled differently (agentview letterboxed, wrist not), which was an
-    accident of the ManiSkill cameras happening to be 640x480 and 256x256: the wrist
+    accident of the first simulator's cameras happening to be 640x480 and 256x256: the wrist
     needed no letterbox, so the step was simply omitted for it. That left two code paths
     for what is conceptually one operation, and a camera whose resolution changes (a new
     sim, a re-configured sensor) silently gets the wrong treatment.

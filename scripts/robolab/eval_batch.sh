@@ -9,7 +9,7 @@
 #   bash scripts/robolab/eval_batch.sh <adapter-name> 10 \
 #       BananaInBowlTask BagelOnPlateTask
 #
-# Unlike scripts/maniskill/eval_batch.sh this runs ONE process per TASK rather than one per
+# This runs ONE process per TASK rather than one per
 # episode: Isaac Sim's cold start plus env construction costs tens of seconds, so
 # scripts/run_robolab_mvtoken.py --episodes N reuses the app and the env across episodes (exactly
 # what RoboLab's own run_evaluation does).
