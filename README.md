@@ -28,8 +28,8 @@
 <p align="center">
 📄 <a href="https://arxiv.org/abs/2609.10522">Arxiv Paper</a> &nbsp;|&nbsp;
 🤗 <a href="https://huggingface.co/papers/2609.10522">Daily Paper</a> &nbsp;|&nbsp;
-🦾 <a href="https://huggingface.co/showlab/Show-Harness-VLMs">Models</a> &nbsp;|&nbsp;
-📊 <a href="https://huggingface.co/datasets/showlab/Show-Harness-Data">Dataset</a> &nbsp;|&nbsp;
+🦾 <a href="https://huggingface.co/showlab/Show-Harness-VLMs">HF Models</a> &nbsp;|&nbsp;
+📊 <a href="https://huggingface.co/datasets/showlab/Show-Harness-Data">HF Dataset</a> &nbsp;|&nbsp;
 🌐 <a href="https://showlab.github.io/Show-Harness/">Project Page</a> &nbsp;|&nbsp;
 💬 <a href="https://x.com/ZechenBai/status/2097879130356498603">X (Twitter)</a>
 </p>
