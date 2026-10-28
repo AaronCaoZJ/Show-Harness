@@ -18,7 +18,7 @@ from typing import Any, Optional
 import numpy as np
 
 import core.ui.console as console
-from core.action_units import MOVE_ATOMS
+from core.action_units import MOVE_ATOMS, RT_ATOMS
 from interpreters.franka_atomic_controller import AtomicStepResult, FrankaAtomicController
 from core.runners.preemption import InterruptibleDecider
 from core.record.episode_logger import EpisodeLogger, status_flags
@@ -38,8 +38,13 @@ STILL_TOKEN = "STILL"
 # The DAGGER plugin's single-arm intent slot (plugins.dagger.SINGLE_SIDE).
 DAGGER_SIDE = "arm"
 # Match the MVTOKEN training window (rollout_to_llamafactory.py RECENT_WINDOW = 5): the
-# input lists up to the 5 most recent MV_* moves, newest first; GRASP/RELEASE are excluded.
+# input lists up to the 5 most recent MOVE tokens, newest first; GRASP/RELEASE are excluded.
 RECENT_MOVES_MAX = 5
+# What counts as a "move" for that history. Rotations are in it because a 90-degree turn is
+# nine identical RT_* tokens and 10 degrees is all but invisible in a 256x256 frame: without
+# the history the model cannot tell which of the nine it is on. Kept in step with the
+# converter's --rotation-tokens; a prompt that offers no RT_* simply never fills these.
+HISTORY_ATOMS = frozenset(MOVE_ATOMS + RT_ATOMS)
 
 
 class MvTokenRunner:
@@ -202,7 +207,7 @@ class MvTokenRunner:
                 result = None if token == STILL_TOKEN else self.controller.step(token)
                 t_exec_ms = (time.monotonic() - t_mark) * 1000.0
 
-                if token in MOVE_ATOMS:
+                if token in HISTORY_ATOMS:
                     recent_moves.insert(0, token)
                     del recent_moves[RECENT_MOVES_MAX:]
 

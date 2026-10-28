@@ -1,0 +1,16 @@
+# LIBERO / LIBERO-plus camera contract, read by the real2sim generators through
+# core.config.camera_contract() -- the same place a LIBERO deployment runner must read it.
+#
+# Verified conventions (carried over from the legacy AgentRobot LIBERO runner, re-checked on
+# LIBERO-plus 2026-09-19):
+#   * agentview is rendered upside down; rotating 180 deg gives the upright view in which
+#     +x (MV_FWD) moves toward the camera, +y (MV_RIGHT) moves right, +z (MV_UP) moves up.
+#   * the wrist (robot0_eye_in_hand) is used in its NATIVE orientation: fingertips at the
+#     top of the frame and left/right agreeing with the rotated agentview.
+#   * both views are rendered square (256), so no crop and no letterbox.
+agentview_camera: agentview
+wrist_camera: robot0_eye_in_hand
+agentview_rotation_degrees: 180
+agentview_flip: none
+wrist_rotation_degrees: 0
+wrist_flip: none

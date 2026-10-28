@@ -27,6 +27,21 @@ MOVE_ATOMS = (
 # the rotation plugin on embodiments that support it).
 ROTATE_ATOMS = ("ROTATE_CW", "ROTATE_CCW")
 
+# Incremental end-effector rotation about the WORLD axes through the TCP — the same frame
+# the MV_* units use, so a rotation unit means the same thing whatever the hand is doing.
+# PITCH/ROLL are named by where the FINGERTIPS of a downward-pointing gripper tilt, reusing
+# the translation words (RT_PITCH_FWD tips them toward MV_FWD); YAW by its sense seen from
+# above. Distinct from ROTATE_ATOMS, which is wrist-view yaw only. Offered by the LIBERO
+# vocabulary (prompts/v5); the metric step lives in configs/primitives_<embodiment>.yaml.
+RT_ATOMS = (
+    "RT_ROLL_LEFT",
+    "RT_ROLL_RIGHT",
+    "RT_PITCH_FWD",
+    "RT_PITCH_BACK",
+    "RT_YAW_CW",
+    "RT_YAW_CCW",
+)
+
 # Sim-controller idle token (holds the current setpoint for one env step).
 STOP_ATOM = "STOP"
 

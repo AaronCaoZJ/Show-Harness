@@ -24,6 +24,8 @@ BACKENDS: dict[str, tuple[str, str]] = {
     # RoboLab additionally requires Isaac Sim to be launched (core.sim.robolab_task.launch_isaac)
     # BEFORE make_backend is called -- see backends/robolab.py.
     "robolab": ("scripts.trajectory.real2sim.backends.robolab", "RobolabBackend"),
+    # LIBERO / LIBERO-plus: run with <LIBERO-plus>/.venv/bin/python (see backends/libero.py).
+    "libero": ("scripts.trajectory.real2sim.backends.libero", "LiberoBackend"),
 }
 
 

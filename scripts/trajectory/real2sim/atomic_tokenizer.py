@@ -21,6 +21,10 @@ Contract (matches ``configs/primitives_franka.yaml``, the real-Franka convention
 deployment): ``MV_FWD``=+X, ``MV_BACK``=-X, ``MV_LEFT``=-Y, ``MV_RIGHT``=+Y, ``MV_UP``=+Z,
 ``MV_DOWN``=-Z, in world axes (~= robot base axes at identity base pose). One token == one
 ``step_m`` (2 cm) displacement; ``gripper_closed`` in a record is the state BEFORE the token.
+
+Rotation tokens (``RT_*``, see :data:`ROT_AXES`) are optional: a backend that sets
+``supports_rotation`` executes them as ``rot_step_rad`` (10 deg) turns about a WORLD axis
+through the TCP, with the TCP position held. Backends without rotation never see one.
 """
 from __future__ import annotations
 
@@ -62,6 +66,71 @@ _AXIS_TOKENS = {
 # token -> (axis index, sign); the inverse map, handy for stats/validation.
 TOKEN_AXIS = {tok: (ax, sg) for (ax, sg), tok in _AXIS_TOKENS.items()}
 
+# Rotation tokens: one ``rot_step_rad`` turn about a WORLD axis through the TCP. World axes,
+# not tool axes, so a rotation token means the same thing whatever the hand is doing -- the
+# same frame the MV_* tokens use. PITCH/ROLL are named by where the FINGERTIPS of a
+# downward-pointing gripper tilt, reusing the translation words (RT_PITCH_FWD tips them
+# toward MV_FWD); YAW by its sense seen from above. The value is the rotation axis.
+ROT_AXES: dict[str, np.ndarray] = {
+    "RT_ROLL_RIGHT": np.array([1.0, 0.0, 0.0]),    # +X: tips toward +Y (MV_RIGHT)
+    "RT_ROLL_LEFT": np.array([-1.0, 0.0, 0.0]),
+    "RT_PITCH_BACK": np.array([0.0, 1.0, 0.0]),    # +Y: tips toward -X (MV_BACK)
+    "RT_PITCH_FWD": np.array([0.0, -1.0, 0.0]),
+    "RT_YAW_CCW": np.array([0.0, 0.0, 1.0]),       # +Z: counter-clockwise seen from above
+    "RT_YAW_CW": np.array([0.0, 0.0, -1.0]),
+}
+OPPOSITE.update({
+    "RT_ROLL_RIGHT": "RT_ROLL_LEFT", "RT_ROLL_LEFT": "RT_ROLL_RIGHT",
+    "RT_PITCH_BACK": "RT_PITCH_FWD", "RT_PITCH_FWD": "RT_PITCH_BACK",
+    "RT_YAW_CCW": "RT_YAW_CW", "RT_YAW_CW": "RT_YAW_CCW",
+})
+_ROT_AXIS_TOKENS = {
+    (int(np.flatnonzero(v)[0]), int(np.sign(v[np.flatnonzero(v)[0]]))): tok
+    for tok, v in ROT_AXES.items()
+}
+
+
+def rot_token_for_axis(axis: int, sign: float) -> str:
+    return _ROT_AXIS_TOKENS[(int(axis), 1 if sign >= 0 else -1)]
+
+
+def is_rotate(token: str) -> bool:
+    return token in ROT_AXES
+
+
+def rotvec_to_mat(rv: np.ndarray) -> np.ndarray:
+    """Rodrigues: axis-angle (world frame) -> 3x3 rotation matrix."""
+    rv = np.asarray(rv, dtype=np.float64)
+    th = float(np.linalg.norm(rv))
+    if th < 1e-12:
+        return np.eye(3)
+    k = rv / th
+    kx = np.array([[0, -k[2], k[1]], [k[2], 0, -k[0]], [-k[1], k[0], 0]])
+    return np.eye(3) + np.sin(th) * kx + (1 - np.cos(th)) * (kx @ kx)
+
+
+def mat_to_rotvec(m: np.ndarray) -> np.ndarray:
+    """Log map: 3x3 rotation matrix -> axis-angle, stable near 0 and pi."""
+    m = np.asarray(m, dtype=np.float64)
+    cos = np.clip((np.trace(m) - 1.0) / 2.0, -1.0, 1.0)
+    th = float(np.arccos(cos))
+    if th < 1e-9:
+        return np.zeros(3)
+    if np.pi - th < 1e-6:
+        # Near pi the sine vanishes; take the axis from the symmetric part instead.
+        b = (m + np.eye(3)) / 2.0
+        axis = np.sqrt(np.clip(np.diag(b), 0.0, None))
+        i = int(np.argmax(axis))
+        axis = b[:, i] / max(axis[i], 1e-12)
+        return axis / np.linalg.norm(axis) * th
+    w = np.array([m[2, 1] - m[1, 2], m[0, 2] - m[2, 0], m[1, 0] - m[0, 1]])
+    return w / (2.0 * np.sin(th)) * th
+
+
+def rotation_error(target: np.ndarray, current: np.ndarray) -> np.ndarray:
+    """World-frame axis-angle that turns ``current`` into ``target`` (both 3x3)."""
+    return mat_to_rotvec(np.asarray(target) @ np.asarray(current).T)
+
 
 def token_for_axis(axis: int, sign: float) -> str:
     return _AXIS_TOKENS[(int(axis), 1 if sign >= 0 else -1)]
@@ -79,6 +148,8 @@ def token_kind(token: str) -> str:
         return "grasp"
     if token == RELEASE:
         return "release"
+    if token in ROT_AXES:
+        return "rotate"
     raise ValueError(f"unknown token {token!r}")
 
 
@@ -143,6 +214,31 @@ class AtomicSimEnv(abc.ABC):
     @abc.abstractmethod
     def success(self) -> bool:
         """The task's own success predicate, evaluated on the CURRENT state."""
+
+    # -- optional: rotation tokens -------------------------------------------
+    #: Set by backends that can execute ``RT_*`` tokens. Everything below is only called
+    #: when it is True, so translation-only backends need not implement any of it.
+    supports_rotation: bool = False
+
+    def tcp_rotmat(self) -> np.ndarray:
+        """TCP orientation as a 3x3 world-frame rotation matrix."""
+        raise NotImplementedError
+
+    def orientation_ref(self) -> np.ndarray:
+        """The orientation the backend is HOLDING -- the lattice value, not the drifted one.
+
+        A rotation token turns from here rather than from the measured orientation, so the
+        lattice does not inherit whatever the controller let the hand drift by.
+        """
+        return self.tcp_rotmat()
+
+    def set_orientation_ref(self, rotmat: np.ndarray) -> None:
+        """Adopt ``rotmat`` as the orientation every later control step holds."""
+
+    def apply_delta_pose(self, delta_m: np.ndarray, delta_rotvec: np.ndarray,
+                         grip_cmd: float, max_cmd_m: float, max_cmd_rad: float) -> None:
+        """ONE control step commanding a position AND a world-frame rotation error."""
+        raise NotImplementedError
 
     # -- optional ------------------------------------------------------------
     def frozen(self) -> bool:
@@ -232,8 +328,23 @@ class AtomicExec:
         gripper_steps: int = 10,
         quiesce_tol_m: float = 0.0003,
         quiesce_max_steps: int = 40,
+        rot_step_rad: float = float(np.radians(10.0)),
+        rot_tol_rad: float = float(np.radians(0.5)),
+        max_cmd_rad: float = float(np.radians(10.0)),
+        lattice_origin: Optional[np.ndarray] = None,
     ) -> None:
         self.backend = backend
+        # Optional: aim every token at a node of THE lattice through this point instead of
+        # at "wherever the hand is + step_m". A token stops as soon as it is within tol_m,
+        # always from the short side, so start-relative targets lose ~0.5 mm per token --
+        # 7-10 mm after a descent of a dozen tokens on LIBERO, enough to close above a
+        # bowl rim instead of on it. Node-relative targets cannot accumulate, and they pull
+        # the other two axes back onto the lattice as well. Off by default (the ManiSkill
+        # and RoboLab generators predate it and are unchanged).
+        self.lattice_origin = None if lattice_origin is None else np.asarray(lattice_origin, dtype=np.float64)
+        self.rot_step_rad = float(rot_step_rad)
+        self.rot_tol_rad = float(rot_tol_rad)
+        self.max_cmd_rad = float(max_cmd_rad)
         self.step_m = float(step_m)
         self.tol_m = float(tol_m)
         self.max_cmd_m = float(max_cmd_m)
@@ -254,17 +365,52 @@ class AtomicExec:
         self.backend.apply_delta(np.asarray(delta_m, dtype=np.float64),
                                  self.grip_cmd, self.max_cmd_m)
 
+    def lattice_node(self, pos: np.ndarray) -> np.ndarray:
+        """Nearest lattice node to ``pos`` (``pos`` itself when no lattice is set).
+
+        Falls back to ``pos`` if the hand is more than a quarter step off the lattice --
+        something pushed it (a contact), and snapping would turn one token into a jump.
+        """
+        pos = np.asarray(pos, dtype=np.float64)
+        if self.lattice_origin is None:
+            return pos
+        node = self.lattice_origin + self.step_m * np.round((pos - self.lattice_origin) / self.step_m)
+        return node if np.max(np.abs(node - pos)) <= 0.25 * self.step_m else pos
+
     def move(self, token: str) -> float:
         """One MV_* token == one ``step_m`` displacement. Returns achieved metres."""
         direction = MOVE_DIRS[token]
         start = self.backend.tcp_pos()
-        target = start + direction * self.step_m
+        target = self.lattice_node(start) + direction * self.step_m
         for _ in range(self.max_ctrl_steps):
             err = target - self.backend.tcp_pos()
             if np.linalg.norm(err) < self.tol_m:
                 break
             self._step(err)
         return float(np.linalg.norm(self.backend.tcp_pos() - start))
+
+    def rotate(self, token: str) -> float:
+        """One RT_* token == one ``rot_step_rad`` turn about a world axis, TCP held still.
+
+        Both halves are closed-loop for the same reason as :meth:`move`: a delta controller
+        commanded "zero translation" does not hold the TCP -- it re-targets from wherever
+        the hand is, so a turn drags the TCP along (measured on LIBERO's OSC: 3.4 cm of
+        travel during a 15 deg yaw). The position error back to the start is commanded on
+        every step alongside the rotation error. Returns the achieved angle in radians.
+        """
+        backend = self.backend
+        start_pos = self.lattice_node(backend.tcp_pos())
+        r0 = backend.orientation_ref()
+        target = rotvec_to_mat(ROT_AXES[token] * self.rot_step_rad) @ r0
+        for _ in range(self.max_ctrl_steps):
+            rot_err = rotation_error(target, backend.tcp_rotmat())
+            pos_err = start_pos - backend.tcp_pos()
+            if np.linalg.norm(rot_err) < self.rot_tol_rad and np.linalg.norm(pos_err) < self.tol_m:
+                break
+            backend.apply_delta_pose(pos_err, rot_err, self.grip_cmd,
+                                     self.max_cmd_m, self.max_cmd_rad)
+        backend.set_orientation_ref(target)
+        return float(np.linalg.norm(rotation_error(backend.tcp_rotmat(), r0)))
 
     def move_to(self, target: np.ndarray, tol_m: float = 0.002,
                 budget: int = 40) -> None:
@@ -532,6 +678,8 @@ class TokenEpisode:
         )
         if kind == "move":
             self.exec.move(token)
+        elif kind == "rotate":
+            self.exec.rotate(token)
         elif token == GRASP:
             self.exec.grasp()
         elif token == RELEASE:
@@ -616,6 +764,95 @@ class TokenEpisode:
             before = self.backend.tcp_pos()
             self.emit(token, "move")
             if float(np.linalg.norm(self.backend.tcp_pos() - before)) < min_progress:
+                stalled += 1
+                if stalled >= stall_limit:
+                    return
+            else:
+                stalled = 0
+            prev_token = token
+
+    def chase_pose(self, pos: np.ndarray, rotmat: np.ndarray, tol_m: float,
+                   tol_rad: float, budget: int = 80, stall_frac: float = 0.3,
+                   stall_limit: int = 3, z_order: bool = False,
+                   progress_patience: Optional[int] = None) -> None:
+        """:meth:`chase` over SIX axes: 3 translations in ``step_m`` units, 3 rotations in
+        ``rot_step_rad`` units, pursuing whichever is furthest from its tolerance.
+
+        Errors are compared after normalising by their own step, so "3 tokens of FWD
+        left" and "3 tokens of YAW left" weigh the same. The rotation error is the
+        world-frame axis-angle from the current to the target orientation; its per-axis
+        components are not independent (rotations do not commute), which is fine here --
+        every token re-reads the pose, so the pursuit re-plans around the coupling.
+
+        Same guards as :meth:`chase`: an axis lock (runs of one key), an immediate
+        opposite token means the lattice cannot get closer, and a stall guard on tokens
+        that barely move. Tolerances are clamped to >= 0.55 of their own step.
+
+        ``z_order``: go DOWN last and UP first -- while the target is below, finish the
+        horizontal and rotational error before descending; while it is above, climb first.
+        A continuous demo reaches a grasp on a descending diagonal; pursuing its corners
+        axis by axis can instead sweep the fingers sideways at object height (measured on
+        LIBERO: the bowl shoved 45-92 mm before the grasp in 4 of 5 failed episodes).
+
+        ``progress_patience``: stop once the total remaining error (in tokens, summed over
+        the six axes) has not dropped by half a token for this many tokens. The stall guard
+        only sees a token that does not MOVE; at the edge of the workspace the hand moves
+        fine but in the wrong combination -- measured on LIBERO: MV_FWD and MV_UP taking
+        turns for 140 tokens, each ~1.5 cm of travel, none of it toward the target, every one
+        recorded as a clean-looking label. Off by default (existing generators unchanged).
+        """
+        tol_m = self._tol(tol_m)
+        tol_rad = max(float(tol_rad), self.exec.rot_step_rad * 0.55)
+        pos = np.asarray(pos, dtype=np.float64)
+        prev_token: Optional[str] = None
+        lock: Optional[int] = None
+        stalled = 0
+        best, since_best = np.inf, 0
+        for _ in range(budget):
+            err_t = pos - self.backend.tcp_pos()
+            err_r = rotation_error(rotmat, self.backend.tcp_rotmat())
+            # Normalised "tokens remaining" per axis; below tolerance counts as done.
+            norm = np.concatenate([
+                np.where(np.abs(err_t) >= tol_m, np.abs(err_t) / self.exec.step_m, 0.0),
+                np.where(np.abs(err_r) >= tol_rad, np.abs(err_r) / self.exec.rot_step_rad, 0.0),
+            ])
+            if progress_patience is not None:
+                total = float(norm.sum())
+                if total < best - 0.5:
+                    best, since_best = total, 0
+                else:
+                    since_best += 1
+                    if since_best > progress_patience:
+                        return
+            if lock is not None and norm[lock] > 0:
+                axis = lock
+            else:
+                pick = norm.copy()
+                if z_order and pick[2] > 0:
+                    others = np.delete(pick, 2)
+                    if err_t[2] < 0 and others.max() > 0:
+                        pick[2] = 0.0          # descend last
+                    elif err_t[2] > 0:
+                        pick[:] = 0.0          # climb first
+                        pick[2] = norm[2]
+                axis = int(np.argmax(pick))
+                if pick[axis] <= 0:
+                    return
+                lock = axis
+            if axis < 3:
+                token = token_for_axis(axis, err_t[axis])
+            else:
+                token = rot_token_for_axis(axis - 3, err_r[axis - 3])
+            if prev_token is not None and opposite(token, prev_token):
+                return
+            p0, r0 = self.backend.tcp_pos(), self.backend.tcp_rotmat()
+            self.emit(token)
+            if axis < 3:
+                progress = np.linalg.norm(self.backend.tcp_pos() - p0) / self.exec.step_m
+            else:
+                progress = np.linalg.norm(
+                    rotation_error(self.backend.tcp_rotmat(), r0)) / self.exec.rot_step_rad
+            if progress < stall_frac:
                 stalled += 1
                 if stalled >= stall_limit:
                     return

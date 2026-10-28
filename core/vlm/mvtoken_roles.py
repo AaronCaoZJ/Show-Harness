@@ -43,6 +43,12 @@ MVTOKEN_ACTIONS = (
     "MV_RIGHT",
     "MV_UP",
     "MV_DOWN",
+    "RT_ROLL_LEFT",
+    "RT_ROLL_RIGHT",
+    "RT_PITCH_FWD",
+    "RT_PITCH_BACK",
+    "RT_YAW_CW",
+    "RT_YAW_CCW",
     "GRASP",
     "RELEASE",
     "DONE",
@@ -118,8 +124,14 @@ class MvTokenController:
         agentview_image,
         wrist_image=None,
         debug: bool = False,
+        constrain_to=None,
     ) -> VLMResponse:
-        """One step -> one atomic token. See :meth:`_ordered_images` for the wire order."""
+        """One step -> one atomic token. See :meth:`_ordered_images` for the wire order.
+
+        ``constrain_to`` narrows THIS step's choices (guided decoding) and is meant for a
+        caller that measured something the prompt cannot express -- e.g. the last token
+        moved the arm 0.01 mm because it is pressed against a limit. Off by default.
+        """
         prompt = self.prompt_template.format(
             task=task,
             gripper_state=gripper_state,
@@ -138,6 +150,7 @@ class MvTokenController:
             images[0],
             wrist_image=images[1:] or None,
             debug=debug,
+            constrain_to=constrain_to,
         )
 
     @staticmethod

@@ -392,6 +392,7 @@ class VLMClient:
         agentview_image,
         wrist_image=None,
         debug: bool = False,
+        constrain_to: Optional[Sequence[str]] = None,
     ) -> VLMResponse:
         """One call -> ONE bare atomic action token, for a model fine-tuned to emit it.
 
@@ -402,6 +403,12 @@ class VLMClient:
         which constrains a NON-fine-tuned model's answer with guided decoding and falls back
         to a strict retry. Constraining a fine-tuned model instead hides whether it actually
         learned the vocabulary.
+
+        ``constrain_to`` is the one exception, and callers must treat it as one: it turns
+        guided decoding ON for a single call, restricted to the subset passed. It exists for
+        a caller that has an outside reason to forbid part of the vocabulary this step -- a
+        controller that measured the last token producing no motion at all, say -- and any
+        caller using it owes the reader a count of how often it fired.
         """
         if not allowed_tokens:
             raise ValueError("allowed_tokens must not be empty")
@@ -419,10 +426,17 @@ class VLMClient:
             "max_tokens": self._token_call_budget(),
             "chat_template_kwargs": self._chat_template_kwargs(_NO_THINKING),
         }
+        if constrain_to:
+            # vLLM 0.24 IGNORES a top-level `guided_choice` -- it answers free text (thinking
+            # block and all) and the only sign is a parse failure downstream. The field it
+            # honours is `structured_outputs`. Both are sent: the old name is harmless where
+            # it is ignored, and still works against a server too old for the new one.
+            payload["structured_outputs"] = {"choice": list(constrain_to)}
+            payload["guided_choice"] = list(constrain_to)
         if debug:
             payload["logprobs"] = True
         data, raw_text, latency_s = self._post_completion(payload)
-        token = _parse_single_token(raw_text, allowed_tokens)
+        token = _parse_single_token(raw_text, constrain_to or allowed_tokens)
         return VLMResponse(
             token=token,
             raw_text=raw_text,
