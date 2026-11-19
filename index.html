@@ -170,6 +170,7 @@
             -webkit-mask-image: radial-gradient(ellipse 70% 60% at 50% 30%, #000 30%, transparent 75%);
             mask-image: radial-gradient(ellipse 70% 60% at 50% 30%, #000 30%, transparent 75%);
         }
+        .hero.is-off .blob { animation-play-state: paused; }   /* nothing drifts while the hero is off screen */
         @keyframes drift {
             0%   { transform: translate(0, 0) scale(1); }
             50%  { transform: translate(3vw, 2vw) scale(1.08); }
@@ -228,8 +229,9 @@
         .fig-live { position: relative; width: 100%; }
         .fig-live > svg, .fig-live > img { display: block; width: 100%; height: auto; }
         .fig-live > svg { overflow: visible; }   /* cropped to the drawing: let entrance moves pass the edge */
-        .fig-live:not([data-ready]) { background: linear-gradient(100deg, #f3f5f8 30%, #fafbfc 50%, #f3f5f8 70%) 0 0 / 200% 100%; border-radius: 10px; animation: shimmer 1.4s linear infinite; }
-        @keyframes shimmer { to { background-position: -200% 0; } }
+        .fig-live:not([data-ready]) { background: #f3f5f8; border-radius: 10px; }   /* placeholder until the drawing is fetched */
+        /* the parts that keep moving live in a small overlay svg over the drawing (see splitOverlay) */
+        .fig-live > svg.ov { position: absolute; left: 0; top: 0; width: 100%; height: 100%; pointer-events: none; }
 
         .fig-tools { position: absolute; top: 10px; right: 10px; display: flex; gap: 6px; z-index: 2; opacity: 0; transition: opacity .2s; }
         .card-x:hover .fig-tools, .card-x:focus-within .fig-tools { opacity: 1; }
@@ -340,11 +342,13 @@
         /* dotted trajectories: dots light up one after another, then a spark runs along them */
         .fig-live .fx-dots .dot { transform-box: fill-box; transform-origin: center; transition: opacity .2s ease calc(var(--d) + var(--i) * 34ms); }
         .fig-live:not(.is-in) .fx-dots .dot { opacity: 0; }
-        .fig-live.is-loop .fx-dots .dot { animation: spark calc(var(--n) * 70ms + 1400ms) ease-out calc(var(--i) * 70ms) infinite; }
+        /* Loops share a cycle and rest for most of it: every frame of motion repaints and re-lays out
+           the svg, so a figure that moves in bursts costs a fraction of one that never stops. */
+        .fig-live.is-loop .fx-dots .dot { animation: spark 4.5s ease-out calc(var(--i) * 70ms) infinite; }
         @keyframes spark {
             0%   { transform: scale(1); fill: rgb(194, 241, 200); }
-            6%   { transform: scale(1.9); fill: #fff; }
-            22%, 100% { transform: scale(1); fill: rgb(194, 241, 200); }
+            3%   { transform: scale(1.9); fill: #fff; }
+            9%, 100% { transform: scale(1); fill: rgb(194, 241, 200); }
         }
 
         /* solid arrows: a mask draws them tail to tip, then a glint runs the same way the dots do */
@@ -356,24 +360,25 @@
         .fig-live .fx-solid .glint { visibility: hidden; }
         .fig-live.is-loop .fx-solid .glint {
             visibility: visible; opacity: .95; stroke-dasharray: 10 var(--gap); stroke-dashoffset: 10;
-            animation: glint 2.2s cubic-bezier(.45, 0, .55, 1) infinite;
+            animation: glint 4.5s cubic-bezier(.45, 0, .55, 1) infinite;
         }
-        @keyframes glint { 0% { stroke-dashoffset: 10; } 62%, 100% { stroke-dashoffset: var(--neg); } }
+        @keyframes glint { 0% { stroke-dashoffset: 10; } 30%, 100% { stroke-dashoffset: var(--neg); } }
 
         /* loops, each on the inner .lp so it never fights the entrance transform */
         .fig-live .lp { transform-box: fill-box; transform-origin: center; }
-        .fig-live.is-loop .fx-arrow > .lp { animation: nudge 1.9s ease-in-out var(--ph, 0s) infinite; }
+        .fig-live.is-loop .fx-arrow > .lp { animation: nudge 4s ease-in-out infinite; }
         @keyframes nudge {
-            0%, 100% { transform: translate(0, 0); }
-            50% { transform: translate(calc(var(--ax) * 7px), calc(var(--ay) * 7px)); }
+            0%, 50%, 100% { transform: translate(0, 0); }
+            12.5%, 37.5% { transform: translate(calc(var(--ax) * 7px), calc(var(--ay) * 7px)); }
+            25% { transform: translate(0, 0); }
         }
-        .fig-live.is-loop .fx-spin > .lp { animation: rock 2.6s ease-in-out infinite; }
+        .fig-live.is-loop .fx-spin > .lp { animation: rock 4s ease-in-out infinite; }
         @keyframes rock {
-            0%, 100% { transform: rotate(0deg); }
-            50% { transform: rotate(calc(var(--dir) * 12deg)); }
+            0%, 50%, 100% { transform: rotate(0deg); }
+            25% { transform: rotate(calc(var(--dir) * 12deg)); }
         }
-        .fig-live.is-loop .fx-mascot > .lp { animation: bob 3.2s ease-in-out infinite; }
-        @keyframes bob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
+        .fig-live.is-loop .fx-mascot > .lp { animation: bob 4s ease-in-out infinite; }
+        @keyframes bob { 0%, 50%, 100% { transform: translateY(0); } 25% { transform: translateY(-5px); } }
 
         /* method: centre-lines draw each stream, the arrow proper lands at the end */
         .fig-live .flow { visibility: visible; pointer-events: none; }
@@ -797,7 +802,7 @@
             <div class="video-frame reveal">
                 <!-- browsers only autoplay muted video; the clip carries narration,
                      so it starts silent and the viewer can unmute from the controls -->
-                <video muted autoplay loop controls playsinline preload="auto" poster="./assets/videos/posters/_main.jpg">
+                <video muted autoplay loop controls playsinline preload="auto" poster="./assets/videos/posters/_main.jpg" data-autoplay>
                     <source src="./assets/videos/Show-Harness-Main.mp4" type="video/mp4">
                 </video>
             </div>
@@ -2068,7 +2073,7 @@ z
             </div>
             <div class="browser reveal">
                 <div class="browser-bar"><i></i><i></i><i></i><span>GUMI &middot; GUI Manipulation Interface</span></div>
-                <video muted autoplay loop playsinline controls preload="metadata">
+                <video muted loop playsinline controls preload="none" data-autoplay>
                     <source src="./assets/videos/gumi_rollout.mp4" type="video/mp4">
                 </video>
             </div>
@@ -5764,7 +5769,7 @@ z
 <!-- /fig:generalization -->
                         </div>
                     </div>
-                    <figcaption class="fig-cap">Capability analysis of <span class="nw">Show-Harness</span> across physical (<img class="cap-icon" src="./assets/images/icon_hand.png" alt="hand icon">) and semantic (<img class="cap-icon" src="./assets/images/icon_brain.png" alt="brain icon">) adaptability.</figcaption>
+                    <figcaption class="fig-cap">Capability analysis of <span class="nw">Show-Harness</span> across physical <span class="nw">(<img class="cap-icon" src="./assets/images/icon_hand.png" alt="hand icon">)</span> and semantic <span class="nw">(<img class="cap-icon" src="./assets/images/icon_brain.png" alt="brain icon">)</span> adaptability.</figcaption>
                 </figure>
                 <div class="more-text"><p><strong class="claim">A new physical demand is met in the interpreter, not the model</strong> &mdash; a smaller step, an extra unit, a joint prediction over two arms. A 1&nbsp;cm step lifts ZS from 60% to 80% and FT from 40% to 65% with no retraining, where &pi;0.5 needs its entire budget of <span class="nw">fine-grained</span> data to reach 60%. Rotation units extrapolate to an unseen 90&deg; (ZS 10/10, &pi;0.5 20%), and joint <span class="nw">dual-arm</span> prediction lifts the average from 50% to 80% while removing every collision.</p><p><strong class="claim">A semantic demand is met in context.</strong> Situated Planning takes ZS to 85% where FT alone gets 10%, and a single video demonstration has ZS follow the demonstrated order 20/20, against 20% with nothing to watch.</p></div>
             </div>
@@ -7171,7 +7176,7 @@ z
                     </div>
                     <figcaption class="fig-cap">Effect of frontier VLM choice and thinking effort.</figcaption>
                 </figure>
-                <div class="more-text"><p><strong class="claim">Among frontier VLMs with strong reasoning, <span class="nw">zero-shot</span> control is limited by <span class="nw">fine-grained</span> spatial grounding, not by language understanding or planning.</strong> Five of them under one harness split into two tiers: <span class="nw">Gemini-3.1</span>&nbsp;Pro, <span class="nw">GPT-5.6-sol</span> and Opus&nbsp;5 at 86&ndash;96%, and <span class="nw">GPT-5.6-luna</span> and <span class="nw">Gemini-3.6-flash</span> at 72&ndash;78%. Instruction following (&ge;98%) and subtask plans (&ge;97%) are <span class="nw">near-saturated</span> everywhere, while empty grasps climb from 6% to 26% down the ranking &mdash; the models miss on the centimetres. Raising the thinking effort mainly shortens episodes &mdash; from 37 to 30 steps for <span class="nw">GPT-5.6-sol</span> &mdash; and costs 3.4&times; the <span class="nw">wall-clock</span> time.</p></div>
+                <div class="more-text"><p><strong class="claim">Among frontier VLMs with strong reasoning, <span class="nw">zero-shot</span> control is limited by <span class="nw">fine-grained</span> spatial grounding, not by language understanding or planning.</strong> Five of them under one harness split into two tiers: <span class="nw">Gemini-3.1</span>&nbsp;Pro, <span class="nw">GPT-5.6-sol</span> and Opus&nbsp;5 at 86&ndash;96%, and <span class="nw">GPT-5.6-luna</span> and <span class="nw">Gemini-3.6-flash</span> at 72&ndash;78%. All models follow instructions reliably &mdash; over 98% of their responses are valid action units &mdash; and panel (b) shows that planning is not the main bottleneck: errors concentrate on <span class="nw">fine-grained</span> grasping and placement. Raising the thinking effort mainly shortens episodes &mdash; from 37 to 30 steps for <span class="nw">GPT-5.6-sol</span> &mdash; and costs 3.4&times; the <span class="nw">wall-clock</span> time.</p></div>
             </div>
             <div class="result">
                 <div class="result-head"><h3>Fine-tuned backbone scaling</h3></div>
@@ -11759,6 +11764,7 @@ z
                 ], { duration: CYCLE, iterations: Infinity }));
             }
             pulses.set(box, anims);
+            if (box.classList.contains("is-paused")) anims.forEach(a => a.pause());
         }
         function stopPulses(box) { (pulses.get(box) || []).forEach(a => a.cancel()); pulses.delete(box); }
 
@@ -11805,6 +11811,27 @@ z
             }
         }, { threshold: .3 });
 
+        /* Animating anything inside one of these drawings repaints the whole drawing, embedded
+           bitmaps and all, every frame. animsvg.py marked (data-ov) the parts that keep moving and
+           whatever is stacked on them; they move, in order, into a second <svg> with the same
+           viewBox and the same transforms, laid over the first. Ids resolve document-wide, so
+           their clips, masks and images still work. Only that small layer repaints. */
+        function splitOverlay(box) {
+            const svg = box.querySelector(":scope > svg");
+            const marked = svg ? [...svg.querySelectorAll("[data-ov]")] : [];
+            if (!marked.length) return;
+            const ov = svg.cloneNode(false);
+            ["id", "role", "aria-label"].forEach(a => ov.removeAttribute(a));
+            ov.setAttribute("aria-hidden", "true");
+            ov.classList.add("ov");
+            let host = ov;
+            const chain = [];
+            for (let n = marked[0].parentNode; n !== svg; n = n.parentNode) chain.unshift(n);
+            for (const n of chain) { const g = n.cloneNode(false); g.removeAttribute("id"); host.appendChild(g); host = g; }
+            for (const el of marked) host.appendChild(el);
+            box.appendChild(ov);
+        }
+
         async function mount(box) {
             const url = box.dataset.svg, alt = box.dataset.alt || "";
             try {
@@ -11829,6 +11856,7 @@ z
             }
             box.dataset.ready = "";
             if (box.dataset.kind === "method") prepMethod(box);
+            if (!/[?&]noov\b/.test(location.search)) splitOverlay(box);
             box.getBoundingClientRect();
             requestAnimationFrame(() => box.classList.remove("is-static"));
             addTools(box, true);
@@ -11858,15 +11886,14 @@ z
         const lb = document.getElementById("lb"), lbContent = document.getElementById("lbContent");
         let lastFocus = null;
         function openLightbox(box) {
-            const src = box.querySelector("svg, img");
-            if (!src) return;
-            const clone = src.cloneNode(true);
+            const srcs = [...box.querySelectorAll(":scope > svg, :scope > img, :scope > .fig-svg, :scope svg.fig-svg")];
+            if (!srcs.length) return;
             const holder = document.createElement("div");
             // show the finished drawing, without replaying the entrance
             holder.className = (box.classList.contains("fig-live") ? "fig-live is-in is-static" : "fig-anim is-in");
             if (box.dataset.kind) holder.dataset.kind = box.dataset.kind;
             holder.dataset.ready = "";
-            holder.appendChild(clone);
+            for (const src of new Set(srcs)) holder.appendChild(src.cloneNode(true));
             lbContent.replaceChildren(holder);
             lbContent.classList.toggle("wide", PHONE.matches);
             lastFocus = document.activeElement;
@@ -11884,7 +11911,29 @@ z
         lb.addEventListener("click", e => { if (e.target === lb || e.target.classList.contains("lb-scroll")) closeLightbox(); });
         addEventListener("keydown", e => { if (e.key === "Escape" && lb.classList.contains("is-open")) closeLightbox(); });
 
-        document.querySelectorAll(".fig-live[data-svg]").forEach(mount);
+        // drawings are fetched as they come near, not all at load
+        const mountIO = new IntersectionObserver((es, obs) => {
+            for (const e of es) if (e.isIntersecting) { obs.unobserve(e.target); mount(e.target); }
+        }, { rootMargin: "900px 0px" });
+        document.querySelectorAll(".fig-live[data-svg]").forEach(b => mountIO.observe(b));
+
+        /* videos outside the deck: fetched when near, playing only while on screen */
+        (() => {
+            const near = new IntersectionObserver((es, obs) => {
+                for (const e of es) if (e.isIntersecting) { obs.unobserve(e.target); if (e.target.preload === "none") { e.target.preload = "auto"; e.target.load(); } }
+            }, { rootMargin: "600px 0px" });
+            const seen = new IntersectionObserver(es => {
+                for (const e of es) {
+                    const v = e.target;
+                    if (e.isIntersecting) { if (v.dataset.autopaused !== undefined || v.dataset.autoplay !== undefined && !v.dataset.started) { delete v.dataset.autopaused; v.dataset.started = ""; const p = v.play(); if (p) p.catch(() => {}); } }
+                    else if (!v.paused) { v.pause(); v.dataset.autopaused = ""; }
+                }
+            }, { threshold: .2 });
+            document.querySelectorAll("video[data-autoplay]").forEach(v => { near.observe(v); seen.observe(v); });
+            // the hero's drifting colour stops once the hero is scrolled away
+            const hero = document.querySelector(".hero");
+            new IntersectionObserver(([e]) => hero.classList.toggle("is-off", !e.isIntersecting)).observe(hero);
+        })();
 
         /* ---------------- stats: numbers count up, bars fill ---------------- */
         (() => {
@@ -12012,7 +12061,8 @@ z
                 }
             };
             let tmr = 0;
-            addEventListener("resize", () => { clearTimeout(tmr); tmr = setTimeout(fix, 120); });
+            let lastW = innerWidth;
+            addEventListener("resize", () => { if (innerWidth === lastW) return; lastW = innerWidth; clearTimeout(tmr); tmr = setTimeout(fix, 120); });
             fix();
             // text inside <details> is laid out only once it opens
             document.querySelectorAll("details").forEach(d => d.addEventListener("toggle", () => d.open && fix()));
@@ -12080,7 +12130,7 @@ z
         // What each shelf is evidence for, tied to the rows it comes from in the paper.
         const CAT_NOTES = {
             f_table: "Cross-task: ten object&ndash;receptacle pairings on the Franka, including Teddy and Chess, which fine-tuning never sees. Zero-shot averages 89% and the fine-tuned 2B model 86%, against 57% for the strongest baseline.",
-            f_long: "Long-horizon episodes run for hundreds of units rather than a dozen. Subtask state and failure recovery live in the harness, so a mis-grasp is retried instead of ending the run &mdash; 14 of 50 zero-shot episodes succeed only after such a retry.",
+            f_long: "Long-horizon episodes run for hundreds of units rather than a dozen. Subtask state and failure recovery live in the harness, so a mis-grasp is retried instead of ending the run.",
             f_env: "Cross-environment: a changed backdrop, dimmed light, and a table crowded with objects the task never mentions. Nothing is retrained between them; zero-shot holds 100% and the fine-tuned model 88%.",
             a_table: "Cross-embodiment: the same vocabulary, model and prompts as on the Franka &mdash; only the interpreter is swapped for the 6-DoF arm. Zero-shot scores 45/50 and the fine-tuned model 42/50 across the five Plate tasks.",
             a_dual: "One model call decides both arms, with the same vocabulary plus <code>STILL</code> to hold an arm in place. Joint prediction lifts the dual-arm average from 50% to 80% and removes all four collisions that two independent agents produce.",
@@ -12244,7 +12294,7 @@ z
                 col.innerHTML = `
                   <div class="video-card${alt ? " has-alt" : ""}"${alt ? ` role="button" tabindex="0" aria-label="Show another take of this capture"` : ""}>
                     <video muted loop playsinline preload="none"
-                           poster="${clipPoster(c.file)}"
+                           data-poster="${clipPoster(c.file)}"
                            data-src="${clipSrc(c.file)}"></video>
                   </div>
                   ${CLIP_TASK[id] ? `<p class="clip-task">${CLIP_TASK[id]}</p>` : ""}`;
@@ -12327,9 +12377,11 @@ z
         placeBallast();
         PHONE.addEventListener("change", placeBallast);
 
+        let deckNear = false;    // nothing in the deck is fetched until it is close to the viewport
         function prime(i) {
             const slide = track.children[i];
-            if (!slide) return;
+            if (!slide || !deckNear) return;
+            for (const v of slide.querySelectorAll("video[data-poster]")) { v.poster = v.dataset.poster; delete v.dataset.poster; }
             for (const v of slide.querySelectorAll("video[data-src]")) {
                 v.src = v.dataset.src;
                 delete v.dataset.src;
@@ -12361,6 +12413,11 @@ z
 
         prevBtn.addEventListener("click", () => go(index - 1));
         nextBtn.addEventListener("click", () => go(index + 1));
+
+        new IntersectionObserver(([e], obs) => {
+            if (!e.isIntersecting) return;
+            obs.disconnect(); deckNear = true; prime(index); prime(index + 1); pump();
+        }, { rootMargin: "800px 0px" }).observe(viewport);
 
         new IntersectionObserver(([e]) => {
             deckVisible = e.isIntersecting;
