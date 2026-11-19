@@ -36,6 +36,7 @@
             --gutter: 24px;
             --top: 56px;
             --media: 960px;                          /* every figure, card and grid shares this width */
+            --measure: 760px;                        /* running prose that is read, not scanned: abstract, BibTeX */
             --pad: clamp(10px, 2vw, 22px);           /* card padding: captions indent by it to meet the picture */
         }
 
@@ -58,6 +59,7 @@
 
         .wrap { max-width: 1120px; margin-inline: auto; padding-inline: var(--gutter); }
         .wide { max-width: var(--media); margin-inline: auto; }
+        .narrow { max-width: var(--measure); margin-inline: auto; }
 
         .sec { padding-block: clamp(64px, 9vw, 112px); position: relative; }
         .sec.tint { background: var(--tint); }
@@ -327,7 +329,7 @@
         /* ================================================================
            Abstract
            ================================================================ */
-        .abstract { max-width: var(--media); margin-inline: auto; }
+        .abstract { max-width: var(--measure); margin-inline: auto; }
         .abstract-text {
             font-size: 1.06rem; line-height: 1.8; color: var(--ink-2); margin: 0;
             text-align: justify; -webkit-hyphens: auto; hyphens: auto;
@@ -11534,7 +11536,7 @@ z
 
     <!-- ================= CITE ================= -->
     <section class="sec" id="cite">
-        <div class="wrap"><div class="wide">
+        <div class="wrap"><div class="narrow">
             <div class="sec-head">
                 <h2 class="sec-title">BibTeX</h2>
             </div>
