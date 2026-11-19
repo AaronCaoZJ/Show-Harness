@@ -35,8 +35,10 @@
             --r: 18px;
             --gutter: 24px;
             --top: 56px;
-            --media: 820px;                          /* the one column every section uses: headings, figures, text */
+            --media: 836px;                          /* the one column every section uses. 836 came out of a sweep of
+                                                        680-1000px scoring every caption/lead/note's last line */
             --media-wide: 940px;                     /* the main video alone is wider */
+            --measure: 720px;                        /* abstract and BibTeX sit a little narrower (abstract: 16 full lines) */
             --pad: clamp(10px, 2vw, 22px);           /* card padding: captions indent by it to meet the picture */
         }
 
@@ -54,8 +56,10 @@
 
         h1, h2, h3 { color: var(--ink); text-wrap: balance; }
         p { text-wrap: pretty; }
-        /* Text runs the full measure (no balancing: it breaks lines well short of the edge).
-           Short last lines are handled in JS by tying the final words together. */
+        /* Text runs the full measure (no balancing: it breaks lines well short of the edge),
+           justified with hyphenation on wide screens so every full line meets the right edge,
+           as the abstract does. Phones keep ragged-right, where short last lines are mended in JS. */
+        .fig-cap, .lead-1, .takeaway, .more-text p, .bl-list li, .tbl-cap { text-align: justify; -webkit-hyphens: auto; hyphens: auto; }
         .more-text p, .abstract-text { text-wrap: pretty; }
         .nw { white-space: nowrap; }   /* a hyphenated compound in a short block stays on one line */
         a { color: var(--blue); }
@@ -63,6 +67,7 @@
 
         .wrap { max-width: 1120px; margin-inline: auto; padding-inline: var(--gutter); }
         .wide { max-width: var(--media); margin-inline: auto; }
+        .narrow { max-width: var(--measure); margin-inline: auto; }
 
         .sec { padding-block: clamp(64px, 9vw, 112px); position: relative; }
         .sec.tint { background: var(--tint); }
@@ -87,7 +92,7 @@
             font-weight: 700; letter-spacing: -.022em; line-height: 1.12;
             font-size: clamp(1.6rem, 3.4vw, 2.5rem); margin: 0 0 .9rem;
         }
-        .lead-1 { font-size: clamp(1rem, 1.5vw, 1.12rem); line-height: 1.65; color: var(--muted); margin: 0; }
+        .lead-1 { font-size: 1.12rem; line-height: 1.65; color: var(--muted); margin: 0; }   /* fixed: same breaks at every desktop width */
         .sec-head { margin-bottom: clamp(28px, 4vw, 44px); }
         .sec-head.center { text-align: center; }
         .sec-head.center .lead-1 { margin-inline: auto; }
@@ -401,7 +406,7 @@
         /* ================================================================
            Abstract
            ================================================================ */
-        .abstract { max-width: var(--media); margin-inline: auto; }
+        .abstract { max-width: var(--measure); margin-inline: auto; }
         .abstract-text {
             font-size: 1.06rem; line-height: 1.8; color: var(--ink-2); margin: 0;
             text-align: justify; -webkit-hyphens: auto; hyphens: auto;
@@ -515,6 +520,8 @@
         .stats.armed .bar b { transform: scaleX(0); }
         .stats.armed.is-in .bar b { transform: none; }
         .stat-sub { font-size: .76rem; color: var(--muted); margin-top: 10px; }
+        .shift-tags { display: grid; grid-template-columns: repeat(2, max-content); gap: 4px; margin-top: 8px; }   /* two by two, never 3 + 1 */
+        .shift-tags span { font-size: .7rem; line-height: 1; color: var(--muted); padding: .28rem .5rem; border-radius: 999px; background: var(--tint); border: 1px solid var(--line); }
 
         /* ================================================================
            Demo deck
@@ -661,6 +668,8 @@
             .tool .lbl { display: none; }
 
             .abstract-text { font-size: 1rem; line-height: 1.75; text-align: left; -webkit-hyphens: manual; hyphens: manual; }
+            .lead-1 { font-size: 1rem; }
+            .fig-cap, .lead-1, .takeaway, .more-text p, .bl-list li, .tbl-cap { text-align: left; -webkit-hyphens: manual; hyphens: manual; }
 
             /* three across, so each row of six reads as two even rows instead of 5 + 1 */
             .unit-rows > div { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .35rem; margin-bottom: .35rem; }
@@ -671,7 +680,7 @@
             .stat { padding: 14px 16px; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr); column-gap: 16px; align-items: center; }
             .stat-lab { grid-column: 1 / -1; }
             .stat-nums { margin-bottom: 0; }
-            .stat-sub { grid-column: 1 / -1; margin-top: 8px; }
+            .stat-sub, .shift-tags { grid-column: 1 / -1; margin-top: 8px; }
             details.more .more-body { font-size: .92rem; }
             .res-table { font-size: .78rem; }
             .more-text { font-size: .92rem; }
@@ -817,8 +826,8 @@
                         <noscript><img src="./assets/images/overview.svg" alt="Show-Harness overview"></noscript>
                     </div>
                 </div>
-                <figcaption class="fig-cap">A VLM becomes a situated agent: it reasons and acts through semantic action units that
-                    <span class="nw">embodiment-specific</span> interpreters ground into robot motion.</figcaption>
+                <figcaption class="fig-cap">Show-Harness turns a VLM into a situated agent: it perceives, reasons, and acts through a
+                    compact set of semantic action units that <span class="nw">embodiment-specific</span> interpreters ground into robot motion.</figcaption>
             </figure>
         </div>
     </section>
@@ -2078,7 +2087,7 @@ z
                         <div class="bar zs"><span>ZS</span><i><b style="--v:100%"></b></i></div>
                         <div class="bar ft"><span>FT</span><i><b style="--v:88%; --bd:.08s"></b></i></div>
                     </div>
-                    <div class="stat-sub">background, lighting, viewpoint, distractors</div>
+                    <div class="shift-tags"><span>background</span><span>lighting</span><span>viewpoint</span><span>distractors</span></div>
                 </div>
                 <div class="stat">
                     <div class="stat-lab">Cross-embodiment <span>Franka + AgileX</span></div>
@@ -11611,7 +11620,7 @@ z
 
     <!-- ================= CITE ================= -->
     <section class="sec" id="cite">
-        <div class="wrap"><div class="wide">
+        <div class="wrap"><div class="narrow">
             <div class="sec-head">
                 <h2 class="sec-title">BibTeX</h2>
             </div>
@@ -11954,6 +11963,7 @@ z
            together: the line above gets a little shorter, every other line stays full.
            Re-run from the original text on every resize. */
         (() => {
+            if (/[?&]notie\b/.test(location.search)) return;   // ?notie: raw line breaks, for measuring
             const SEL = ".fig-cap, .lead-1, .takeaway, .tbl-cap, .more-text p, .bl-list li, .stat-sub";
             const blocks = [...document.querySelectorAll(SEL)];
             const tail = el => {
@@ -11996,6 +12006,10 @@ z
             const fix = () => {
                 for (const el of blocks) {
                     if (!el.offsetParent) continue;
+                    if (getComputedStyle(el).textAlign === "justify") {
+                        for (const n of texts(el)) if (n.__orig !== undefined) n.nodeValue = n.__orig;
+                        continue;
+                    }
                     const nodes = texts(el);
                     for (const n of nodes) { if (n.__orig === undefined) n.__orig = n.nodeValue; n.nodeValue = n.__orig; }
                     for (let k = 1; k <= 5 && tail(el) < .3; k++) {
