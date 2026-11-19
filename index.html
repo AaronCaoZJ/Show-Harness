@@ -35,9 +35,8 @@
             --r: 18px;
             --gutter: 24px;
             --top: 56px;
-            --media: 820px;                          /* figures, captions and text: the old page's text column */
-            --media-wide: 940px;                     /* video: the main clip, the demo deck, GUMI (old page's container) */
-            --measure: 700px;                        /* abstract and BibTeX: the old page's figure width */
+            --media: 820px;                          /* the one column every section uses: headings, figures, text */
+            --media-wide: 940px;                     /* the main video alone is wider */
             --pad: clamp(10px, 2vw, 22px);           /* card padding: captions indent by it to meet the picture */
         }
 
@@ -64,8 +63,6 @@
 
         .wrap { max-width: 1120px; margin-inline: auto; padding-inline: var(--gutter); }
         .wide { max-width: var(--media); margin-inline: auto; }
-        .wide-x { max-width: var(--media-wide); margin-inline: auto; }
-        .narrow { max-width: var(--measure); margin-inline: auto; }
 
         .sec { padding-block: clamp(64px, 9vw, 112px); position: relative; }
         .sec.tint { background: var(--tint); }
@@ -404,7 +401,7 @@
         /* ================================================================
            Abstract
            ================================================================ */
-        .abstract { max-width: var(--measure); margin-inline: auto; }
+        .abstract { max-width: var(--media); margin-inline: auto; }
         .abstract-text {
             font-size: 1.06rem; line-height: 1.8; color: var(--ink-2); margin: 0;
             text-align: justify; -webkit-hyphens: auto; hyphens: auto;
@@ -588,7 +585,7 @@
         /* ================================================================
            GUMI: the clip sits in a browser window, because that is what it is
            ================================================================ */
-        .browser { max-width: var(--media-wide); margin-inline: auto; border-radius: 16px; overflow: hidden; background: #fff; border: 1px solid var(--line); box-shadow: var(--sh-2); }
+        .browser { max-width: var(--media); margin-inline: auto; border-radius: 16px; overflow: hidden; background: #fff; border: 1px solid var(--line); box-shadow: var(--sh-2); }
         .browser-bar { display: flex; align-items: center; gap: 7px; height: 34px; padding: 0 14px; background: #f3f5f8; border-bottom: 1px solid var(--line); }
         .browser-bar i { width: 10px; height: 10px; border-radius: 50%; background: #dfe3e8; }
         .browser-bar i:nth-child(1) { background: #f0a19f; } .browser-bar i:nth-child(2) { background: #f5cf86; } .browser-bar i:nth-child(3) { background: #a9d59a; }
@@ -2027,18 +2024,18 @@ z
     <!-- ================= 03 DEMOS ================= -->
     <section class="sec tint" id="demos">
         <div class="wrap">
-            <div class="sec-head wide-x">
+            <div class="sec-head wide">
                 <div class="eyebrow"><span class="num">03</span>Demos<span class="tag">2&times; speed</span></div>
                 <h2 class="sec-title">Real-Robot Demonstrations</h2>
             </div>
-            <div class="wide-x" id="deck"></div>
+            <div class="wide" id="deck"></div>
         </div>
     </section>
 
     <!-- ================= 04 GUMI ================= -->
     <section class="sec" id="gumi">
         <div class="wrap">
-            <div class="sec-head wide-x">
+            <div class="sec-head wide">
                 <div class="eyebrow"><span class="num">04</span>GUMI</div>
                 <h2 class="sec-title">Collecting Demonstrations by Playing</h2>
                 <p class="lead-1">Every action unit is a labeled key: a human and a GUI agent drive the robot the same way, and
@@ -2050,7 +2047,7 @@ z
                     <source src="./assets/videos/gumi_rollout.mp4" type="video/mp4">
                 </video>
             </div>
-            <div class="wide-x"><p class="fig-cap flush">A GUI agent driving the <span class="nw">dual-arm</span> robot through GUMI, one action unit per keystroke.</p></div>
+            <div class="wide"><p class="fig-cap flush">A GUI agent driving the <span class="nw">dual-arm</span> robot through GUMI, one action unit per keystroke.</p></div>
         </div>
     </section>
 
@@ -11614,7 +11611,7 @@ z
 
     <!-- ================= CITE ================= -->
     <section class="sec" id="cite">
-        <div class="wrap"><div class="narrow">
+        <div class="wrap"><div class="wide">
             <div class="sec-head">
                 <h2 class="sec-title">BibTeX</h2>
             </div>
