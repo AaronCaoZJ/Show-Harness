@@ -520,8 +520,9 @@
         .stats.armed .bar b { transform: scaleX(0); }
         .stats.armed.is-in .bar b { transform: none; }
         .stat-sub { font-size: .76rem; color: var(--muted); margin-top: 10px; }
-        .shift-tags { display: grid; grid-template-columns: repeat(2, max-content); gap: 4px; margin-top: 8px; }   /* two by two, never 3 + 1 */
-        .shift-tags span { font-size: .7rem; line-height: 1; color: var(--muted); padding: .28rem .5rem; border-radius: 999px; background: var(--tint); border: 1px solid var(--line); }
+        /* two by two, all four the same size and spanning the card like the bars above */
+        .shift-tags { display: grid; grid-template-columns: 1fr 1fr; gap: 5px; margin-top: 8px; }
+        .shift-tags span { text-align: center; font-size: .7rem; line-height: 1; color: var(--muted); padding: .32rem .4rem; border-radius: 999px; background: var(--tint); border: 1px solid var(--line); }
 
         /* ================================================================
            Demo deck
