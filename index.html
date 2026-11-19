@@ -35,7 +35,7 @@
             --r: 18px;
             --gutter: 24px;
             --top: 56px;
-            --media: 836px;                          /* the one column every section uses. 836 came out of a sweep of
+            --media: 848px;                          /* the one column every section uses. 848 came out of a sweep of
                                                         680-1000px scoring every caption/lead/note's last line */
             --media-wide: 940px;                     /* the main video alone is wider */
             --measure: 720px;                        /* abstract and BibTeX sit a little narrower (abstract: 16 full lines) */
@@ -210,6 +210,7 @@
         /* live illustrations: the SVG is fetched and inlined so its parts can move */
         .fig-live { position: relative; width: 100%; }
         .fig-live > svg, .fig-live > img { display: block; width: 100%; height: auto; }
+        .fig-live > svg { overflow: visible; }   /* cropped to the drawing: let entrance moves pass the edge */
         .fig-live:not([data-ready]) { background: linear-gradient(100deg, #f3f5f8 30%, #fafbfc 50%, #f3f5f8 70%) 0 0 / 200% 100%; border-radius: 10px; animation: shimmer 1.4s linear infinite; }
         @keyframes shimmer { to { background-position: -200% 0; } }
 
@@ -451,9 +452,18 @@
            ================================================================ */
         .result { margin: clamp(48px, 7vw, 84px) auto 0; max-width: var(--media); }
         .result-head { margin: 0 0 16px; padding-inline: calc(var(--pad) + 1px); }
-        .result-head h3 { font-size: clamp(1.15rem, 2vw, 1.4rem); font-weight: 700; letter-spacing: -.012em; margin: 0 0 .5rem; }
-        .takeaway { font-size: 1rem; line-height: 1.6; color: var(--ink-2); margin: 0; }
+        .result-head h3 { font-size: clamp(1.15rem, 2vw, 1.4rem); font-weight: 700; letter-spacing: -.012em; margin: 0; }
+        .result.first { margin-top: 0; }
+        /* the one-line claim under a figure, set apart as on the old page */
+        .takeaway {
+            margin: 16px calc(var(--pad) + 1px) 0; padding: .72rem 1rem; font-size: .98rem; line-height: 1.65; color: var(--ink-2);
+            background: #fff; border-left: 3px solid var(--sky); border-radius: 0 .5rem .5rem 0;
+        }
         .takeaway strong { color: var(--blue); }
+        .more-text.before { margin: 0 0 16px; }
+        .result-tail { margin-top: 16px; }
+        .cap-icon { height: 1.3em; width: auto; vertical-align: -.3em; margin: 0 .05em; }
+        .title-note { white-space: nowrap; margin-left: .6rem; font-size: .5em; font-weight: 600; letter-spacing: 0; color: var(--blue); vertical-align: .28em; }
 
         details.more { margin: 12px 0 0; padding-inline: calc(var(--pad) + 1px); }
         details.more summary {
@@ -781,12 +791,11 @@
             <figure class="fig wide">
                 <div class="card-x reveal">
                     <div class="fig-live" data-svg="./assets/images/top_demo.svg" data-kind="teaser" data-total="2200"
-                         data-alt="Show-Harness in the open world" style="aspect-ratio: 780 / 353;">
+                         data-alt="Show-Harness in the open world" style="aspect-ratio: 777.92 / 352.48;">
                         <noscript><img src="./assets/images/top_demo.svg" alt="Show-Harness in the open world"></noscript>
                     </div>
                 </div>
-                <figcaption class="fig-cap">One interface across scenes, tasks and embodiments &mdash; frontier VLMs <span class="nw">zero-shot</span>, or the same
-                    interface <span class="nw">fine-tuned</span> onto <span class="nw">open-source</span> backbones at 12&ndash;33&nbsp;Hz.</figcaption>
+                <figcaption class="fig-cap"><span class="nw">Show-Harness</span> unlocks generalizable embodied manipulation with foundation VLMs across diverse tasks, scenes, and robot embodiments, enabling direct <span class="nw">zero-shot</span> deployment with frontier models and capable, efficient control via lightweight adaptation of compact <span class="nw">open-source</span> models.</figcaption>
             </figure>
         </div>
     </section>
@@ -823,12 +832,11 @@
             <figure class="fig wide">
                 <div class="card-x reveal">
                     <div class="fig-live" data-svg="./assets/images/overview.svg" data-kind="overview" data-total="3400"
-                         data-alt="Show-Harness overview" style="aspect-ratio: 875 / 512;">
+                         data-alt="Show-Harness overview" style="aspect-ratio: 859.83 / 485.76;">
                         <noscript><img src="./assets/images/overview.svg" alt="Show-Harness overview"></noscript>
                     </div>
                 </div>
-                <figcaption class="fig-cap">Show-Harness turns a VLM into a situated agent: it perceives, reasons, and acts through a
-                    compact set of semantic action units that <span class="nw">embodiment-specific</span> interpreters ground into robot motion.</figcaption>
+                <figcaption class="fig-cap"><span class="nw">Show-Harness</span> connects foundation VLMs to diverse robot embodiments through one semantic action interface, enabling <span class="nw">zero-shot</span> control with frontier models and lightweight adaptation of small open models.</figcaption>
             </figure>
         </div>
     </section>
@@ -837,12 +845,12 @@
     <section class="sec tint" id="interface">
         <div class="wrap">
             <div class="sec-head wide">
-                <div class="eyebrow"><span class="num">01</span>Interface</div>
+                <div class="eyebrow"><span class="num">01</span></div>
                 <h2 class="sec-title">The Semantic Action Space</h2>
-                <p class="lead-1"><span class="nw">Parameter-free</span> units a VLM reasons about directly. The interpreter supplies each unit&rsquo;s
-                    magnitude, so one vocabulary drives a Franka, an AgileX and a simulator.</p>
+                <p class="lead-1">Robot control is reformulated into <span class="nw">parameter-free</span> units that a VLM can reason about directly. Each unit
+                is a bare symbol; the interpreter supplies its metric magnitude, so the same vocabulary drives a <span class="nw">7-DoF</span>
+                Franka, a <span class="nw">6-DoF</span> AgileX, and a simulator without changing the model.</p>
             </div>
-
             <div class="wide">
                 <div class="unit-rows" id="unitRows">
                     <div><button type="button" class="unit-chip" aria-pressed="false"
@@ -860,18 +868,19 @@
                             data-unit="ROTATE_CCW" data-desc="Rotate the end effector one increment counterclockwise about the specified axis.">ROTATE_CCW</button><button type="button" class="unit-chip" aria-pressed="false"
                             data-unit="STILL" data-desc="Hold this arm where it is. Used in dual-arm control, where a single model call drives both arms.">STILL</button></div>
                 </div>
-                <p class="unit-desc" id="unitDesc" aria-live="polite">Hover or tap a unit to see what it does.</p>
+                <p class="unit-desc" id="unitDesc" aria-live="polite">A unit is a bare symbol &mdash; the interpreter supplies its metric magnitude.
+                Pick one to see what it does.</p>
             </div>
-
             <div class="result">
-                <div class="result-head">
-                    <h3>Where does the interface get its leverage?</h3>
-                    <p class="takeaway">Remove both the names and the convention, and success collapses to <strong>5%</strong> &mdash; 19 of 20 episodes time out.</p>
-                </div>
-                <div class="card-x reveal">
-                    <div class="fig-anim">
-                        <!-- fig:action_repr -->
-<svg xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 439.2 123.84" xmlns="http://www.w3.org/2000/svg" version="1.1" id="fig-action_repr" class="fig-svg" width="100%" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Action representation ablation">
+                <div class="result-head"><h3>Where does the interface get its leverage?</h3></div>
+                <div class="more-text before"><p>A unit like <code>MV_LEFT</code> carries a <em>name</em> the model already knows plus a <em>convention</em>
+                fixing whose left it is. Arbitrary symbols <code>A</code>&ndash;<code>F</code> work if the convention
+                is spelled out (95% vs 100%); the names alone, unexplained, still reach 90%.</p></div>
+                <figure class="fig">
+                    <div class="card-x reveal">
+                        <div class="fig-anim">
+                            <!-- fig:action_repr -->
+<svg xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="1.46 1.46 436.27 120.91" xmlns="http://www.w3.org/2000/svg" version="1.1" id="fig-action_repr" class="fig-svg" width="100%" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Action representation ablation">
  <defs>
   <style type="text/css">#fig-action_repr *{stroke-linejoin: round; stroke-linecap: butt}</style>
  </defs>
@@ -1997,16 +2006,15 @@ z
  </defs>
 </svg>
 <!-- /fig:action_repr -->
+                        </div>
                     </div>
-                </div>
-                <div class="more-text">
-                        <p>A unit like <code>MV_LEFT</code> carries a <em>name</em> the model already knows plus a <em>convention</em>
-                            fixing whose left it is. Arbitrary symbols <code>A</code>&ndash;<code>F</code> work if the convention
-                            is spelled out (95% vs 100%); the names alone, unexplained, still reach 90%.</p>
-                        <p>Asked to write that mapping down, the model gets 23.3% of six directions right against a 16.7% chance rate,
-                            and 11 of 20 trials mirror left and right. The interface is not decoration around the action space;
-                            it <em>is</em> the action space.</p>
-                    </div>
+                    <figcaption class="fig-cap">(a) Ablation on <span class="nw">action-space</span> representation. (b) Action mappings inferred under setting (D) over 20 episodes, where the model probes unknown symbols and infers their effects from observation changes.</figcaption>
+                </figure>
+                <p class="takeaway">Remove both and the agent has to infer the mapping from its own interaction &mdash; success collapses
+                to <strong>5%</strong>, with 19 of 20 episodes timing out.</p>
+                <div class="more-text"><p>Asked to write that mapping down, the model gets 23.3% of six directions right against a 16.7% chance rate,
+                and 11 of 20 trials mirror left and right. The interface is not decoration around the action space;
+                it <em>is</em> the action space.</p></div>
             </div>
         </div>
     </section>
@@ -2015,7 +2023,7 @@ z
     <section class="sec" id="harness">
         <div class="wrap">
             <div class="sec-head wide">
-                <div class="eyebrow"><span class="num">02</span>Harness</div>
+                <div class="eyebrow"><span class="num">02</span></div>
                 <h2 class="sec-title">Inside the Harness</h2>
                 <p class="lead-1">Each step closes the loop: plugins assemble the context, the VLM emits one semantic action unit,
                     and the interpreter grounds it into motion.</p>
@@ -2023,10 +2031,11 @@ z
             <figure class="fig wide">
                 <div class="card-x reveal">
                     <div class="fig-live" data-svg="./assets/images/method.svg" data-kind="method" data-total="3600"
-                         data-alt="Show-Harness architecture" style="aspect-ratio: 2948 / 1485;">
+                         data-alt="Show-Harness architecture" style="aspect-ratio: 2920.49 / 1449.64;">
                         <noscript><img src="./assets/images/method.svg" alt="Show-Harness architecture"></noscript>
                     </div>
                 </div>
+                <figcaption class="fig-cap"><strong>The <span class="nw">Show-Harness</span> architecture.</strong> A modular perceive&ndash;reason&ndash;act loop connects foundation VLMs to robot control through a shared semantic action interface.</figcaption>
             </figure>
         </div>
     </section>
@@ -2035,8 +2044,8 @@ z
     <section class="sec tint" id="demos">
         <div class="wrap">
             <div class="sec-head wide">
-                <div class="eyebrow"><span class="num">03</span>Demos<span class="tag">2&times; speed</span></div>
-                <h2 class="sec-title">Real-Robot Demonstrations</h2>
+                <div class="eyebrow"><span class="num">03</span></div>
+                <h2 class="sec-title">Real-Robot Demonstrations<span class="title-note">2&times; speed</span></h2>
             </div>
             <div class="wide" id="deck"></div>
         </div>
@@ -2046,10 +2055,11 @@ z
     <section class="sec" id="gumi">
         <div class="wrap">
             <div class="sec-head wide">
-                <div class="eyebrow"><span class="num">04</span>GUMI</div>
-                <h2 class="sec-title">Collecting Demonstrations by Playing</h2>
-                <p class="lead-1">Every action unit is a labeled key: a human and a GUI agent drive the robot the same way, and
-                    every recorded step is a ready training pair &mdash; no specialized teleoperation hardware required.</p>
+                <div class="eyebrow"><span class="num">04</span></div>
+                <h2 class="sec-title">GUMI &mdash; Collecting Demonstrations by Playing</h2>
+                <p class="lead-1">Every action unit is a labeled key, so demonstrating a task amounts to playing the robot. A human at
+                the keyboard and a GUI agent reading the same screen drive the robot identically, and every recorded
+                step is a ready training pair &mdash; no specialized teleoperation hardware required.</p>
             </div>
             <div class="browser reveal">
                 <div class="browser-bar"><i></i><i></i><i></i><span>GUMI &middot; GUI Manipulation Interface</span></div>
@@ -2057,7 +2067,7 @@ z
                     <source src="./assets/videos/gumi_rollout.mp4" type="video/mp4">
                 </video>
             </div>
-            <div class="wide"><p class="fig-cap flush">A GUI agent driving the <span class="nw">dual-arm</span> robot through GUMI, one action unit per keystroke.</p></div>
+            <div class="wide"><p class="fig-cap flush">A GUI agent driving the <span class="nw"><span class="nw">dual-arm</span></span> robot through GUMI, one action unit per keystroke.</p></div>
         </div>
     </section>
 
@@ -2065,12 +2075,15 @@ z
     <section class="sec tint" id="results">
         <div class="wrap">
             <div class="sec-head wide">
-                <div class="eyebrow"><span class="num">05</span>Results</div>
-                <h2 class="sec-title">Generalization across tasks, environments, and embodiments</h2>
-                <p class="lead-1">Two routes, one interface &mdash; a <span class="nw">zero-shot</span> agent (ZS) on <span class="nw">Gemini-3.1</span>&nbsp;Pro and a <span class="nw">fine-tuned</span>
-                    <span class="nw">Qwen3.5-2B</span> (FT) both beat VLA, <span class="nw">VLA-centric</span> agent and <span class="nw">code-as-policy</span> baselines.</p>
+                <div class="eyebrow"><span class="num">05</span></div>
+                <h2 class="sec-title">Results</h2>
             </div>
-
+            <div class="result first">
+                <div class="result-head"><h3>Generalization across tasks, environments, and embodiments</h3></div>
+                <div class="more-text before"><p>Two routes, one interface: a <span class="nw">zero-shot</span> agent (ZS) on <span class="nw">Gemini-3.1</span>&nbsp;Pro, and a <span class="nw">fine-tuned</span> <span class="nw">Qwen3.5-2B</span> (FT).
+                Both beat all three baseline families &mdash; VLA (&pi;0.5, GR00T), <span class="nw">VLA-centric</span> agents (<span class="nw">H-VLA</span>, <span class="nw">G-VLA</span>)
+                and <span class="nw">code-as-policy</span> (<span class="nw">CaP-X</span>, RATS).</p></div>
+            </div>
             <div class="stats armed" id="stats">
                 <div class="stat">
                     <div class="stat-lab">Cross-task <span>10 tasks</span></div>
@@ -2080,6 +2093,7 @@ z
                         <div class="bar ft"><span>FT</span><i><b style="--v:86%; --bd:.08s"></b></i></div>
                         <div class="bar base"><span>Best&nbsp;BL</span><i><b style="--v:57%; --bd:.16s"></b></i></div>
                     </div>
+                    <div class="stat-sub">ZS / FT &nbsp;&middot;&nbsp; best baseline 57%</div>
                 </div>
                 <div class="stat">
                     <div class="stat-lab">Cross-environment <span>4 shifts</span></div>
@@ -2098,18 +2112,26 @@ z
                         <div class="bar ft"><span>FT</span><i><b style="--v:87%; --bd:.08s"></b></i></div>
                         <div class="bar base"><span>Best&nbsp;BL</span><i><b style="--v:52%; --bd:.16s"></b></i></div>
                     </div>
+                    <div class="stat-sub">ZS / FT &nbsp;&middot;&nbsp; best baseline 52%</div>
                 </div>
+            </div>
+            <div class="result-tail wide">
+                <div class="more-text"><p>ZS clears every environment shift at 20/20, including the Teddy and Chess tasks held out from <span class="nw">fine-tuning.</span>
+                Trained only in simulation, FT still transfers to the real robot at 13/20 &mdash; both trainable VLA
+                baselines score 0/20.</p></div>
             </div>
             <details class="more">
                 <summary>More details</summary>
                 <div class="more-body">
+                    <p>We compare against three representative families of robot-control systems:</p>
                     <ul class="bl-list">
-                        <li><b>VLA</b> &mdash; &pi;<sub>0.5</sub>, GR00T: map observations and instructions directly to low-level
-                            actions; fine-tuned on end-effector trajectories converted from the same demonstrations as ours.</li>
-                        <li><b>VLA-centric agents</b> &mdash; Harness VLA (H-VLA), Goal-VLA (G-VLA): a VLA stays the physical
-                            executor, with an agentic layer on top for planning, monitoring or intervention.</li>
-                        <li><b>Code-as-policy agents</b> &mdash; CaP-X, RATS: high-level reasoning translated into executable
-                            programs or API calls.</li>
+                        <li><b>VLA</b> baselines directly map observations and instructions to <span class="nw">low-level</span> robot actions, including
+                            &pi;<sub>0.5</sub> and GR00T. For a controlled comparison, both are <span class="nw">fine-tuned</span> on continuous <span class="nw">end-effector</span>
+                            trajectories converted from the same demonstrations used to train our VLM policy.</li>
+                        <li><b><span class="nw">VLA-centric</span> agents</b> retain a VLA as the main physical executor while adding an outer agentic layer for
+                            planning, monitoring, or intervention, represented by Harness VLA (<span class="nw">H-VLA</span> in tables) and <span class="nw">Goal-VLA</span> (<span class="nw">G-VLA</span> in tables).</li>
+                        <li><b><span class="nw">Code-as-policy</span> agents</b> translate <span class="nw">high-level</span> reasoning into executable programs or API calls, represented by
+                            <span class="nw">CaP-X</span> and RATS.</li>
                     </ul>
                     <div class="tbl-wrap"><table class="res-table">
                     <thead><tr><th rowspan="2" class="setting">Setting</th><th colspan="2">VLA</th><th colspan="2">VLA-centric agent</th><th colspan="2">Code-as-policy agent</th><th colspan="2" class="ours">Show-Harness</th></tr>
@@ -2142,24 +2164,18 @@ z
                     </tbody>
                     </table></div>
                     <p class="tbl-cap">Performance across three levels of generalization on real robots. ZS and FT denote
-                        <span class="nw">Show-Harness</span> in <span class="nw">zero-shot</span> mode (<span class="nw">Gemini-3.1</span>&nbsp;Pro with medium thinking effort) and <span class="nw">fine-tuned</span> mode
-                        (<span class="nw">Qwen3.5-2B</span>).</p>
-                    <p>ZS clears every environment shift at 20/20, including the Teddy and Chess tasks held out from fine-tuning.
-                        Trained only in simulation, FT still transfers to the real robot at 13/20 &mdash; both trainable VLA
-                        baselines score 0/20.</p>
+                        <span class="nw"><span class="nw">Show-Harness</span></span> in <span class="nw"><span class="nw">zero-shot</span></span> mode (<span class="nw"><span class="nw">Gemini-3.1</span></span>&nbsp;Pro with medium thinking effort) and <span class="nw"><span class="nw">fine-tuned</span></span> mode
+                        (<span class="nw"><span class="nw">Qwen3.5-2B</span></span>).</p>
                 </div>
             </details>
 
-            <article class="result">
-                <div class="result-head">
-                    <h3>Physical and semantic adaptability</h3>
-                    <p class="takeaway">Adapting to a new physical demand is a change to the <em>interpreter</em>, not to the model
-                        &mdash; a smaller step, an extra unit, a joint prediction over two arms.</p>
-                </div>
-                <div class="card-x reveal">
-                    <div class="fig-anim">
-                        <!-- fig:generalization -->
-<svg xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 439.2 329.76" xmlns="http://www.w3.org/2000/svg" version="1.1" id="fig-generalization" class="fig-svg" width="100%" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Physical and semantic adaptability">
+            <div class="result">
+                <div class="result-head"><h3>Physical and semantic adaptability</h3></div>
+                <figure class="fig">
+                    <div class="card-x reveal">
+                        <div class="fig-anim">
+                            <!-- fig:generalization -->
+<svg xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0.00 0.00 439.20 329.47" xmlns="http://www.w3.org/2000/svg" version="1.1" id="fig-generalization" class="fig-svg" width="100%" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Physical and semantic adaptability">
  <defs>
   <style type="text/css">#fig-generalization *{stroke-linejoin: round; stroke-linecap: butt}</style>
  </defs>
@@ -5746,28 +5762,27 @@ z
  </defs>
 </svg>
 <!-- /fig:generalization -->
+                        </div>
                     </div>
-                </div>
-                <div class="more-text">
-                        <p><strong>Physical.</strong> A 1&nbsp;cm interpreter step lifts ZS 60%&nbsp;&rarr;&nbsp;80% and FT
-                            40%&nbsp;&rarr;&nbsp;65% with no retraining, where &pi;0.5 needs its entire budget on fine-grained data
-                            to reach 60%. Rotation units extrapolate to an unseen 90&deg; (ZS 10/10, &pi;0.5 20%), and joint
-                            dual-arm prediction lifts the average 50%&nbsp;&rarr;&nbsp;80% while removing every collision.</p>
-                        <p><strong>Semantic.</strong> Situated Planning takes ZS to 85% where FT alone gets 10%. A single video
-                            demonstration has ZS follow the demonstrated order 20/20, against 20% with nothing to watch.</p>
-                    </div>
-            </article>
-
-            <article class="result">
-                <div class="result-head">
-                    <h3>Frontier VLM choice and thinking effort</h3>
-                    <p class="takeaway">Among frontier VLMs with strong reasoning, <span class="nw">zero-shot</span> robot control is limited by
-                        <strong><span class="nw">fine-grained</span> spatial grounding</strong>, not by language understanding or planning.</p>
-                </div>
-                <div class="card-x reveal">
-                    <div class="fig-anim">
-                        <!-- fig:model_api -->
-<svg xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 439.2 141.12" xmlns="http://www.w3.org/2000/svg" version="1.1" id="fig-model_api" class="fig-svg" width="100%" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Frontier VLM ablation">
+                    <figcaption class="fig-cap">Capability analysis of <span class="nw">Show-Harness</span> across physical (<img class="cap-icon" src="./assets/images/icon_hand.png" alt="hand icon">) and semantic (<img class="cap-icon" src="./assets/images/icon_brain.png" alt="brain icon">) adaptability.</figcaption>
+                </figure>
+                <p class="takeaway">Adapting to a new physical demand is a change to the <em>interpreter</em>, not to the model &mdash;
+                a smaller step, an extra unit, a joint prediction over two arms.</p>
+                <div class="more-text"><p><strong>Physical.</strong> A 1&nbsp;cm interpreter step lifts ZS 60%&nbsp;&rarr;&nbsp;80% and FT
+                40%&nbsp;&rarr;&nbsp;65% with no retraining, where &pi;0.5 needs its entire budget on <span class="nw">fine-grained</span> data
+                to reach 60%. Rotation units extrapolate to an unseen 90&deg; (ZS 10/10, &pi;0.5 20%), and joint
+                <span class="nw">dual-arm</span> prediction lifts the average 50%&nbsp;&rarr;&nbsp;80% while removing every collision.
+                <br><br>
+                <strong>Semantic.</strong> Situated Planning takes ZS to 85% where FT alone gets 10%. A single video
+                demonstration has ZS follow the demonstrated order 20/20, against 20% with nothing to watch.</p></div>
+            </div>
+            <div class="result">
+                <div class="result-head"><h3>Frontier VLM choice and thinking effort</h3></div>
+                <figure class="fig">
+                    <div class="card-x reveal">
+                        <div class="fig-anim">
+                            <!-- fig:model_api -->
+<svg xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0.00 0.00 439.20 141.12" xmlns="http://www.w3.org/2000/svg" version="1.1" id="fig-model_api" class="fig-svg" width="100%" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Frontier VLM ablation">
  <defs>
   <style type="text/css">#fig-model_api *{stroke-linejoin: round; stroke-linecap: butt}</style>
  </defs>
@@ -7160,26 +7175,25 @@ z
  </defs>
 </svg>
 <!-- /fig:model_api -->
+                        </div>
                     </div>
-                </div>
-                <div class="more-text">
-                        <p>Five frontier VLMs under one harness split into two tiers: Gemini-3.1&nbsp;Pro, GPT-5.6-sol and Opus&nbsp;5
-                            at 86&ndash;96%, GPT-5.6-luna and Gemini-3.6-flash at 72&ndash;78%. Thinking effort mainly shortens
-                            episodes &mdash; 37 to 30 steps for GPT-5.6-sol, at 3.4&times; the wall-clock. Planning is not the gap:
-                            instruction following (&ge;98%) and subtask plans (&ge;97%) are near-saturated everywhere, while empty
-                            grasps climb from 6% to 26% down the ranking. The models miss on the centimetres.</p>
-                    </div>
-            </article>
-
-            <article class="result">
-                <div class="result-head">
-                    <h3>Fine-tuned backbone scaling</h3>
-                    <p class="takeaway">Above 2B, capacity buys precision and costs latency &mdash; and on a moving target the latency wins.</p>
-                </div>
-                <div class="card-x reveal">
-                    <div class="fig-anim">
-                        <!-- fig:open_source -->
-<svg xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 439.2 152.64" xmlns="http://www.w3.org/2000/svg" version="1.1" id="fig-open_source" class="fig-svg" width="100%" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Fine-tuned backbone scaling">
+                    <figcaption class="fig-cap">Effect of frontier VLM choice and thinking effort.</figcaption>
+                </figure>
+                <p class="takeaway">Among frontier VLMs with strong reasoning, <span class="nw">zero-shot</span> robot control is limited by
+                <strong><span class="nw">fine-grained</span> spatial grounding</strong>, not by language understanding or planning.</p>
+                <div class="more-text"><p>Five frontier VLMs under one harness split into two tiers: <span class="nw">Gemini-3.1</span>&nbsp;Pro, <span class="nw">GPT-5.6-sol</span> and Opus&nbsp;5
+                at 86&ndash;96%, <span class="nw">GPT-5.6-luna</span> and <span class="nw">Gemini-3.6-flash</span> at 72&ndash;78%. Thinking effort mainly shortens
+                episodes &mdash; 37 to 30 steps for <span class="nw">GPT-5.6-sol</span>, at 3.4&times; the <span class="nw">wall-clock.</span> Planning is not the gap:
+                instruction following (&ge;98%) and subtask plans (&ge;97%) are <span class="nw">near-saturated</span> everywhere, while empty
+                grasps climb from 6% to 26% down the ranking. The models miss on the centimetres.</p></div>
+            </div>
+            <div class="result">
+                <div class="result-head"><h3>Fine-tuned backbone scaling</h3></div>
+                <figure class="fig">
+                    <div class="card-x reveal">
+                        <div class="fig-anim">
+                            <!-- fig:open_source -->
+<svg xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0.00 0.00 439.20 152.35" xmlns="http://www.w3.org/2000/svg" version="1.1" id="fig-open_source" class="fig-svg" width="100%" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Fine-tuned backbone scaling">
  <defs>
   <style type="text/css">#fig-open_source *{stroke-linejoin: round; stroke-linecap: butt}</style>
  </defs>
@@ -8818,28 +8832,25 @@ L 108 36
  </defs>
 </svg>
 <!-- /fig:open_source -->
+                        </div>
                     </div>
-                </div>
-                <div class="more-text">
-                        <p>Success is flat from 2B up &mdash; Qwen3.5 at 2B/4B/9B and InternVL3.5 at 2B/8B all within four points
-                            (88&ndash;92%). The two smallest backbones emit valid units but hesitate, stretching episodes from 37.6
-                            to 57.8 steps at 72&ndash;74%. Capacity pays where precision is the bottleneck: stacking and peg
-                            insertion go 50%&nbsp;&rarr;&nbsp;65%&nbsp;&rarr;&nbsp;75% from 0.8B to 9B. The one reversal is the
-                            rolling tennis ball, where 2B (80%) beats 0.8B (70%) and 9B (60%) &mdash; at 79&nbsp;ms per decision
-                            the 9B model cannot track a moving target, against 39&nbsp;ms for 2B.</p>
-                    </div>
-            </article>
-
-            <article class="result">
-                <div class="result-head">
-                    <h3>Harness plugin ablations</h3>
-                    <p class="takeaway">Default plugins buy raw success; optional ones buy reach on the cases that need them, at no
-                        cost to the rest.</p>
-                </div>
-                <div class="card-x reveal">
-                    <div class="fig-anim">
-                        <!-- fig:plugins -->
-<svg xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 439.2 298.8" xmlns="http://www.w3.org/2000/svg" version="1.1" id="fig-plugins" class="fig-svg" width="100%" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Harness plugin ablations">
+                    <figcaption class="fig-cap">(a) Effect of <span class="nw">fine-tuned</span> backbone scaling over the five Plate tasks; bubble area is proportional to parameter count. (b) Three Qwen3.5 capacities across <span class="nw">fine-grained</span> tasks.</figcaption>
+                </figure>
+                <p class="takeaway">Above 2B, capacity buys precision and costs latency &mdash; and on a moving target the latency wins.</p>
+                <div class="more-text"><p>Success is flat from 2B up &mdash; Qwen3.5 at 2B/4B/9B and InternVL3.5 at 2B/8B all within four points
+                (88&ndash;92%). The two smallest backbones emit valid units but hesitate, stretching episodes from 37.6
+                to 57.8 steps at 72&ndash;74%. Capacity pays where precision is the bottleneck: stacking and peg
+                insertion go 50%&nbsp;&rarr;&nbsp;65%&nbsp;&rarr;&nbsp;75% from 0.8B to 9B. The one reversal is the
+                rolling tennis ball, where 2B (80%) beats 0.8B (70%) and 9B (60%) &mdash; at 79&nbsp;ms per decision
+                the 9B model cannot track a moving target, against 39&nbsp;ms for 2B.</p></div>
+            </div>
+            <div class="result">
+                <div class="result-head"><h3>Harness plugin ablations</h3></div>
+                <figure class="fig">
+                    <div class="card-x reveal">
+                        <div class="fig-anim">
+                            <!-- fig:plugins -->
+<svg xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="2.93 2.93 433.34 292.65" xmlns="http://www.w3.org/2000/svg" version="1.1" id="fig-plugins" class="fig-svg" width="100%" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Harness plugin ablations">
  <defs>
   <style type="text/css">#fig-plugins *{stroke-linejoin: round; stroke-linecap: butt}</style>
  </defs>
@@ -11604,18 +11615,20 @@ z
  </defs>
 </svg>
 <!-- /fig:plugins -->
+                        </div>
                     </div>
-                </div>
-                <div class="more-text">
-                        <p>Removing one default plugin at a time from the full 96% configuration: <strong>Multi-View Guidance</strong>
-                            is worth 38 points, <strong>Subtask Planning</strong> 36, <strong>Proprioception</strong> 28,
-                            <strong>Failure Recovery</strong> 24, and <strong>Action History</strong> 20 while cutting 23% of the
-                            steps. The rest trade cost for reach: <strong>Action Chunking</strong> holds 96% with 19% fewer VLM
-                            calls, and <strong>Adaptive Step</strong> reaches 96% in 30 steps, beating a fine 2&nbsp;cm step (82%)
-                            and a coarse 4&nbsp;cm one (70%). <strong>Visual Prompt</strong> and <strong>Situated Planning</strong>
-                            stay off by default, each lifting its target case from 35% to 85%.</p>
-                    </div>
-            </article>
+                    <figcaption class="fig-cap">Plugin ablations on the real Franka arm using <span class="nw">Gemini-3.1</span> Pro as a <span class="nw">zero-shot</span> agent.</figcaption>
+                </figure>
+                <p class="takeaway">Default plugins buy raw success; optional ones buy reach on the cases that need them, at no cost to
+                the rest.</p>
+                <div class="more-text"><p>Removing one default plugin at a time from the full 96% configuration: <strong><span class="nw">Multi-View</span> Guidance</strong>
+                is worth 38 points, <strong>Subtask Planning</strong> 36, <strong>Proprioception</strong> 28,
+                <strong>Failure Recovery</strong> 24, and <strong>Action History</strong> 20 while cutting 23% of the
+                steps. The rest trade cost for reach: <strong>Action Chunking</strong> holds 96% with 19% fewer VLM
+                calls, and <strong>Adaptive Step</strong> reaches 96% in 30 steps, beating a fine 2&nbsp;cm step (82%)
+                and a coarse 4&nbsp;cm one (70%). <strong>Visual Prompt</strong> and <strong>Situated Planning</strong>
+                stay off by default, each lifting its target case from 35% to 85%.</p></div>
+            </div>
         </div>
     </section>
 
@@ -12008,7 +12021,14 @@ z
                 for (const el of blocks) {
                     if (!el.offsetParent) continue;
                     if (getComputedStyle(el).textAlign === "justify") {
-                        for (const n of texts(el)) if (n.__orig !== undefined) n.nodeValue = n.__orig;
+                        // justified: only a true orphan (< 15%) gets its last words tied, and at most
+                        // two ties, so the line above loses a word and barely stretches
+                        const nodes = texts(el);
+                        for (const n of nodes) { if (n.__orig === undefined) n.__orig = n.nodeValue; n.nodeValue = n.__orig; }
+                        for (let k = 1; k <= 2 && tail(el) < .15; k++) {
+                            for (const n of nodes) n.nodeValue = n.__orig;
+                            tie(nodes, k + 1);
+                        }
                         continue;
                     }
                     const nodes = texts(el);
@@ -12085,14 +12105,25 @@ z
             ]],
         ];
 
-        // One line per shelf: what the clips are evidence for.
+        // What each shelf is evidence for, tied to the rows it comes from in the paper.
         const CAT_NOTES = {
-            f_table: "Ten object&ndash;receptacle pairings on the Franka, including Teddy and Chess, never seen in fine-tuning.",
-            f_long:  "Episodes that run for hundreds of units; a mis-grasp is retried instead of ending the run.",
-            f_env:   "A changed backdrop, dimmed light and a crowded table &mdash; nothing retrained between them.",
-            a_table: "Same vocabulary, model and prompts as the Franka &mdash; only the interpreter is swapped for a 6-DoF arm.",
-            a_dual:  "Both arms decided in one model call, with <code>STILL</code> to hold an arm in place.",
-            a_wild:  "Outside the lab, with no new data and no re-tuning.",
+            f_table: "The Cross-Task rows: ten object&ndash;receptacle pairings on the Franka, including Teddy and " +
+                     "Chess, which are never seen in fine-tuning. Zero-shot averages 89% here and the fine-tuned " +
+                     "2B model 86%, against 57% for the strongest baseline.",
+            f_long:  "Episodes that run for hundreds of units rather than a dozen. Subtask state and failure " +
+                     "recovery live in the harness, so a mis-grasp is retried instead of ending the run &mdash; " +
+                     "14 of 50 zero-shot episodes succeed only after such a retry.",
+            f_env:   "The Cross-Environment rows: a changed backdrop, dimmed light, and a table crowded with " +
+                     "objects the task never mentions. Nothing is retrained between them; zero-shot holds 100% " +
+                     "and the fine-tuned model 88%.",
+            a_table: "The Cross-Embodiment rows. Same vocabulary, same model, same prompts as the Franka &mdash; " +
+                     "only the interpreter is swapped for a 6-DoF arm. Zero-shot scores 45/50 and the fine-tuned " +
+                     "model 42/50 across the five Plate tasks.",
+            a_dual:  "Both arms are decided in one model call, sharing the vocabulary plus <code>STILL</code> to " +
+                     "hold an arm in place. Joint prediction lifts the dual-arm average from 50% to 80% and " +
+                     "removes all four collisions that two independent agents produce.",
+            a_wild:  "Outside the lab, with no new data and no re-tuning: an office whiteboard, an open-air deck, " +
+                     "uncontrolled light and background.",
         };
 
         const PER_PAGE = 16;
