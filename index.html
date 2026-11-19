@@ -55,10 +55,8 @@
 
         h1, h2, h3 { color: var(--ink); text-wrap: balance; }
         p { text-wrap: pretty; }
-        /* Short blocks (one to a few lines) are balanced, so a caption that runs a few words
-           past one line breaks into two even lines instead of leaving those words alone on the
-           second. Longer running text stays full-measure; pretty only keeps it off a one-word last line. */
-        .fig-cap, .lead-1, .takeaway, .tbl-cap, .unit-desc, .deck-note, .bl-list li, .stat-sub { text-wrap: balance; }
+        /* Text runs the full measure (no balancing: it breaks lines well short of the edge).
+           Short last lines are handled in JS by tying the final words together. */
         .more-text p, .abstract-text { text-wrap: pretty; }
         .nw { white-space: nowrap; }   /* a hyphenated compound in a short block stays on one line */
         a { color: var(--blue); }
@@ -11952,13 +11950,15 @@ z
             });
         })();
 
-        /* ---------------- no stranded last lines in running text ----------------
-           Short blocks are balanced in CSS. Longer paragraphs keep their full measure,
-           so here, only when one ends on a line under 30% of the column, its last
-           few words are tied with no-break spaces and travel down together. Re-checked
-           on resize, from the original text each time. */
+        /* ---------------- no stranded last lines ----------------
+           Every caption, lead, takeaway and note runs the full measure. Only when a block
+           ends on a line under 30% of its width are its final words tied with no-break
+           spaces (one more each try, up to five, across inline tags) so they move down
+           together: the line above gets a little shorter, every other line stays full.
+           Re-run from the original text on every resize. */
         (() => {
-            const paras = [...document.querySelectorAll(".more-text p, .bl-list li")];
+            const SEL = ".fig-cap, .lead-1, .takeaway, .tbl-cap, .more-text p, .bl-list li, .stat-sub";
+            const blocks = [...document.querySelectorAll(SEL)];
             const tail = el => {
                 const r = document.createRange(); r.selectNodeContents(el);
                 const rows = [];
@@ -11973,23 +11973,45 @@ z
                 const w = rows.map(x => x.r - x.l);
                 return w[w.length - 1] / Math.max(...w);
             };
-            const lastText = el => { let n = el.lastChild; while (n && n.nodeType !== 3) n = n.lastChild || n.previousSibling; return n; };
+            const texts = el => {
+                const out = [], tw = document.createTreeWalker(el, NodeFilter.SHOW_TEXT);
+                for (let n = tw.nextNode(); n; n = tw.nextNode()) out.push(n);
+                return out;
+            };
+            // tie the last k inter-word spaces of the block, walking back across text nodes
+            const tie = (nodes, k) => {
+                for (let i = nodes.length - 1; i >= 0 && k > 0; i--) {
+                    const n = nodes[i], v = n.nodeValue;
+                    let end = v.length;
+                    if (i === nodes.length - 1) end = v.replace(/\s+$/, "").length;   // trailing space is not between words
+                    let chars = [...v];
+                    for (let j = end - 1; j >= 0 && k > 0; j--) {
+                        if (chars[j] === " " || chars[j] === "\n") {
+                            // collapse a run of whitespace to one tie
+                            let a = j; while (a > 0 && /\s/.test(chars[a - 1])) a--;
+                            if (a === 0 && i === 0) break;
+                            chars.splice(a, j - a + 1, " "); j = a; k--;
+                        }
+                    }
+                    n.nodeValue = chars.join("");
+                }
+            };
             const fix = () => {
-                for (const el of paras) {
-                    const t = lastText(el);
-                    if (!t) continue;
-                    if (t.__orig === undefined) t.__orig = t.nodeValue;
-                    t.nodeValue = t.__orig;
-                    for (let k = 2; k <= 5 && tail(el) < .3; k++) {
-                        const words = t.__orig.replace(/\s+$/, "").split(/ (?=\S)/);
-                        if (words.length <= k) break;
-                        t.nodeValue = words.slice(0, -k).join(" ") + " " + words.slice(-k).join("\u00a0") + (t.__orig.match(/\s+$/) || [""])[0];
+                for (const el of blocks) {
+                    if (!el.offsetParent) continue;
+                    const nodes = texts(el);
+                    for (const n of nodes) { if (n.__orig === undefined) n.__orig = n.nodeValue; n.nodeValue = n.__orig; }
+                    for (let k = 1; k <= 5 && tail(el) < .3; k++) {
+                        for (const n of nodes) n.nodeValue = n.__orig;
+                        tie(nodes, k + 1);
                     }
                 }
             };
             let tmr = 0;
             addEventListener("resize", () => { clearTimeout(tmr); tmr = setTimeout(fix, 120); });
             fix();
+            // text inside <details> is laid out only once it opens
+            document.querySelectorAll("details").forEach(d => d.addEventListener("toggle", () => d.open && fix()));
         })();
 
         /* ---------------- BibTeX copy ---------------- */
