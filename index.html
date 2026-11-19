@@ -463,6 +463,10 @@
         details.more summary:hover { color: var(--blue); }
         details.more .more-body { font-size: .95rem; line-height: 1.7; color: var(--ink-2); padding: .5rem 0 0; }
         .result details.more, .sec > .wrap > details.more { max-width: var(--media); margin-inline: auto; }
+        /* the figure-specific numbers under each result figure: always shown, no toggle */
+        .more-text { margin: 14px 0 0; padding-inline: calc(var(--pad) + 1px); font-size: .95rem; line-height: 1.7; color: var(--ink-2); }
+        .more-text p { margin: 0 0 .8rem; }
+        .more-text p:last-child { margin-bottom: 0; }
         details.more .more-body p { margin: 0 0 .8rem; }
 
         /* the baselines and the paper's main table, inside the results' "More details" */
@@ -667,6 +671,7 @@
             .stat-sub { grid-column: 1 / -1; margin-top: 8px; }
             details.more .more-body { font-size: .92rem; }
             .res-table { font-size: .78rem; }
+            .more-text { font-size: .92rem; }
 
             /* demo deck: embodiments as a two-way switch, their shelves a sideways scroller in the bubble */
             .deck-tabs { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
@@ -5733,9 +5738,7 @@ z
 <!-- /fig:generalization -->
                     </div>
                 </div>
-                <details class="more">
-                    <summary>More details</summary>
-                    <div class="more-body">
+                <div class="more-text">
                         <p><strong>Physical.</strong> A 1&nbsp;cm interpreter step lifts ZS 60%&nbsp;&rarr;&nbsp;80% and FT
                             40%&nbsp;&rarr;&nbsp;65% with no retraining, where &pi;0.5 needs its entire budget on fine-grained data
                             to reach 60%. Rotation units extrapolate to an unseen 90&deg; (ZS 10/10, &pi;0.5 20%), and joint
@@ -5743,7 +5746,6 @@ z
                         <p><strong>Semantic.</strong> Situated Planning takes ZS to 85% where FT alone gets 10%. A single video
                             demonstration has ZS follow the demonstrated order 20/20, against 20% with nothing to watch.</p>
                     </div>
-                </details>
             </article>
 
             <article class="result">
@@ -7150,16 +7152,13 @@ z
 <!-- /fig:model_api -->
                     </div>
                 </div>
-                <details class="more">
-                    <summary>More details</summary>
-                    <div class="more-body">
+                <div class="more-text">
                         <p>Five frontier VLMs under one harness split into two tiers: Gemini-3.1&nbsp;Pro, GPT-5.6-sol and Opus&nbsp;5
                             at 86&ndash;96%, GPT-5.6-luna and Gemini-3.6-flash at 72&ndash;78%. Thinking effort mainly shortens
                             episodes &mdash; 37 to 30 steps for GPT-5.6-sol, at 3.4&times; the wall-clock. Planning is not the gap:
                             instruction following (&ge;98%) and subtask plans (&ge;97%) are near-saturated everywhere, while empty
                             grasps climb from 6% to 26% down the ranking. The models miss on the centimetres.</p>
                     </div>
-                </details>
             </article>
 
             <article class="result">
@@ -8811,9 +8810,7 @@ L 108 36
 <!-- /fig:open_source -->
                     </div>
                 </div>
-                <details class="more">
-                    <summary>More details</summary>
-                    <div class="more-body">
+                <div class="more-text">
                         <p>Success is flat from 2B up &mdash; Qwen3.5 at 2B/4B/9B and InternVL3.5 at 2B/8B all within four points
                             (88&ndash;92%). The two smallest backbones emit valid units but hesitate, stretching episodes from 37.6
                             to 57.8 steps at 72&ndash;74%. Capacity pays where precision is the bottleneck: stacking and peg
@@ -8821,7 +8818,6 @@ L 108 36
                             rolling tennis ball, where 2B (80%) beats 0.8B (70%) and 9B (60%) &mdash; at 79&nbsp;ms per decision
                             the 9B model cannot track a moving target, against 39&nbsp;ms for 2B.</p>
                     </div>
-                </details>
             </article>
 
             <article class="result">
@@ -11600,9 +11596,7 @@ z
 <!-- /fig:plugins -->
                     </div>
                 </div>
-                <details class="more">
-                    <summary>More details</summary>
-                    <div class="more-body">
+                <div class="more-text">
                         <p>Removing one default plugin at a time from the full 96% configuration: <strong>Multi-View Guidance</strong>
                             is worth 38 points, <strong>Subtask Planning</strong> 36, <strong>Proprioception</strong> 28,
                             <strong>Failure Recovery</strong> 24, and <strong>Action History</strong> 20 while cutting 23% of the
@@ -11611,7 +11605,6 @@ z
                             and a coarse 4&nbsp;cm one (70%). <strong>Visual Prompt</strong> and <strong>Situated Planning</strong>
                             stay off by default, each lifting its target case from 35% to 85%.</p>
                     </div>
-                </details>
             </article>
         </div>
     </section>
