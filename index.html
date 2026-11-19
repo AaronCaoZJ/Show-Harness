@@ -35,6 +35,8 @@
             --r: 18px;
             --gutter: 24px;
             --top: 56px;
+            --media: 960px;                          /* every figure, card and grid shares this width */
+            --pad: clamp(10px, 2vw, 22px);           /* card padding: captions indent by it to meet the picture */
         }
 
         html { scroll-behavior: smooth; scroll-padding-top: calc(var(--top) + 12px); }
@@ -56,7 +58,7 @@
 
         .wrap { max-width: 1120px; margin-inline: auto; padding-inline: var(--gutter); }
         .measure { max-width: 760px; margin-inline: auto; }
-        .wide { max-width: 980px; margin-inline: auto; }
+        .wide { max-width: var(--media); margin-inline: auto; }
 
         .sec { padding-block: clamp(64px, 9vw, 112px); position: relative; }
         .sec.tint { background: var(--tint); }
@@ -171,7 +173,7 @@
 
         .hero-media { margin-top: clamp(40px, 6vw, 64px); }
         .video-frame {
-            position: relative; max-width: 1000px; margin-inline: auto; border-radius: 20px; padding: 8px;
+            position: relative; max-width: var(--media); margin-inline: auto; border-radius: 20px; padding: 8px;
             background: rgba(255, 255, 255, .7); border: 1px solid rgba(255, 255, 255, .9);
             box-shadow: var(--sh-2), 0 0 0 1px var(--line);
             -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
@@ -183,10 +185,12 @@
            ================================================================ */
         .card-x {
             position: relative; background: var(--card); border: 1px solid var(--line); border-radius: var(--r);
-            box-shadow: var(--sh-1); padding: clamp(10px, 2vw, 22px);
+            box-shadow: var(--sh-1); padding: var(--pad);
         }
-        .fig { margin: 0; }
-        .fig-cap { font-size: .9rem; line-height: 1.6; color: var(--muted); margin: 1rem auto 0; max-width: 760px; text-align: center; }
+        .fig { margin-block: 0; }   /* block only: the inline margins are .wide's, which centre it */
+        /* captions start where the picture starts: the card's border plus its padding */
+        .fig-cap { font-size: .9rem; line-height: 1.6; color: var(--muted); margin: .9rem 0 0; max-width: 780px; text-align: left; padding-inline: calc(var(--pad) + 1px); }
+        .fig-cap.flush { padding-inline: 1px; }
 
         /* live illustrations: the SVG is fetched and inlined so its parts can move */
         .fig-live { position: relative; width: 100%; }
@@ -236,6 +240,19 @@
             22%, 100% { transform: scale(1); fill: rgb(194, 241, 200); }
         }
 
+        /* solid arrows: a mask draws them tail to tip, then a glint runs the same way the dots do */
+        .fig-live .fx-solid .rv {
+            stroke-dasharray: var(--len) var(--len); stroke-dashoffset: var(--len);
+            transition: stroke-dashoffset .8s cubic-bezier(.45, 0, .55, 1) var(--d);
+        }
+        .fig-live.is-in .fx-solid .rv { stroke-dashoffset: 0; }
+        .fig-live .fx-solid .glint { visibility: hidden; }
+        .fig-live.is-loop .fx-solid .glint {
+            visibility: visible; opacity: .95; stroke-dasharray: 10 var(--gap); stroke-dashoffset: 10;
+            animation: glint 2.2s cubic-bezier(.45, 0, .55, 1) infinite;
+        }
+        @keyframes glint { 0% { stroke-dashoffset: 10; } 62%, 100% { stroke-dashoffset: var(--neg); } }
+
         /* loops, each on the inner .lp so it never fights the entrance transform */
         .fig-live .lp { transform-box: fill-box; transform-origin: center; }
         .fig-live.is-loop .fx-arrow > .lp { animation: nudge 1.9s ease-in-out var(--ph, 0s) infinite; }
@@ -267,13 +284,13 @@
         .fig-live.is-loop .flow .pulse { opacity: 1; stroke-width: 8; }
         .fig-live.is-loop .flow .pulse-glow { opacity: .5; stroke-width: 28; }
 
-        .fig-live.is-paused .lp, .fig-live.is-paused .dot { animation-play-state: paused !important; }
-        .fig-live.is-static .fx, .fig-live.is-static .dot, .fig-live.is-static .draw { transition: none !important; }
+        .fig-live.is-paused .lp, .fig-live.is-paused .dot, .fig-live.is-paused .glint { animation-play-state: paused !important; }
+        .fig-live.is-static .fx, .fig-live.is-static .dot, .fig-live.is-static .draw, .fig-live.is-static .rv { transition: none !important; }
 
         @media (prefers-reduced-motion: reduce) {
-            .fig-live .fx, .fig-live .dot, .fig-live .draw { transition: none !important; }
+            .fig-live .fx, .fig-live .dot, .fig-live .draw, .fig-live .rv { transition: none !important; }
             .fig-live .lp, .fig-live .dot { animation: none !important; }
-            .fig-live .pulse, .fig-live .pulse-glow { display: none; }
+            .fig-live .pulse, .fig-live .pulse-glow, .fig-live .glint { display: none; }
         }
 
         /* ---------- matplotlib figures (bars grow, switches slide) ---------- */
@@ -358,16 +375,14 @@
         /* ================================================================
            Results
            ================================================================ */
-        .result { margin-top: clamp(48px, 7vw, 84px); }
-        .result-head { max-width: 760px; margin: 0 auto 18px; text-align: center; }
+        .result { margin: clamp(48px, 7vw, 84px) auto 0; max-width: var(--media); }
+        .result-head { max-width: 820px; margin: 0 0 16px; padding-inline: calc(var(--pad) + 1px); }
         .result-head h3 { font-size: clamp(1.15rem, 2vw, 1.4rem); font-weight: 700; letter-spacing: -.012em; margin: 0 0 .5rem; }
         .takeaway { font-size: 1rem; line-height: 1.6; color: var(--ink-2); margin: 0; }
         .takeaway strong { color: var(--blue); }
-        .result .card-x { max-width: 920px; margin-inline: auto; }
-        .result .card-x .fig-anim { max-width: 860px; margin-inline: auto; }
 
-        details.more { max-width: 760px; margin: 14px auto 0; text-align: center; }
-        details.more .more-body { text-align: left; }
+        details.more { margin: 12px 0 0; padding-inline: calc(var(--pad) + 1px); }
+        details.more .more-body { max-width: 780px; }
         details.more summary {
             list-style: none; cursor: pointer; display: inline-flex; align-items: center; gap: .45rem;
             font-size: .85rem; font-weight: 600; color: var(--muted); padding: .35rem .2rem; border-radius: 8px;
@@ -382,9 +397,10 @@
         details.more[open] summary::before { transform: rotate(45deg); }
         details.more summary:hover { color: var(--blue); }
         details.more .more-body { font-size: .95rem; line-height: 1.7; color: var(--ink-2); padding: .4rem 0 0 1.6rem; }
+        .result details.more, .sec > .wrap > details.more { max-width: var(--media); margin-inline: auto; }
         details.more .more-body p { margin: 0 0 .8rem; }
 
-        .stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; max-width: 920px; margin: 0 auto; }
+        .stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; max-width: var(--media); margin: 0 auto; }
         .stat { border: 1px solid var(--line); border-radius: 16px; background: #fff; padding: 18px 18px 16px; box-shadow: var(--sh-1); }
         .stat-lab { font-size: .76rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin-bottom: 10px; }
         .stat-lab span { font-weight: 600; letter-spacing: 0; text-transform: none; }
@@ -406,31 +422,41 @@
         /* ================================================================
            Demo deck
            ================================================================ */
-        .deck-tabs { display: flex; flex-wrap: wrap; align-items: center; gap: .45rem; margin-bottom: 1rem; }
+        /* embodiments on top; the open one's shelves sit in a bubble that points back at it */
+        .deck-tabs { display: flex; flex-wrap: wrap; gap: .5rem; }
         .deck-tab {
-            font-size: .84rem; padding: .42rem .9rem; border-radius: 999px; border: 1px solid var(--line);
-            background: #fff; color: var(--muted); cursor: pointer; white-space: nowrap; box-shadow: var(--sh-1);
-            transition: background .15s, color .15s, border-color .15s;
+            display: inline-flex; align-items: center; gap: .5rem;
+            font-size: .9rem; font-weight: 600; padding: .5rem 1.05rem; border-radius: 999px;
+            border: 1px solid var(--line); background: #fff; color: var(--ink-2); cursor: pointer; white-space: nowrap;
+            box-shadow: var(--sh-1); transition: background .2s, color .2s, border-color .2s, box-shadow .2s;
         }
         .deck-tab:hover { border-color: rgba(0, 113, 188, .35); color: var(--ink); }
-        .deck-tab.is-on { background: var(--ink); border-color: var(--ink); color: #fff; }
-        .deck-tab .n { opacity: .6; margin-left: .38rem; font-variant-numeric: tabular-nums; }
-        .deck-subgroup {
-            display: inline-flex; align-items: center; gap: .25rem; padding: .22rem;
-            border-radius: 999px; background: rgba(17, 24, 32, .05); border: 1px solid var(--line);
-            overflow: hidden; white-space: nowrap; min-width: 0;
+        .deck-tab.is-on { background: var(--ink); border-color: var(--ink); color: #fff; box-shadow: 0 10px 20px -12px rgba(17, 24, 32, .6); }
+        .deck-tab .n { font-weight: 500; opacity: .55; font-variant-numeric: tabular-nums; }
+
+        .deck-pop {
+            position: relative; margin: 14px 0 22px; padding: 12px 12px 0;
+            background: #fff; border: 1px solid var(--line); border-radius: 16px;
+            box-shadow: 0 18px 36px -24px rgba(16, 32, 64, .35), var(--sh-1);
         }
-        .deck-fold {
-            display: inline-grid; grid-template-columns: 0fr; opacity: 0; margin-right: -.45rem;
-            transition: grid-template-columns .34s var(--ease), opacity .2s ease, margin-right .34s var(--ease);
+        .deck-caret {
+            position: absolute; top: -7px; left: var(--cx, 64px); width: 14px; height: 14px; margin-left: -7px;
+            background: #fff; border-left: 1px solid var(--line); border-top: 1px solid var(--line);
+            border-top-left-radius: 3px; transform: rotate(45deg); transition: left .42s var(--ease);
         }
-        .deck-fold[data-open="true"] { grid-template-columns: 1fr; opacity: 1; margin-right: 0; }
-        .deck-elbow { display: none; }
-        .deck-sub { font-size: .8rem; padding: .32rem .78rem; border: 0; background: transparent; box-shadow: none; color: var(--muted); }
-        .deck-sub:hover { background: rgba(255, 255, 255, .8); color: var(--ink); }
-        .deck-sub.is-on { background: #fff; color: var(--ink); box-shadow: 0 1px 3px rgba(16, 25, 45, .16); }
-        .deck-sub.is-on .n { color: var(--blue); opacity: 1; }
-        .deck-note { font-size: .92rem; line-height: 1.6; color: var(--muted); margin: 0 0 1.25rem; min-height: 1.6em; }
+        .deck-subgroup { display: flex; flex-wrap: wrap; gap: .4rem; }
+        .deck-subgroup[hidden] { display: none; }
+        .deck-subgroup.pop-in, .deck-note.pop-in { animation: pop-in .38s var(--ease) both; }
+        @keyframes pop-in { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: none; } }
+        .deck-sub {
+            font-size: .85rem; padding: .42rem .85rem; border-radius: 10px; cursor: pointer; white-space: nowrap;
+            border: 1px solid transparent; background: var(--tint); color: var(--ink-2);
+            transition: background .15s, color .15s, border-color .15s;
+        }
+        .deck-sub:hover { border-color: rgba(0, 113, 188, .3); }
+        .deck-sub.is-on { background: rgba(0, 113, 188, .09); border-color: rgba(0, 113, 188, .35); color: var(--blue); }
+        .deck-sub .n { opacity: .6; margin-left: .35rem; font-variant-numeric: tabular-nums; }
+        .deck-note { font-size: .92rem; line-height: 1.6; color: var(--muted); margin: 12px 2px 0; padding: 10px 0 12px; border-top: 1px dashed var(--line); min-height: 1.6em; }
 
         .deck-frame { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: .55rem; }
         .deck-arrow {
@@ -457,12 +483,12 @@
         @keyframes card-in { from { opacity: 0; transform: translateY(14px) scale(.98); } to { opacity: 1; transform: none; } }
         .video-card.card-in { animation: card-in .45s var(--ease) both; animation-delay: calc(var(--i, 0) * 30ms); }
         .clip-task { margin: .5rem 0 0; font-size: .8rem; line-height: 1.45; color: var(--muted); }
-        @media (prefers-reduced-motion: reduce) { .deck-track, .deck-fold { transition: none; } .video-card.card-in { animation: none; } }
+        @media (prefers-reduced-motion: reduce) { .deck-track, .deck-caret { transition: none; } .video-card.card-in, .deck-subgroup.pop-in, .deck-note.pop-in { animation: none; } }
 
         /* ================================================================
            GUMI: the clip sits in a browser window, because that is what it is
            ================================================================ */
-        .browser { max-width: 1000px; margin-inline: auto; border-radius: 16px; overflow: hidden; background: #fff; border: 1px solid var(--line); box-shadow: var(--sh-2); }
+        .browser { max-width: var(--media); margin-inline: auto; border-radius: 16px; overflow: hidden; background: #fff; border: 1px solid var(--line); box-shadow: var(--sh-2); }
         .browser-bar { display: flex; align-items: center; gap: 7px; height: 34px; padding: 0 14px; background: #f3f5f8; border-bottom: 1px solid var(--line); }
         .browser-bar i { width: 10px; height: 10px; border-radius: 50%; background: #dfe3e8; }
         .browser-bar i:nth-child(1) { background: #f0a19f; } .browser-bar i:nth-child(2) { background: #f5cf86; } .browser-bar i:nth-child(3) { background: #a9d59a; }
@@ -513,7 +539,7 @@
            Rows that must stay one line become grids or horizontal scrollers.
            ================================================================ */
         @media (max-width: 640px) {
-            :root { --gutter: 16px; --top: 50px; --r: 14px; }
+            :root { --gutter: 16px; --top: 50px; --r: 14px; --pad: 8px; }
             body { font-size: 15.5px; }
             .sec { padding-block: 56px; }
             .sec-head { margin-bottom: 24px; }
@@ -536,8 +562,8 @@
             .video-frame { padding: 4px; border-radius: 14px; }
             .video-frame video { border-radius: 10px; }
 
-            .card-x { padding: 8px; border-radius: 14px; }
-            .fig-cap { font-size: .84rem; text-align: left; margin-top: .8rem; }
+            .card-x { border-radius: 14px; }
+            .fig-cap { font-size: .84rem; margin-top: .8rem; }
             .card-x { margin-bottom: 0; }
             .fig-tools { opacity: 1; position: static; justify-content: flex-end; margin: 8px 0 0; }
             .tool { height: 28px; padding: 0 .55rem; font-size: .72rem; }
@@ -562,20 +588,19 @@
             .stat-lab { grid-column: 1 / -1; }
             .stat-nums { margin-bottom: 0; }
             .stat-sub { grid-column: 1 / -1; margin-top: 8px; }
-            .result-head { text-align: left; }
             details.more .more-body { padding-left: 0; font-size: .92rem; }
 
-            /* demo deck: embodiments as a two-way switch, shelves as a scroller */
+            /* demo deck: embodiments as a two-way switch, their shelves a sideways scroller in the bubble */
             .deck-tabs { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
-            .deck-tabs > .deck-tab { order: 1; text-align: center; padding: .5rem .4rem; }
-            .deck-fold { order: 2; grid-column: 1 / -1; display: none; margin: 4px 0 0; opacity: 1; transition: none; }
-            .deck-fold[data-open="true"] { display: block; }
+            .deck-tab { justify-content: center; padding: .55rem .4rem; font-size: .84rem; }
+            .deck-pop { padding: 10px 10px 0; margin: 12px 0 18px; }
             .deck-subgroup {
-                display: flex; width: 100%; overflow-x: auto; scrollbar-width: none; border-radius: 12px;
-                -webkit-mask-image: linear-gradient(90deg, #000 calc(100% - 24px), transparent); mask-image: linear-gradient(90deg, #000 calc(100% - 24px), transparent);
+                flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none;
+                -webkit-mask-image: linear-gradient(90deg, #000 calc(100% - 22px), transparent); mask-image: linear-gradient(90deg, #000 calc(100% - 22px), transparent);
             }
             .deck-subgroup::-webkit-scrollbar { display: none; }
-            .deck-sub { flex: none; border-radius: 9px; }
+            .deck-sub { flex: none; font-size: .8rem; padding: .4rem .7rem; }
+            .deck-note { font-size: .86rem; }
             .deck-frame { grid-template-columns: minmax(0, 1fr); }
             .deck-arrow { display: none; }
             .deck-note { font-size: .86rem; }
@@ -1968,7 +1993,7 @@ z
                     <source src="./assets/videos/gumi_rollout.mp4" type="video/mp4">
                 </video>
             </div>
-            <p class="fig-cap">A GUI agent driving the dual-arm robot through GUMI, one action unit per keystroke.</p>
+            <div class="wide"><p class="fig-cap flush">A GUI agent driving the dual-arm robot through GUMI, one action unit per keystroke.</p></div>
         </div>
     </section>
 
@@ -12058,8 +12083,12 @@ z
 
         const deck = document.getElementById("deck");
         deck.innerHTML = `
-          <div class="deck-tabs" id="deckTabs" role="tablist"></div>
-          <p class="deck-note" id="deckNote"></p>
+          <div class="deck-tabs" id="deckTabs" role="tablist" aria-label="Embodiment"></div>
+          <div class="deck-pop" id="deckPop">
+            <span class="deck-caret" aria-hidden="true"></span>
+            <div id="deckSubs"></div>
+            <p class="deck-note" id="deckNote"></p>
+          </div>
           <div class="deck-frame">
             <button class="deck-arrow" id="deckPrev" type="button" aria-label="Previous page">&lsaquo;</button>
             <div class="deck-viewport" id="deckViewport">
@@ -12070,6 +12099,8 @@ z
           <div class="deck-dots" id="deckDots"></div>`;
 
         const tabsBox = document.getElementById("deckTabs");
+        const pop = document.getElementById("deckPop");
+        const subsBox = document.getElementById("deckSubs");
         const noteBox = document.getElementById("deckNote");
         const track = document.getElementById("deckTrack");
         const viewport = document.getElementById("deckViewport");
@@ -12089,19 +12120,20 @@ z
             pump();
         }, { threshold: .25 });
 
-        // The tab row is built once and afterwards only has classes toggled on it,
-        // so switching a shelf never restarts every entrance animation.
-        const tabRefs = { parents: [], folds: [], subs: new Map() };
+        // Built once; afterwards only classes and [hidden] change, so switching a
+        // shelf never restarts the other entrance animations.
+        const tabRefs = { parents: [], groups: [], subs: new Map() };
 
         function buildTabs() {
             tabsBox.innerHTML = "";
+            subsBox.innerHTML = "";
             GROUPS.forEach(([name, subs], gi) => {
                 const total = subs.reduce((t, [k]) => t + countOf(k), 0);
                 const b = document.createElement("button");
                 b.type = "button";
                 b.className = "deck-tab";
                 b.setAttribute("role", "tab");
-                b.innerHTML = `${name}<span class="n">${total}</span>`;
+                b.innerHTML = `<span>${name}</span><span class="n">${total}</span>`;
                 b.addEventListener("click", () => {
                     if (gi === group) return;
                     swapTo(() => { group = gi; cat = GROUPS[gi][1][0][0]; });
@@ -12109,14 +12141,15 @@ z
                 tabsBox.appendChild(b);
                 tabRefs.parents.push(b);
 
-                const fold = document.createElement("span");
-                fold.className = "deck-fold";
-                const box = document.createElement("span");
+                const box = document.createElement("div");
                 box.className = "deck-subgroup";
+                box.setAttribute("role", "tablist");
+                box.setAttribute("aria-label", name);
+                box.hidden = true;
                 for (const [key, label] of subs) {
                     const c = document.createElement("button");
                     c.type = "button";
-                    c.className = "deck-tab deck-sub";
+                    c.className = "deck-sub";
                     c.setAttribute("role", "tab");
                     c.innerHTML = `${label}<span class="n">${countOf(key)}</span>`;
                     c.addEventListener("click", () => {
@@ -12126,11 +12159,21 @@ z
                     box.appendChild(c);
                     tabRefs.subs.set(key, c);
                 }
-                fold.appendChild(box);
-                tabsBox.appendChild(fold);
-                tabRefs.folds.push(fold);
+                subsBox.appendChild(box);
+                tabRefs.groups.push(box);
             });
         }
+
+        // the bubble's caret sits under the middle of the embodiment it belongs to
+        function placeCaret() {
+            const tab = tabRefs.parents[group];
+            if (!tab) return;
+            const t = tab.getBoundingClientRect(), b = pop.getBoundingClientRect();
+            pop.style.setProperty("--cx", `${t.left + t.width / 2 - b.left}px`);
+        }
+        new ResizeObserver(placeCaret).observe(deck);
+
+        const replayPop = el => { el.classList.remove("pop-in"); void el.offsetWidth; el.classList.add("pop-in"); };
 
         function syncTabs() {
             tabRefs.parents.forEach((b, gi) => {
@@ -12138,11 +12181,10 @@ z
                 b.classList.toggle("is-on", on);
                 b.setAttribute("aria-selected", String(on));
             });
-            tabRefs.folds.forEach((f, gi) => {
+            tabRefs.groups.forEach((box, gi) => {
                 const on = gi === group;
-                f.dataset.open = String(on);
-                f.setAttribute("aria-hidden", String(!on));
-                for (const btn of f.querySelectorAll(".deck-sub")) btn.tabIndex = on ? 0 : -1;
+                if (on && box.hidden) { box.hidden = false; replayPop(box); }
+                if (!on) box.hidden = true;
             });
             tabRefs.subs.forEach((btn, key) => {
                 const on = key === cat;
@@ -12150,9 +12192,10 @@ z
                 btn.setAttribute("aria-selected", String(on));
                 if (on && PHONE.matches) {
                     const strip = btn.parentElement;
-                    strip.scrollTo({ left: btn.offsetLeft - 8, behavior: "smooth" });
+                    strip.scrollTo({ left: btn.offsetLeft - strip.offsetLeft - 8, behavior: "smooth" });
                 }
             });
+            placeCaret();
         }
 
         function clipSrc(file) { return `./assets/videos/gallery_2x/${file}`; }
@@ -12216,7 +12259,7 @@ z
         }
 
         function build() {
-            noteBox.innerHTML = CAT_NOTES[cat] || "";
+            if (noteBox.innerHTML !== (CAT_NOTES[cat] || "")) { noteBox.innerHTML = CAT_NOTES[cat] || ""; replayPop(noteBox); }
             renderGrid();
             for (const v of track.querySelectorAll("video")) cardIO.observe(v);
             dotsBox.innerHTML = "";
