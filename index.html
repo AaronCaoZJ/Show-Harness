@@ -436,6 +436,7 @@
         @media (prefers-reduced-motion: reduce) { .unit-chip.flash, .unit-chip.is-on { animation: none; } }
         .unit-desc { margin: 1rem 0 0; min-height: 3.3em; text-align: center; color: var(--muted); font-size: .95rem; line-height: 1.6; }
         .unit-desc code { font-weight: 700; }
+        #interface .result { margin-top: clamp(16px, 2.4vw, 28px); }
 
         /* ================================================================
            Results
@@ -463,6 +464,31 @@
         details.more .more-body { font-size: .95rem; line-height: 1.7; color: var(--ink-2); padding: .5rem 0 0; }
         .result details.more, .sec > .wrap > details.more { max-width: var(--media); margin-inline: auto; }
         details.more .more-body p { margin: 0 0 .8rem; }
+
+        /* the baselines and the paper's main table, inside the results' "More details" */
+        .bl-list { list-style: none; padding: 0; margin: 0 0 14px; display: grid; gap: 6px; }
+        .bl-list li { position: relative; padding-left: 16px; }
+        .bl-list li::before { content: ""; position: absolute; left: 2px; top: .68em; width: 6px; height: 6px; border-radius: 50%; background: var(--sky); }
+        .bl-list b { color: var(--ink); }
+        .tbl-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; border: 1px solid var(--line); border-radius: 12px; background: #fff; margin: 0 0 8px; }
+        .res-table { width: 100%; min-width: 720px; border-collapse: collapse; font-size: .84rem; line-height: 1.35; font-variant-numeric: tabular-nums; }
+        .res-table th, .res-table td { padding: .4rem .55rem; text-align: center; white-space: nowrap; border-bottom: 1px solid rgba(17, 24, 32, .06); }
+        .res-table thead th { font-weight: 700; color: var(--ink); background: #f7f9fb; }
+        .res-table thead tr:first-child th { border-bottom-color: var(--line); }
+        .res-table thead .ours { color: var(--blue); }
+        .res-table th.setting, .res-table tbody th { text-align: left; }
+        .res-table tbody th { font-weight: 500; color: var(--ink-2); background: #fff; }
+        .res-table td.ours { background: rgba(0, 113, 188, .06); color: var(--ink); font-weight: 600; }
+        .res-table tr.grp th { font-weight: 700; color: var(--ink); padding-top: .75rem; }
+        .res-table tr.grp th span { margin-left: .6rem; font-weight: 400; font-style: italic; color: var(--muted); }
+        .res-table tr.avg th, .res-table tr.avg td { font-weight: 700; color: var(--ink); }
+        .res-table .t-blue tr.avg > * { background: #edf3fa; }
+        .res-table .t-yellow tr.avg > * { background: #fdf3ea; }
+        .res-table .t-red tr.avg > * { background: #fbefef; }
+        .res-table tbody tr:last-child > * { border-bottom: 0; }
+        /* the row labels stay put while a narrow screen scrolls the numbers */
+        .res-table th.setting, .res-table tbody th:not([colspan]) { position: sticky; left: 0; z-index: 1; box-shadow: 1px 0 0 var(--line); }
+        .tbl-cap { font-size: .82rem; line-height: 1.55; color: var(--muted); margin: 0 0 12px; }
 
         .stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; max-width: var(--media); margin: 0 auto; }
         .stat { border: 1px solid var(--line); border-radius: 16px; background: #fff; padding: 18px 18px 16px; box-shadow: var(--sh-1); }
@@ -556,7 +582,7 @@
         .browser-bar { display: flex; align-items: center; gap: 7px; height: 34px; padding: 0 14px; background: #f3f5f8; border-bottom: 1px solid var(--line); }
         .browser-bar i { width: 10px; height: 10px; border-radius: 50%; background: #dfe3e8; }
         .browser-bar i:nth-child(1) { background: #f0a19f; } .browser-bar i:nth-child(2) { background: #f5cf86; } .browser-bar i:nth-child(3) { background: #a9d59a; }
-        .browser-bar span { margin-left: 10px; font-size: .74rem; color: var(--muted); font-family: ui-monospace, SFMono-Regular, Menlo, monospace; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .browser-bar span { margin-left: 10px; font-size: .78rem; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         .browser video { display: block; width: 100%; height: auto; }
 
         /* ================================================================
@@ -640,6 +666,7 @@
             .stat-nums { margin-bottom: 0; }
             .stat-sub { grid-column: 1 / -1; margin-top: 8px; }
             details.more .more-body { font-size: .92rem; }
+            .res-table { font-size: .78rem; }
 
             /* demo deck: embodiments as a two-way switch, their shelves a sideways scroller in the bubble */
             .deck-tabs { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
@@ -659,7 +686,7 @@
             .browser { border-radius: 12px; }
             .browser-bar { height: 26px; padding: 0 10px; gap: 5px; }
             .browser-bar i { width: 7px; height: 7px; }
-            .browser-bar span { font-size: .64rem; }
+            .browser-bar span { font-size: .68rem; }
             pre.bibtex { font-size: .74rem; padding: 2.6rem 1rem 1rem; }
         }
     </style>
@@ -2061,8 +2088,48 @@ z
             <details class="more">
                 <summary>More details</summary>
                 <div class="more-body">
-                    <p>Baselines span VLA (&pi;0.5, GR00T), VLA-centric agents (H-VLA, G-VLA) and code-as-policy (CaP-X, RATS).
-                        ZS clears every environment shift at 20/20, including the Teddy and Chess tasks held out from fine-tuning.
+                    <ul class="bl-list">
+                        <li><b>VLA</b> &mdash; &pi;<sub>0.5</sub>, GR00T: map observations and instructions directly to low-level
+                            actions; fine-tuned on end-effector trajectories converted from the same demonstrations as ours.</li>
+                        <li><b>VLA-centric agents</b> &mdash; Harness VLA (H-VLA), Goal-VLA (G-VLA): a VLA stays the physical
+                            executor, with an agentic layer on top for planning, monitoring or intervention.</li>
+                        <li><b>Code-as-policy agents</b> &mdash; CaP-X, RATS: high-level reasoning translated into executable
+                            programs or API calls.</li>
+                    </ul>
+                    <div class="tbl-wrap"><table class="res-table">
+                    <thead><tr><th rowspan="2" class="setting">Setting</th><th colspan="2">VLA</th><th colspan="2">VLA-centric agent</th><th colspan="2">Code-as-policy agent</th><th colspan="2" class="ours">Show-Harness</th></tr>
+                    <tr><th>&pi;<sub>0.5</sub></th><th>GR00T</th><th>H-VLA</th><th>G-VLA</th><th>CaP-X</th><th>RATS</th><th class="ours">ZS</th><th class="ours">FT</th></tr></thead>
+                    <tbody class="t-blue"><tr class="grp"><th colspan="9">Cross-Task<span>10 object&ndash;receptacle tasks; &dagger;: unseen in fine-tuning; 10 trials / task</span></th></tr>
+                    <tr><th>Block &rarr; Plate</th><td>6/10</td><td>5/10</td><td>7/10</td><td>2/10</td><td>5/10</td><td>6/10</td><td class="ours">10/10</td><td class="ours">10/10</td></tr>
+                    <tr><th>Banana &rarr; Plate</th><td>7/10</td><td>7/10</td><td>8/10</td><td>3/10</td><td>8/10</td><td>8/10</td><td class="ours">10/10</td><td class="ours">10/10</td></tr>
+                    <tr><th>Tennis &rarr; Plate</th><td>3/10</td><td>3/10</td><td>3/10</td><td>1/10</td><td>4/10</td><td>6/10</td><td class="ours">8/10</td><td class="ours">8/10</td></tr>
+                    <tr><th>Teddy<sup>&dagger;</sup> &rarr; Plate</th><td>5/10</td><td>4/10</td><td>5/10</td><td>1/10</td><td>4/10</td><td>6/10</td><td class="ours">10/10</td><td class="ours">8/10</td></tr>
+                    <tr><th>Chess<sup>&dagger;</sup> &rarr; Plate</th><td>1/10</td><td>0/10</td><td>3/10</td><td>0/10</td><td>2/10</td><td>4/10</td><td class="ours">10/10</td><td class="ours">9/10</td></tr>
+                    <tr><th>Block &rarr; Bowl</th><td>5/10</td><td>4/10</td><td>6/10</td><td>2/10</td><td>5/10</td><td>5/10</td><td class="ours">10/10</td><td class="ours">10/10</td></tr>
+                    <tr><th>Banana &rarr; Bowl</th><td>6/10</td><td>6/10</td><td>7/10</td><td>2/10</td><td>7/10</td><td>8/10</td><td class="ours">6/10</td><td class="ours">7/10</td></tr>
+                    <tr><th>Tennis &rarr; Bowl</th><td>2/10</td><td>2/10</td><td>3/10</td><td>1/10</td><td>3/10</td><td>5/10</td><td class="ours">7/10</td><td class="ours">8/10</td></tr>
+                    <tr><th>Teddy<sup>&dagger;</sup> &rarr; Bowl</th><td>3/10</td><td>4/10</td><td>5/10</td><td>1/10</td><td>4/10</td><td>5/10</td><td class="ours">8/10</td><td class="ours">7/10</td></tr>
+                    <tr><th>Chess<sup>&dagger;</sup> &rarr; Bowl</th><td>1/10</td><td>0/10</td><td>3/10</td><td>0/10</td><td>2/10</td><td>4/10</td><td class="ours">10/10</td><td class="ours">9/10</td></tr>
+                    <tr class="avg"><th>Average (%)</th><td>39.0</td><td>35.0</td><td>50.0</td><td>13.0</td><td>44.0</td><td>57.0</td><td class="ours">89.0</td><td class="ours">86.0</td></tr>
+                    </tbody>
+                    <tbody class="t-yellow"><tr class="grp"><th colspan="9">Cross-Environment<span>2 tasks (Block or Banana &rarr; Plate); 10 trials / task</span></th></tr>
+                    <tr><th>Background</th><td>11/20</td><td>10/20</td><td>15/20</td><td>4/20</td><td>12/20</td><td>14/20</td><td class="ours">20/20</td><td class="ours">18/20</td></tr>
+                    <tr><th>Lighting</th><td>9/20</td><td>9/20</td><td>14/20</td><td>5/20</td><td>11/20</td><td>13/20</td><td class="ours">20/20</td><td class="ours">19/20</td></tr>
+                    <tr><th>Viewpoint</th><td>10/20</td><td>7/20</td><td>10/20</td><td>2/20</td><td>10/20</td><td>12/20</td><td class="ours">20/20</td><td class="ours">19/20</td></tr>
+                    <tr><th>Distractors</th><td>10/20</td><td>8/20</td><td>12/20</td><td>1/20</td><td>9/20</td><td>13/20</td><td class="ours">20/20</td><td class="ours">19/20</td></tr>
+                    <tr><th>Sim-to-real</th><td>0/20</td><td>0/20</td><td>&ndash;</td><td>&ndash;</td><td>&ndash;</td><td>&ndash;</td><td class="ours">&ndash;</td><td class="ours">13/20</td></tr>
+                    <tr class="avg"><th>Average (%)</th><td>40.0</td><td>34.0</td><td>63.8</td><td>15.0</td><td>52.5</td><td>65.0</td><td class="ours">100.0</td><td class="ours">88.0</td></tr>
+                    </tbody>
+                    <tbody class="t-red"><tr class="grp"><th colspan="9">Cross-Embodiment<span>5 Plate tasks; 10 trials / task on each arm</span></th></tr>
+                    <tr><th>Franka (7-DoF)</th><td>22/50</td><td>19/50</td><td>26/50</td><td>7/50</td><td>23/50</td><td>30/50</td><td class="ours">48/50</td><td class="ours">45/50</td></tr>
+                    <tr><th>AgileX (6-DoF)</th><td>19/50</td><td>17/50</td><td>23/50</td><td>4/50</td><td>20/50</td><td>22/50</td><td class="ours">45/50</td><td class="ours">42/50</td></tr>
+                    <tr class="avg"><th>Average (%)</th><td>41.0</td><td>36.0</td><td>49.0</td><td>11.0</td><td>43.0</td><td>52.0</td><td class="ours">93.0</td><td class="ours">87.0</td></tr>
+                    </tbody>
+                    </table></div>
+                    <p class="tbl-cap">Performance across three levels of generalization on real robots. ZS and FT denote
+                        Show-Harness in zero-shot mode (Gemini-3.1&nbsp;Pro with medium thinking effort) and fine-tuned mode
+                        (Qwen3.5-2B).</p>
+                    <p>ZS clears every environment shift at 20/20, including the Teddy and Chess tasks held out from fine-tuning.
                         Trained only in simulation, FT still transfers to the real robot at 13/20 &mdash; both trainable VLA
                         baselines score 0/20.</p>
                 </div>
