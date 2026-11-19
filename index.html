@@ -92,6 +92,10 @@
             font-weight: 700; letter-spacing: -.022em; line-height: 1.12;
             font-size: clamp(1.6rem, 3.4vw, 2.5rem); margin: 0 0 .9rem;
         }
+        /* the section number leads the title, in the brand blue */
+        .sec-num { color: var(--blue); font-weight: 600; font-variant-numeric: tabular-nums; margin-right: .42em; }
+        /* each figure's prose opens with its claim */
+        .more-text .claim { color: var(--ink); font-weight: 700; }
         .lead-1 { font-size: 1.12rem; line-height: 1.65; color: var(--muted); margin: 0; }   /* fixed: same breaks at every desktop width */
         .sec-head { margin-bottom: clamp(28px, 4vw, 44px); }
         .sec-head.center { text-align: center; }
@@ -845,11 +849,8 @@
     <section class="sec tint" id="interface">
         <div class="wrap">
             <div class="sec-head wide">
-                <div class="eyebrow"><span class="num">01</span></div>
-                <h2 class="sec-title">The Semantic Action Space</h2>
-                <p class="lead-1">Robot control is reformulated into <span class="nw">parameter-free</span> units that a VLM can reason about directly. Each unit
-                is a bare symbol; the interpreter supplies its metric magnitude, so the same vocabulary drives a <span class="nw">7-DoF</span>
-                Franka, a <span class="nw">6-DoF</span> AgileX, and a simulator without changing the model.</p>
+                <h2 class="sec-title"><span class="sec-num">01</span>The Semantic Action Space</h2>
+                <p class="lead-1"><span class="nw">Show-Harness</span> recasts robot control as a small vocabulary of <span class="nw">parameter-free</span> units that a VLM can reason about directly. A unit is a bare symbol; the interpreter supplies its metric magnitude, so the same vocabulary drives a <span class="nw">7-DoF</span> Franka, a <span class="nw">6-DoF</span> AgileX and a simulator without changing the model.</p>
             </div>
             <div class="wide">
                 <div class="unit-rows" id="unitRows">
@@ -868,8 +869,7 @@
                             data-unit="ROTATE_CCW" data-desc="Rotate the end effector one increment counterclockwise about the specified axis.">ROTATE_CCW</button><button type="button" class="unit-chip" aria-pressed="false"
                             data-unit="STILL" data-desc="Hold this arm where it is. Used in dual-arm control, where a single model call drives both arms.">STILL</button></div>
                 </div>
-                <p class="unit-desc" id="unitDesc" aria-live="polite">A unit is a bare symbol &mdash; the interpreter supplies its metric magnitude.
-                Pick one to see what it does.</p>
+                <p class="unit-desc" id="unitDesc" aria-live="polite">Pick a unit to see what it does.</p>
             </div>
             <div class="result">
                 <div class="result-head"><h3>Where does the interface get its leverage?</h3></div>
@@ -2008,8 +2008,7 @@ z
                     </div>
                     <figcaption class="fig-cap">(a) Ablation on <span class="nw">action-space</span> representation. (b) Action mappings inferred under setting (D) over 20 episodes, where the model probes unknown symbols and infers their effects from observation changes.</figcaption>
                 </figure>
-                <p class="takeaway">Conventions carry most of the grounding: with the convention spelled out, arbitrary symbols <code>A</code>&ndash;<code>F</code> reach 95% against 100% for the default. The names alone, unexplained, still reach 90% &mdash; a useful prior.</p>
-                <div class="more-text"><p>Remove both and the agent has to probe for the mapping &mdash; success collapses to <strong>5%</strong>, with 19 of 20 episodes timing out. Asked to write that mapping down (b), the model gets 23.3% of six directions right against a 16.7% chance rate, and 11 of 20 trials mirror left and right. The interface is not decoration around the action space; it <em>is</em> the action space.</p></div>
+                <div class="more-text"><p><strong class="claim">Conventions carry most of the grounding.</strong> With the convention spelled out, arbitrary symbols <code>A</code>&ndash;<code>F</code> reach 95% against 100% for the default, and the names alone, unexplained, still reach 90% &mdash; a useful prior. Remove both and the agent has to probe for the mapping: success collapses to 5%, with 19 of 20 episodes timing out, and asked to write the mapping down (b), the model gets 23.3% of six directions right against a 16.7% chance rate, with 11 of 20 trials mirroring left and right. The interface is not decoration around the action space; it <em>is</em> the action space.</p></div>
             </div>
         </div>
     </section>
@@ -2018,8 +2017,7 @@ z
     <section class="sec" id="harness">
         <div class="wrap">
             <div class="sec-head wide">
-                <div class="eyebrow"><span class="num">02</span></div>
-                <h2 class="sec-title">Inside the Harness</h2>
+                <h2 class="sec-title"><span class="sec-num">02</span>Inside the Harness</h2>
                 <p class="lead-1">Each step closes the loop: plugins assemble the context, the VLM emits one semantic action unit,
                     and the interpreter grounds it into motion.</p>
             </div>
@@ -2039,8 +2037,7 @@ z
     <section class="sec tint" id="demos">
         <div class="wrap">
             <div class="sec-head wide">
-                <div class="eyebrow"><span class="num">03</span></div>
-                <h2 class="sec-title">Real-Robot Demonstrations<span class="title-note">2&times; speed</span></h2>
+                <h2 class="sec-title"><span class="sec-num">03</span>Real-Robot Demonstrations<span class="title-note">2&times; speed</span></h2>
             </div>
             <div class="wide" id="deck"></div>
         </div>
@@ -2050,11 +2047,8 @@ z
     <section class="sec" id="gumi">
         <div class="wrap">
             <div class="sec-head wide">
-                <div class="eyebrow"><span class="num">04</span></div>
-                <h2 class="sec-title">GUMI &mdash; Collecting Demonstrations by Playing</h2>
-                <p class="lead-1">Every action unit is a labeled key, so demonstrating a task amounts to playing the robot. A human at
-                the keyboard and a GUI agent reading the same screen drive the robot identically, and every recorded
-                step is a ready training pair &mdash; no specialized teleoperation hardware required.</p>
+                <h2 class="sec-title"><span class="sec-num">04</span>GUMI &mdash; Collecting Demonstrations by Playing</h2>
+                <p class="lead-1">Because every action unit is a labeled key, demonstrating a task is simply playing the robot. A human at the keyboard and a GUI agent reading the same screen drive it identically, and every recorded step is a <span class="nw">ready-made</span> training pair &mdash; no specialized teleoperation hardware required.</p>
             </div>
             <div class="browser reveal">
                 <div class="browser-bar"><i></i><i></i><i></i><span>GUMI &middot; GUI Manipulation Interface</span></div>
@@ -2070,14 +2064,11 @@ z
     <section class="sec tint" id="results">
         <div class="wrap">
             <div class="sec-head wide">
-                <div class="eyebrow"><span class="num">05</span></div>
-                <h2 class="sec-title">Results</h2>
+                <h2 class="sec-title"><span class="sec-num">05</span>Results</h2>
             </div>
             <div class="result first">
                 <div class="result-head"><h3>Generalization across tasks, environments, and embodiments</h3></div>
-                <div class="more-text before"><p>Two routes, one interface: a <span class="nw">zero-shot</span> agent (ZS) on <span class="nw">Gemini-3.1</span>&nbsp;Pro, and a <span class="nw">fine-tuned</span> <span class="nw">Qwen3.5-2B</span> (FT).
-                Both beat all three baseline families &mdash; VLA (&pi;0.5, GR00T), <span class="nw">VLA-centric</span> agents (<span class="nw">H-VLA</span>, <span class="nw">G-VLA</span>)
-                and <span class="nw">code-as-policy</span> (<span class="nw">CaP-X</span>, RATS).</p></div>
+                <div class="more-text before"><p>One interface, two routes: a <span class="nw">zero-shot</span> agent (ZS) on <span class="nw">Gemini-3.1</span>&nbsp;Pro, and <span class="nw">Qwen3.5-2B</span> <span class="nw">fine-tuned</span> on the same interface (FT). Both outperform all three baseline families &mdash; VLA (&pi;0.5, GR00T), <span class="nw">VLA-centric</span> agents (<span class="nw">H-VLA</span>, <span class="nw">G-VLA</span>) and <span class="nw">code-as-policy</span> agents (<span class="nw">CaP-X</span>, RATS).</p></div>
             </div>
             <div class="stats armed" id="stats">
                 <div class="stat">
@@ -2111,9 +2102,7 @@ z
                 </div>
             </div>
             <div class="result-tail wide">
-                <div class="more-text"><p>ZS clears every environment shift at 20/20, including the Teddy and Chess tasks held out from <span class="nw">fine-tuning.</span>
-                Trained only in simulation, FT still transfers to the real robot at 13/20 &mdash; both trainable VLA
-                baselines score 0/20.</p></div>
+                <div class="more-text"><p>ZS clears every environment shift at 20/20, and both routes stay ahead on Teddy and Chess, which <span class="nw">fine-tuning</span> never sees. Trained only in simulation, FT still transfers to the real robot at 13/20 &mdash; both trainable VLA baselines score 0/20.</p></div>
             </div>
             <details class="more">
                 <summary>More details</summary>
@@ -5761,15 +5750,7 @@ z
                     </div>
                     <figcaption class="fig-cap">Capability analysis of <span class="nw">Show-Harness</span> across physical (<img class="cap-icon" src="./assets/images/icon_hand.png" alt="hand icon">) and semantic (<img class="cap-icon" src="./assets/images/icon_brain.png" alt="brain icon">) adaptability.</figcaption>
                 </figure>
-                <p class="takeaway">Adapting to a new physical demand is a change to the <em>interpreter</em>, not to the model &mdash;
-                a smaller step, an extra unit, a joint prediction over two arms.</p>
-                <div class="more-text"><p><strong>Physical.</strong> A 1&nbsp;cm interpreter step lifts ZS 60%&nbsp;&rarr;&nbsp;80% and FT
-                40%&nbsp;&rarr;&nbsp;65% with no retraining, where &pi;0.5 needs its entire budget on <span class="nw">fine-grained</span> data
-                to reach 60%. Rotation units extrapolate to an unseen 90&deg; (ZS 10/10, &pi;0.5 20%), and joint
-                <span class="nw">dual-arm</span> prediction lifts the average 50%&nbsp;&rarr;&nbsp;80% while removing every collision.
-                <br><br>
-                <strong>Semantic.</strong> Situated Planning takes ZS to 85% where FT alone gets 10%. A single video
-                demonstration has ZS follow the demonstrated order 20/20, against 20% with nothing to watch.</p></div>
+                <div class="more-text"><p><strong class="claim">A new physical demand is met in the interpreter, not the model</strong> &mdash; a smaller step, an extra unit, a joint prediction over two arms. A 1&nbsp;cm step lifts ZS from 60% to 80% and FT from 40% to 65% with no retraining, where &pi;0.5 needs its entire budget of <span class="nw">fine-grained</span> data to reach 60%. Rotation units extrapolate to an unseen 90&deg; (ZS 10/10, &pi;0.5 20%), and joint <span class="nw">dual-arm</span> prediction lifts the average from 50% to 80% while removing every collision.</p><p><strong class="claim">A semantic demand is met in context.</strong> Situated Planning takes ZS to 85% where FT alone gets 10%, and a single video demonstration has ZS follow the demonstrated order 20/20, against 20% with nothing to watch.</p></div>
             </div>
             <div class="result">
                 <div class="result-head"><h3>Frontier VLM choice and thinking effort</h3></div>
@@ -7174,13 +7155,7 @@ z
                     </div>
                     <figcaption class="fig-cap">Effect of frontier VLM choice and thinking effort.</figcaption>
                 </figure>
-                <p class="takeaway">Among frontier VLMs with strong reasoning, <span class="nw">zero-shot</span> robot control is limited by
-                <strong><span class="nw">fine-grained</span> spatial grounding</strong>, not by language understanding or planning.</p>
-                <div class="more-text"><p>Five frontier VLMs under one harness split into two tiers: <span class="nw">Gemini-3.1</span>&nbsp;Pro, <span class="nw">GPT-5.6-sol</span> and Opus&nbsp;5
-                at 86&ndash;96%, <span class="nw">GPT-5.6-luna</span> and <span class="nw">Gemini-3.6-flash</span> at 72&ndash;78%. Thinking effort mainly shortens
-                episodes &mdash; 37 to 30 steps for <span class="nw">GPT-5.6-sol</span>, at 3.4&times; the <span class="nw">wall-clock.</span> Planning is not the gap:
-                instruction following (&ge;98%) and subtask plans (&ge;97%) are <span class="nw">near-saturated</span> everywhere, while empty
-                grasps climb from 6% to 26% down the ranking. The models miss on the centimetres.</p></div>
+                <div class="more-text"><p><strong class="claim">Among frontier VLMs with strong reasoning, <span class="nw">zero-shot</span> control is limited by <span class="nw">fine-grained</span> spatial grounding, not by language understanding or planning.</strong> Five of them under one harness split into two tiers: <span class="nw">Gemini-3.1</span>&nbsp;Pro, <span class="nw">GPT-5.6-sol</span> and Opus&nbsp;5 at 86&ndash;96%, and <span class="nw">GPT-5.6-luna</span> and <span class="nw">Gemini-3.6-flash</span> at 72&ndash;78%. Instruction following (&ge;98%) and subtask plans (&ge;97%) are <span class="nw">near-saturated</span> everywhere, while empty grasps climb from 6% to 26% down the ranking &mdash; the models miss on the centimetres. Raising the thinking effort mainly shortens episodes &mdash; from 37 to 30 steps for <span class="nw">GPT-5.6-sol</span> &mdash; and costs 3.4&times; the <span class="nw">wall-clock</span> time.</p></div>
             </div>
             <div class="result">
                 <div class="result-head"><h3>Fine-tuned backbone scaling</h3></div>
@@ -8831,13 +8806,7 @@ L 108 36
                     </div>
                     <figcaption class="fig-cap">(a) Effect of <span class="nw">fine-tuned</span> backbone scaling over the five Plate tasks; bubble area is proportional to parameter count. (b) Three Qwen3.5 capacities across <span class="nw">fine-grained</span> tasks.</figcaption>
                 </figure>
-                <p class="takeaway">Above 2B, capacity buys precision and costs latency &mdash; and on a moving target the latency wins.</p>
-                <div class="more-text"><p>Success is flat from 2B up &mdash; Qwen3.5 at 2B/4B/9B and InternVL3.5 at 2B/8B all within four points
-                (88&ndash;92%). The two smallest backbones emit valid units but hesitate, stretching episodes from 37.6
-                to 57.8 steps at 72&ndash;74%. Capacity pays where precision is the bottleneck: stacking and peg
-                insertion go 50%&nbsp;&rarr;&nbsp;65%&nbsp;&rarr;&nbsp;75% from 0.8B to 9B. The one reversal is the
-                rolling tennis ball, where 2B (80%) beats 0.8B (70%) and 9B (60%) &mdash; at 79&nbsp;ms per decision
-                the 9B model cannot track a moving target, against 39&nbsp;ms for 2B.</p></div>
+                <div class="more-text"><p><strong class="claim">Above 2B, capacity buys precision and costs latency &mdash; and on a moving target, latency wins.</strong> Success is flat from 2B up: Qwen3.5 at 2B/4B/9B and InternVL3.5 at 2B/8B all land within four points (88&ndash;92%), while the two smallest backbones emit valid units but hesitate, stretching episodes from 37.6 to 57.8 steps at 72&ndash;74%. Capacity pays where precision is the bottleneck: stacking and peg insertion rise from 50% to 65% to 75% between 0.8B and 9B. The rolling tennis ball reverses the order &mdash; 2B (80%) beats 0.8B (70%) and 9B (60%), because at 79&nbsp;ms per decision the 9B model cannot track a moving target, against 39&nbsp;ms for 2B.</p></div>
             </div>
             <div class="result">
                 <div class="result-head"><h3>Harness plugin ablations</h3></div>
@@ -11614,15 +11583,7 @@ z
                     </div>
                     <figcaption class="fig-cap">Plugin ablations on the real Franka arm using <span class="nw">Gemini-3.1</span> Pro as a <span class="nw">zero-shot</span> agent.</figcaption>
                 </figure>
-                <p class="takeaway">Default plugins buy raw success; optional ones buy reach on the cases that need them, at no cost to
-                the rest.</p>
-                <div class="more-text"><p>Removing one default plugin at a time from the full 96% configuration: <strong><span class="nw">Multi-View</span> Guidance</strong>
-                is worth 38 points, <strong>Subtask Planning</strong> 36, <strong>Proprioception</strong> 28,
-                <strong>Failure Recovery</strong> 24, and <strong>Action History</strong> 20 while cutting 23% of the
-                steps. The rest trade cost for reach: <strong>Action Chunking</strong> holds 96% with 19% fewer VLM
-                calls, and <strong>Adaptive Step</strong> reaches 96% in 30 steps, beating a fine 2&nbsp;cm step (82%)
-                and a coarse 4&nbsp;cm one (70%). <strong>Visual Prompt</strong> and <strong>Situated Planning</strong>
-                stay off by default, each lifting its target case from 35% to 85%.</p></div>
+                <div class="more-text"><p><strong class="claim">Default plugins buy raw success; optional ones buy reach on the cases that need them, at no cost to the rest.</strong> Removing one default plugin at a time from the full 96% configuration costs 38 points for <span class="nw">Multi-View</span> Guidance, 36 for Subtask Planning, 28 for Proprioception, 24 for Failure Recovery and 20 for Action History, which also cuts 23% of the steps. The others trade cost for reach: Action Chunking holds 96% with 19% fewer VLM calls, and Adaptive Step reaches 96% in 30 steps, beating a fine 2&nbsp;cm step (82%) and a coarse 4&nbsp;cm one (70%). Visual Prompt and Situated Planning stay off by default, each lifting its target case from 35% to 85%.</p></div>
             </div>
         </div>
     </section>
@@ -12102,23 +12063,12 @@ z
 
         // What each shelf is evidence for, tied to the rows it comes from in the paper.
         const CAT_NOTES = {
-            f_table: "The Cross-Task rows: ten object&ndash;receptacle pairings on the Franka, including Teddy and " +
-                     "Chess, which are never seen in fine-tuning. Zero-shot averages 89% here and the fine-tuned " +
-                     "2B model 86%, against 57% for the strongest baseline.",
-            f_long:  "Episodes that run for hundreds of units rather than a dozen. Subtask state and failure " +
-                     "recovery live in the harness, so a mis-grasp is retried instead of ending the run &mdash; " +
-                     "14 of 50 zero-shot episodes succeed only after such a retry.",
-            f_env:   "The Cross-Environment rows: a changed backdrop, dimmed light, and a table crowded with " +
-                     "objects the task never mentions. Nothing is retrained between them; zero-shot holds 100% " +
-                     "and the fine-tuned model 88%.",
-            a_table: "The Cross-Embodiment rows. Same vocabulary, same model, same prompts as the Franka &mdash; " +
-                     "only the interpreter is swapped for a 6-DoF arm. Zero-shot scores 45/50 and the fine-tuned " +
-                     "model 42/50 across the five Plate tasks.",
-            a_dual:  "Both arms are decided in one model call, sharing the vocabulary plus <code>STILL</code> to " +
-                     "hold an arm in place. Joint prediction lifts the dual-arm average from 50% to 80% and " +
-                     "removes all four collisions that two independent agents produce.",
-            a_wild:  "Outside the lab, with no new data and no re-tuning: an office whiteboard, an open-air deck, " +
-                     "uncontrolled light and background.",
+            f_table: "Cross-task: ten object&ndash;receptacle pairings on the Franka, including Teddy and Chess, which fine-tuning never sees. Zero-shot averages 89% and the fine-tuned 2B model 86%, against 57% for the strongest baseline.",
+            f_long: "Long-horizon episodes run for hundreds of units rather than a dozen. Subtask state and failure recovery live in the harness, so a mis-grasp is retried instead of ending the run &mdash; 14 of 50 zero-shot episodes succeed only after such a retry.",
+            f_env: "Cross-environment: a changed backdrop, dimmed light, and a table crowded with objects the task never mentions. Nothing is retrained between them; zero-shot holds 100% and the fine-tuned model 88%.",
+            a_table: "Cross-embodiment: the same vocabulary, model and prompts as on the Franka &mdash; only the interpreter is swapped for the 6-DoF arm. Zero-shot scores 45/50 and the fine-tuned model 42/50 across the five Plate tasks.",
+            a_dual: "One model call decides both arms, with the same vocabulary plus <code>STILL</code> to hold an arm in place. Joint prediction lifts the dual-arm average from 50% to 80% and removes all four collisions that two independent agents produce.",
+            a_wild: "Outside the lab, with no new data and no re-tuning: an office whiteboard, an open-air deck, uncontrolled light and background.",
         };
 
         const PER_PAGE = 16;
