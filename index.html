@@ -35,8 +35,9 @@
             --r: 18px;
             --gutter: 24px;
             --top: 56px;
-            --media: 960px;                          /* every figure, card and grid shares this width */
-            --measure: 760px;                        /* running prose that is read, not scanned: abstract, BibTeX */
+            --media: 820px;                          /* figures, captions and text: the old page's text column */
+            --media-wide: 940px;                     /* video: the main clip, the demo deck, GUMI (old page's container) */
+            --measure: 700px;                        /* abstract and BibTeX: the old page's figure width */
             --pad: clamp(10px, 2vw, 22px);           /* card padding: captions indent by it to meet the picture */
         }
 
@@ -54,11 +55,18 @@
 
         h1, h2, h3 { color: var(--ink); text-wrap: balance; }
         p { text-wrap: pretty; }
+        /* Short blocks (one to a few lines) are balanced, so a caption that runs a few words
+           past one line breaks into two even lines instead of leaving those words alone on the
+           second. Longer running text stays full-measure; pretty only keeps it off a one-word last line. */
+        .fig-cap, .lead-1, .takeaway, .tbl-cap, .unit-desc, .deck-note, .bl-list li, .stat-sub { text-wrap: balance; }
+        .more-text p, .abstract-text { text-wrap: pretty; }
+        .nw { white-space: nowrap; }   /* a hyphenated compound in a short block stays on one line */
         a { color: var(--blue); }
         code { color: var(--blue); font-size: .9em; }
 
         .wrap { max-width: 1120px; margin-inline: auto; padding-inline: var(--gutter); }
         .wide { max-width: var(--media); margin-inline: auto; }
+        .wide-x { max-width: var(--media-wide); margin-inline: auto; }
         .narrow { max-width: var(--measure); margin-inline: auto; }
 
         .sec { padding-block: clamp(64px, 9vw, 112px); position: relative; }
@@ -180,7 +188,7 @@
 
         .hero-media { margin-top: clamp(40px, 6vw, 64px); }
         .video-frame {
-            position: relative; max-width: var(--media); margin-inline: auto; border-radius: 20px; padding: 8px;
+            position: relative; max-width: var(--media-wide); margin-inline: auto; border-radius: 20px; padding: 8px;
             background: rgba(255, 255, 255, .7); border: 1px solid rgba(255, 255, 255, .9);
             box-shadow: var(--sh-2), 0 0 0 1px var(--line);
             -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
@@ -497,7 +505,7 @@
         .stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; max-width: var(--media); margin: 0 auto; }
         .stat { border: 1px solid var(--line); border-radius: 16px; background: #fff; padding: 18px 18px 16px; box-shadow: var(--sh-1); }
         .stat-lab { font-size: .76rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin-bottom: 10px; }
-        .stat-lab span { font-weight: 600; letter-spacing: 0; text-transform: none; }
+        .stat-lab span { display: block; margin-top: 3px; font-weight: 600; letter-spacing: 0; text-transform: none; }
         .stat-nums { display: flex; align-items: baseline; gap: .55rem; margin-bottom: 12px; }
         .stat-num { font-size: clamp(1.7rem, 3vw, 2.15rem); font-weight: 800; letter-spacing: -.03em; color: var(--ink); line-height: 1; font-variant-numeric: tabular-nums; }
         .stat-num small { font-size: .55em; font-weight: 700; color: var(--muted); margin-left: 1px; }
@@ -582,7 +590,7 @@
         /* ================================================================
            GUMI: the clip sits in a browser window, because that is what it is
            ================================================================ */
-        .browser { max-width: var(--media); margin-inline: auto; border-radius: 16px; overflow: hidden; background: #fff; border: 1px solid var(--line); box-shadow: var(--sh-2); }
+        .browser { max-width: var(--media-wide); margin-inline: auto; border-radius: 16px; overflow: hidden; background: #fff; border: 1px solid var(--line); box-shadow: var(--sh-2); }
         .browser-bar { display: flex; align-items: center; gap: 7px; height: 34px; padding: 0 14px; background: #f3f5f8; border-bottom: 1px solid var(--line); }
         .browser-bar i { width: 10px; height: 10px; border-radius: 50%; background: #dfe3e8; }
         .browser-bar i:nth-child(1) { background: #f0a19f; } .browser-bar i:nth-child(2) { background: #f5cf86; } .browser-bar i:nth-child(3) { background: #a9d59a; }
@@ -772,8 +780,8 @@
                         <noscript><img src="./assets/images/top_demo.svg" alt="Show-Harness in the open world"></noscript>
                     </div>
                 </div>
-                <figcaption class="fig-cap">One interface across scenes, tasks and embodiments &mdash; frontier VLMs zero-shot, or the same
-                    interface fine-tuned onto open-source backbones at 12&ndash;33&nbsp;Hz.</figcaption>
+                <figcaption class="fig-cap">One interface across scenes, tasks and embodiments &mdash; frontier VLMs <span class="nw">zero-shot</span>, or the same
+                    interface <span class="nw">fine-tuned</span> onto <span class="nw">open-source</span> backbones at 12&ndash;33&nbsp;Hz.</figcaption>
             </figure>
         </div>
     </section>
@@ -815,7 +823,7 @@
                     </div>
                 </div>
                 <figcaption class="fig-cap">A VLM becomes a situated agent: it reasons and acts through semantic action units that
-                    embodiment-specific interpreters ground into robot motion.</figcaption>
+                    <span class="nw">embodiment-specific</span> interpreters ground into robot motion.</figcaption>
             </figure>
         </div>
     </section>
@@ -826,7 +834,7 @@
             <div class="sec-head wide">
                 <div class="eyebrow"><span class="num">01</span>Interface</div>
                 <h2 class="sec-title">The Semantic Action Space</h2>
-                <p class="lead-1">Parameter-free units a VLM reasons about directly. The interpreter supplies each unit&rsquo;s
+                <p class="lead-1"><span class="nw">Parameter-free</span> units a VLM reasons about directly. The interpreter supplies each unit&rsquo;s
                     magnitude, so one vocabulary drives a Franka, an AgileX and a simulator.</p>
             </div>
 
@@ -2021,18 +2029,18 @@ z
     <!-- ================= 03 DEMOS ================= -->
     <section class="sec tint" id="demos">
         <div class="wrap">
-            <div class="sec-head wide">
+            <div class="sec-head wide-x">
                 <div class="eyebrow"><span class="num">03</span>Demos<span class="tag">2&times; speed</span></div>
                 <h2 class="sec-title">Real-Robot Demonstrations</h2>
             </div>
-            <div class="wide" id="deck"></div>
+            <div class="wide-x" id="deck"></div>
         </div>
     </section>
 
     <!-- ================= 04 GUMI ================= -->
     <section class="sec" id="gumi">
         <div class="wrap">
-            <div class="sec-head wide">
+            <div class="sec-head wide-x">
                 <div class="eyebrow"><span class="num">04</span>GUMI</div>
                 <h2 class="sec-title">Collecting Demonstrations by Playing</h2>
                 <p class="lead-1">Every action unit is a labeled key: a human and a GUI agent drive the robot the same way, and
@@ -2044,7 +2052,7 @@ z
                     <source src="./assets/videos/gumi_rollout.mp4" type="video/mp4">
                 </video>
             </div>
-            <div class="wide"><p class="fig-cap flush">A GUI agent driving the dual-arm robot through GUMI, one action unit per keystroke.</p></div>
+            <div class="wide-x"><p class="fig-cap flush">A GUI agent driving the <span class="nw">dual-arm</span> robot through GUMI, one action unit per keystroke.</p></div>
         </div>
     </section>
 
@@ -2054,13 +2062,13 @@ z
             <div class="sec-head wide">
                 <div class="eyebrow"><span class="num">05</span>Results</div>
                 <h2 class="sec-title">Generalization across tasks, environments, and embodiments</h2>
-                <p class="lead-1">Two routes, one interface &mdash; a zero-shot agent (ZS) on Gemini-3.1&nbsp;Pro and a fine-tuned
-                    Qwen3.5-2B (FT) both beat VLA, VLA-centric agent and code-as-policy baselines.</p>
+                <p class="lead-1">Two routes, one interface &mdash; a <span class="nw">zero-shot</span> agent (ZS) on <span class="nw">Gemini-3.1</span>&nbsp;Pro and a <span class="nw">fine-tuned</span>
+                    <span class="nw">Qwen3.5-2B</span> (FT) both beat VLA, <span class="nw">VLA-centric</span> agent and <span class="nw">code-as-policy</span> baselines.</p>
             </div>
 
             <div class="stats armed" id="stats">
                 <div class="stat">
-                    <div class="stat-lab">Cross-task <span>&middot; 10 tasks</span></div>
+                    <div class="stat-lab">Cross-task <span>10 tasks</span></div>
                     <div class="stat-nums"><span class="stat-num zs" data-count="89">89<small>%</small></span><span class="sep">/</span><span class="stat-num ft" data-count="86">86<small>%</small></span></div>
                     <div class="bars">
                         <div class="bar zs"><span>ZS</span><i><b style="--v:89%"></b></i></div>
@@ -2069,7 +2077,7 @@ z
                     </div>
                 </div>
                 <div class="stat">
-                    <div class="stat-lab">Cross-environment <span>&middot; 4 shifts</span></div>
+                    <div class="stat-lab">Cross-environment <span>4 shifts</span></div>
                     <div class="stat-nums"><span class="stat-num zs" data-count="100">100<small>%</small></span><span class="sep">/</span><span class="stat-num ft" data-count="88">88<small>%</small></span></div>
                     <div class="bars">
                         <div class="bar zs"><span>ZS</span><i><b style="--v:100%"></b></i></div>
@@ -2078,7 +2086,7 @@ z
                     <div class="stat-sub">background, lighting, viewpoint, distractors</div>
                 </div>
                 <div class="stat">
-                    <div class="stat-lab">Cross-embodiment <span>&middot; Franka + AgileX</span></div>
+                    <div class="stat-lab">Cross-embodiment <span>Franka + AgileX</span></div>
                     <div class="stat-nums"><span class="stat-num zs" data-count="93">93<small>%</small></span><span class="sep">/</span><span class="stat-num ft" data-count="87">87<small>%</small></span></div>
                     <div class="bars">
                         <div class="bar zs"><span>ZS</span><i><b style="--v:93%"></b></i></div>
@@ -2129,8 +2137,8 @@ z
                     </tbody>
                     </table></div>
                     <p class="tbl-cap">Performance across three levels of generalization on real robots. ZS and FT denote
-                        Show-Harness in zero-shot mode (Gemini-3.1&nbsp;Pro with medium thinking effort) and fine-tuned mode
-                        (Qwen3.5-2B).</p>
+                        <span class="nw">Show-Harness</span> in <span class="nw">zero-shot</span> mode (<span class="nw">Gemini-3.1</span>&nbsp;Pro with medium thinking effort) and <span class="nw">fine-tuned</span> mode
+                        (<span class="nw">Qwen3.5-2B</span>).</p>
                     <p>ZS clears every environment shift at 20/20, including the Teddy and Chess tasks held out from fine-tuning.
                         Trained only in simulation, FT still transfers to the real robot at 13/20 &mdash; both trainable VLA
                         baselines score 0/20.</p>
@@ -5748,8 +5756,8 @@ z
             <article class="result">
                 <div class="result-head">
                     <h3>Frontier VLM choice and thinking effort</h3>
-                    <p class="takeaway">Among frontier VLMs with strong reasoning, zero-shot robot control is limited by
-                        <strong>fine-grained spatial grounding</strong>, not by language understanding or planning.</p>
+                    <p class="takeaway">Among frontier VLMs with strong reasoning, <span class="nw">zero-shot</span> robot control is limited by
+                        <strong><span class="nw">fine-grained</span> spatial grounding</strong>, not by language understanding or planning.</p>
                 </div>
                 <div class="card-x reveal">
                     <div class="fig-anim">
@@ -11942,6 +11950,46 @@ z
                 chip.addEventListener("mouseleave", () => paint(pinned));
                 chip.addEventListener("blur", () => paint(pinned));
             });
+        })();
+
+        /* ---------------- no stranded last lines in running text ----------------
+           Short blocks are balanced in CSS. Longer paragraphs keep their full measure,
+           so here, only when one ends on a line under 30% of the column, its last
+           few words are tied with no-break spaces and travel down together. Re-checked
+           on resize, from the original text each time. */
+        (() => {
+            const paras = [...document.querySelectorAll(".more-text p, .bl-list li")];
+            const tail = el => {
+                const r = document.createRange(); r.selectNodeContents(el);
+                const rows = [];
+                for (const q of r.getClientRects()) {
+                    if (q.width < 1) continue;
+                    const row = rows.find(x => Math.abs(x.top - q.top) < 6);
+                    if (row) { row.l = Math.min(row.l, q.left); row.r = Math.max(row.r, q.right); }
+                    else rows.push({ top: q.top, l: q.left, r: q.right });
+                }
+                if (rows.length < 2) return 1;
+                rows.sort((a, b) => a.top - b.top);
+                const w = rows.map(x => x.r - x.l);
+                return w[w.length - 1] / Math.max(...w);
+            };
+            const lastText = el => { let n = el.lastChild; while (n && n.nodeType !== 3) n = n.lastChild || n.previousSibling; return n; };
+            const fix = () => {
+                for (const el of paras) {
+                    const t = lastText(el);
+                    if (!t) continue;
+                    if (t.__orig === undefined) t.__orig = t.nodeValue;
+                    t.nodeValue = t.__orig;
+                    for (let k = 2; k <= 5 && tail(el) < .3; k++) {
+                        const words = t.__orig.replace(/\s+$/, "").split(/ (?=\S)/);
+                        if (words.length <= k) break;
+                        t.nodeValue = words.slice(0, -k).join(" ") + " " + words.slice(-k).join("\u00a0") + (t.__orig.match(/\s+$/) || [""])[0];
+                    }
+                }
+            };
+            let tmr = 0;
+            addEventListener("resize", () => { clearTimeout(tmr); tmr = setTimeout(fix, 120); });
+            fix();
         })();
 
         /* ---------------- BibTeX copy ---------------- */
