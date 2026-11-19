@@ -225,8 +225,11 @@
             transition: opacity .6s var(--ease) var(--d, 0ms), transform .8s var(--ease) var(--d, 0ms);
         }
         .fig-live .fx-pop, .fig-live .fx-letter { transition-timing-function: var(--ease), var(--spring); transition-duration: .4s, .6s; }
+        /* a chat reply: the whole box arrives together, unhurried */
+        .fig-live .fx-msg { transition-duration: .8s, .95s; }
         .fig-live:not(.is-in) .fx { opacity: 0; }
         .fig-live:not(.is-in) .fx-rise { transform: translateY(calc(12px * var(--u))); }
+        .fig-live:not(.is-in) .fx-msg { transform: translateY(calc(16px * var(--u))); }
         .fig-live:not(.is-in) .fx-zoom { transform: scale(.94); }
         .fig-live:not(.is-in) .fx-pop { transform: scale(.55); }
         .fig-live:not(.is-in) .fx-letter { transform: translateY(calc(10px * var(--u))) scale(.7); }
@@ -729,7 +732,7 @@
         <div class="wrap">
             <figure class="fig wide">
                 <div class="card-x reveal">
-                    <div class="fig-live" data-svg="./assets/images/overview.svg" data-kind="overview" data-total="1900"
+                    <div class="fig-live" data-svg="./assets/images/overview.svg" data-kind="overview" data-total="3400"
                          data-alt="Show-Harness overview" style="aspect-ratio: 875 / 512;">
                         <noscript><img src="./assets/images/overview.svg" alt="Show-Harness overview"></noscript>
                     </div>
