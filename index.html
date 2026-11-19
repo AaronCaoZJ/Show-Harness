@@ -873,9 +873,7 @@
             </div>
             <div class="result">
                 <div class="result-head"><h3>Where does the interface get its leverage?</h3></div>
-                <div class="more-text before"><p>A unit like <code>MV_LEFT</code> carries a <em>name</em> the model already knows plus a <em>convention</em>
-                fixing whose left it is. Arbitrary symbols <code>A</code>&ndash;<code>F</code> work if the convention
-                is spelled out (95% vs 100%); the names alone, unexplained, still reach 90%.</p></div>
+                <div class="more-text before"><p>A unit like <code>MV_LEFT</code> gives the model two cues: a <em>name</em> it already understands, and a <em>convention</em> that spells out the unit&rsquo;s physical effect &mdash; whose left it is. A 2&times;2 ablation separates them on the six translation units, with <span class="nw">Gemini-3.1</span>&nbsp;Pro on the Block/Banana&nbsp;&rarr;&nbsp;Plate tasks, 20 trials per variant.</p></div>
                 <figure class="fig">
                     <div class="card-x reveal">
                         <div class="fig-anim">
@@ -2010,11 +2008,8 @@ z
                     </div>
                     <figcaption class="fig-cap">(a) Ablation on <span class="nw">action-space</span> representation. (b) Action mappings inferred under setting (D) over 20 episodes, where the model probes unknown symbols and infers their effects from observation changes.</figcaption>
                 </figure>
-                <p class="takeaway">Remove both and the agent has to infer the mapping from its own interaction &mdash; success collapses
-                to <strong>5%</strong>, with 19 of 20 episodes timing out.</p>
-                <div class="more-text"><p>Asked to write that mapping down, the model gets 23.3% of six directions right against a 16.7% chance rate,
-                and 11 of 20 trials mirror left and right. The interface is not decoration around the action space;
-                it <em>is</em> the action space.</p></div>
+                <p class="takeaway">Conventions carry most of the grounding: with the convention spelled out, arbitrary symbols <code>A</code>&ndash;<code>F</code> reach 95% against 100% for the default. The names alone, unexplained, still reach 90% &mdash; a useful prior.</p>
+                <div class="more-text"><p>Remove both and the agent has to probe for the mapping &mdash; success collapses to <strong>5%</strong>, with 19 of 20 episodes timing out. Asked to write that mapping down (b), the model gets 23.3% of six directions right against a 16.7% chance rate, and 11 of 20 trials mirror left and right. The interface is not decoration around the action space; it <em>is</em> the action space.</p></div>
             </div>
         </div>
     </section>
