@@ -16,6 +16,19 @@
         /* ================================================================
            Tokens. Arial throughout, because the figures are set in it too.
            ================================================================ */
+        /* The figures' code labels (MV_LEFT, A - F) and one arrow are set in DejaVu, as in the paper's PDF,
+           which embeds it. A machine without DejaVu now gets these tiny subsets instead of a serif fallback.
+           Licence: assets/fonts/LICENSE-DejaVu.txt */
+        @font-face {
+            font-family: "DejaVu Sans Mono"; font-display: swap;
+            src: local("DejaVu Sans Mono"), local("DejaVuSansMono"), url("./assets/fonts/dejavu-sans-mono-subset.woff2") format("woff2");
+            unicode-range: U+0041, U+0045, U+0046, U+004C, U+004D, U+0054, U+0056, U+005F, U+2013, U+2026;
+        }
+        @font-face {
+            font-family: "DejaVu Sans"; font-display: swap;
+            src: local("DejaVu Sans"), local("DejaVuSans"), url("./assets/fonts/dejavu-sans-subset.woff2") format("woff2");
+            unicode-range: U+2193;
+        }
         :root {
             --blue: #0071BC;          /* brand blue, AA on white at body sizes */
             --sky: #669ED3;           /* logo blue, accents only */
