@@ -4043,33 +4043,33 @@
 </g><g class="fx fx-rise" style="--d:1071ms"><g fill="rgb(41.960144%, 46.273804%, 51.765442%)" fill-opacity="1">
 <use xlink:href="#ov-glyph-1-4" x="445.249446" y="457.745497"/>
 </g>
-</g><g class="fx fx-wipe" style="--d:1500ms"><g class="lp"><g mask="url(#ov-mask-69)">
+</g><g class="fx fx-wipe" style="--d:1500ms"><g mask="url(#ov-mask-69)">
 <use xlink:href="#ov-source-423" transform="matrix(0.218182, 0, 0, 0.218182, 320.7273, 458.18182)"/>
 </g>
-</g></g><g class="fx fx-wipe" style="--d:1500ms"><g class="lp"><g clip-path="url(#ov-clip-24)">
+</g><g class="fx fx-wipe" style="--d:1500ms"><g clip-path="url(#ov-clip-24)">
 <g clip-path="url(#ov-clip-25)">
 <path fill-rule="nonzero" fill="url(#ov-linear-pattern-3)" d="M 444.820312 464.613281 L 324.621094 464.613281 L 324.621094 478.296875 L 444.820312 478.296875 Z M 444.820312 464.613281 "/>
 <path fill-rule="nonzero" fill="url(#ov-linear-pattern-4)" d="M 444.820312 464.613281 L 324.621094 464.613281 L 324.621094 478.296875 L 444.820312 478.296875 Z M 444.820312 464.613281 "/>
 </g>
 </g>
-</g></g><g class="fx fx-wipe" style="--d:1420ms"><g class="lp"><g mask="url(#ov-mask-70)">
+</g><g class="fx fx-wipe" style="--d:1420ms"><g mask="url(#ov-mask-70)">
 <use xlink:href="#ov-source-429" transform="matrix(0.218182, 0, 0, 0.218182, 318.1091, 402.32728)"/>
 </g>
-</g></g><g class="fx fx-wipe" style="--d:1420ms"><g class="lp"><g clip-path="url(#ov-clip-26)">
+</g><g class="fx fx-wipe" style="--d:1420ms"><g clip-path="url(#ov-clip-26)">
 <g clip-path="url(#ov-clip-27)">
 <path fill-rule="nonzero" fill="url(#ov-linear-pattern-5)" d="M 444.703125 436.503906 L 321.925781 436.503906 L 321.925781 421.335938 L 444.703125 421.335938 Z M 444.703125 436.503906 "/>
 <path fill-rule="nonzero" fill="url(#ov-linear-pattern-6)" d="M 444.703125 436.503906 L 321.925781 436.503906 L 321.925781 421.335938 L 444.703125 421.335938 Z M 444.703125 436.503906 "/>
 </g>
 </g>
-</g></g><g class="fx fx-rise" style="--d:1040ms"><g mask="url(#ov-mask-71)">
+</g><g class="fx fx-rise fx-mascot" style="--d:1180ms"><g class="lp"><g mask="url(#ov-mask-71)">
 <use xlink:href="#ov-source-435" transform="matrix(0.218182, 0, 0, 0.218182, 350.8364, 405.81818)"/>
 </g>
-</g><g class="fx fx-rise" style="--d:1041ms"><g clip-path="url(#ov-clip-28)">
+</g></g><g class="fx fx-rise fx-mascot" style="--d:1180ms"><g class="lp"><g clip-path="url(#ov-clip-28)">
 <g mask="url(#ov-mask-72)">
 <use xlink:href="#ov-source-441" transform="matrix(-0.183164, 0, 0, 0.184615, 371.9272, 407.72725)"/>
 </g>
 </g>
-</g><g class="fx fx-rise" style="--d:1082ms"><g fill="rgb(34.901428%, 34.901428%, 34.901428%)" fill-opacity="1">
+</g></g><g class="fx fx-rise" style="--d:1082ms"><g fill="rgb(34.901428%, 34.901428%, 34.901428%)" fill-opacity="1">
 <use xlink:href="#ov-glyph-0-7" x="462.9004" y="473.719843"/>
 <use xlink:href="#ov-glyph-0-22" x="471.775599" y="473.719843"/>
 <use xlink:href="#ov-glyph-0-23" x="479.150799" y="473.719843"/>
@@ -4117,276 +4117,276 @@
 <use xlink:href="#ov-source-453" transform="matrix(0.218182, 0, 0, 0.218182, 11.78182, 8.9454)"/>
 </g>
 </g><g class="fx fx-fade" style="--d:0ms"><path fill="none" stroke-width="25400" stroke-linecap="butt" stroke-linejoin="miter" stroke="rgb(48.234558%, 68.235779%, 89.411926%)" stroke-opacity="1" stroke-miterlimit="8" d="M -22.526624 224432.805318 C -22.526624 100458.98116 100486.063909 -0.0000000000436557 224410.278694 -0.0000000000436557 L 3158854.325417 -0.0000000000436557 C 3282828.149574 -0.0000000000436557 3383287.130735 100458.98116 3383287.130735 224432.805318 L 3383287.130735 4106515.102967 C 3383287.130735 4230439.317751 3282828.149574 4330947.908285 3158854.325417 4330947.908285 L 224410.278694 4330947.908285 C 100486.063909 4330947.908285 -22.526624 4230439.317751 -22.526624 4106515.102967 Z M -22.526624 224432.805318 " transform="matrix(0.0000787402, 0, 0, 0.0000787402, 11.81818, 9)"/>
-</g><g class="fx fx-msg" style="--d:740ms"><g mask="url(#ov-mask-75)">
+</g><g class="fx fx-msg chat-k1 chat-turn" style="--d:740ms"><g class="lp"><g mask="url(#ov-mask-75)">
 <use xlink:href="#ov-source-459" transform="matrix(0.218182, 0, 0, 0.218182, 25.74545, 122.18185)"/>
 </g>
-</g><g class="fx fx-msg" style="--d:740ms"><g clip-path="url(#ov-clip-29)">
+</g></g><g class="fx fx-msg chat-k1" style="--d:740ms"><g clip-path="url(#ov-clip-29)">
 <g clip-path="url(#ov-clip-30)">
 <g mask="url(#ov-mask-76)">
 <use xlink:href="#ov-source-465" transform="matrix(0.218182, 0, 0, 0.218182, 52.36364, 103.41816)"/>
 </g>
 </g>
 </g>
-</g><g class="fx fx-msg" style="--d:740ms"><path fill-rule="evenodd" fill="rgb(100%, 100%, 100%)" fill-opacity="1" stroke-width="12700" stroke-linecap="butt" stroke-linejoin="miter" stroke="rgb(49.803162%, 49.803162%, 49.803162%)" stroke-opacity="1" stroke-miterlimit="8" d="M -21.034374 100660.911154 C -21.034374 45048.803558 45073.886058 3.4925 100685.993653 3.4925 L 2418088.653871 3.4925 C 2473700.761467 3.4925 2518746.072525 45048.803558 2518746.072525 100660.911154 L 2518746.072525 567137.849352 C 2518746.072525 622700.347574 2473700.761467 667795.268006 2418088.653871 667795.268006 L 100685.993653 667795.268006 C 45073.886058 667795.268006 -21.034374 622700.347574 -21.034374 567137.849352 Z M -21.034374 100660.911154 " transform="matrix(0.0000787402, 0, 0, 0.0000787402, 62.87275, 111.1091)"/>
-</g><g class="fx fx-msg" style="--d:740ms"><g fill="rgb(34.901428%, 34.901428%, 34.901428%)" fill-opacity="1">
+</g><g class="fx fx-msg chat-k1" style="--d:740ms"><path fill-rule="evenodd" fill="rgb(100%, 100%, 100%)" fill-opacity="1" stroke-width="12700" stroke-linecap="butt" stroke-linejoin="miter" stroke="rgb(49.803162%, 49.803162%, 49.803162%)" stroke-opacity="1" stroke-miterlimit="8" d="M -21.034374 100660.911154 C -21.034374 45048.803558 45073.886058 3.4925 100685.993653 3.4925 L 2418088.653871 3.4925 C 2473700.761467 3.4925 2518746.072525 45048.803558 2518746.072525 100660.911154 L 2518746.072525 567137.849352 C 2518746.072525 622700.347574 2473700.761467 667795.268006 2418088.653871 667795.268006 L 100685.993653 667795.268006 C 45073.886058 667795.268006 -21.034374 622700.347574 -21.034374 567137.849352 Z M -21.034374 100660.911154 " transform="matrix(0.0000787402, 0, 0, 0.0000787402, 62.87275, 111.1091)"/>
+</g><g class="fx fx-msg chat-k1" style="--d:740ms"><g fill="rgb(34.901428%, 34.901428%, 34.901428%)" fill-opacity="1">
 <use xlink:href="#ov-glyph-3-0" x="76.27029" y="126.327297"/>
 <use xlink:href="#ov-glyph-3-1" x="82.895293" y="126.327297"/>
 </g>
-</g><g class="fx fx-msg" style="--d:740ms"><g fill="rgb(34.901428%, 34.901428%, 34.901428%)" fill-opacity="1">
+</g><g class="fx fx-msg chat-k1" style="--d:740ms"><g fill="rgb(34.901428%, 34.901428%, 34.901428%)" fill-opacity="1">
 <use xlink:href="#ov-glyph-3-2" x="85.64626" y="126.327297"/>
 </g>
-</g><g class="fx fx-msg" style="--d:740ms"><g fill="rgb(34.901428%, 34.901428%, 34.901428%)" fill-opacity="1">
+</g><g class="fx fx-msg chat-k1" style="--d:740ms"><g fill="rgb(34.901428%, 34.901428%, 34.901428%)" fill-opacity="1">
 <use xlink:href="#ov-glyph-3-3" x="91.649009" y="126.327297"/>
 </g>
-</g><g class="fx fx-msg" style="--d:740ms"><g fill="rgb(34.901428%, 34.901428%, 34.901428%)" fill-opacity="1">
+</g><g class="fx fx-msg chat-k1" style="--d:740ms"><g fill="rgb(34.901428%, 34.901428%, 34.901428%)" fill-opacity="1">
 <use xlink:href="#ov-glyph-3-3" x="97.651757" y="126.327297"/>
 </g>
-</g><g class="fx fx-msg" style="--d:740ms"><g fill="rgb(34.901428%, 34.901428%, 34.901428%)" fill-opacity="1">
+</g><g class="fx fx-msg chat-k1" style="--d:740ms"><g fill="rgb(34.901428%, 34.901428%, 34.901428%)" fill-opacity="1">
 <use xlink:href="#ov-glyph-3-4" x="103.654506" y="126.327297"/>
 </g>
-</g><g class="fx fx-msg" style="--d:740ms"><g fill="rgb(34.901428%, 34.901428%, 34.901428%)" fill-opacity="1">
+</g><g class="fx fx-msg chat-k1" style="--d:740ms"><g fill="rgb(34.901428%, 34.901428%, 34.901428%)" fill-opacity="1">
 <use xlink:href="#ov-glyph-3-5" x="109.657254" y="126.327297"/>
 </g>
-</g><g class="fx fx-msg" style="--d:740ms"><g fill="rgb(34.901428%, 34.901428%, 34.901428%)" fill-opacity="1">
+</g><g class="fx fx-msg chat-k1" style="--d:740ms"><g fill="rgb(34.901428%, 34.901428%, 34.901428%)" fill-opacity="1">
 <use xlink:href="#ov-glyph-3-6" x="114.034112" y="126.327297"/>
 </g>
-</g><g class="fx fx-msg" style="--d:740ms"><g fill="rgb(34.901428%, 34.901428%, 34.901428%)" fill-opacity="1">
+</g><g class="fx fx-msg chat-k1" style="--d:740ms"><g fill="rgb(34.901428%, 34.901428%, 34.901428%)" fill-opacity="1">
 <use xlink:href="#ov-glyph-3-7" x="116.53417" y="126.327297"/>
 </g>
-</g><g class="fx fx-msg" style="--d:740ms"><g fill="rgb(34.901428%, 34.901428%, 34.901428%)" fill-opacity="1">
+</g><g class="fx fx-msg chat-k1" style="--d:740ms"><g fill="rgb(34.901428%, 34.901428%, 34.901428%)" fill-opacity="1">
 <use xlink:href="#ov-glyph-3-2" x="122.536919" y="126.327297"/>
 </g>
-</g><g class="fx fx-msg" style="--d:740ms"><g fill="rgb(34.901428%, 34.901428%, 34.901428%)" fill-opacity="1">
+</g><g class="fx fx-msg chat-k1" style="--d:740ms"><g fill="rgb(34.901428%, 34.901428%, 34.901428%)" fill-opacity="1">
 <use xlink:href="#ov-glyph-3-1" x="128.539667" y="126.327297"/>
 </g>
-</g><g class="fx fx-msg" style="--d:740ms"><g fill="rgb(34.901428%, 34.901428%, 34.901428%)" fill-opacity="1">
+</g><g class="fx fx-msg chat-k1" style="--d:740ms"><g fill="rgb(34.901428%, 34.901428%, 34.901428%)" fill-opacity="1">
 <use xlink:href="#ov-glyph-3-1" x="131.290635" y="126.327297"/>
 </g>
-</g><g class="fx fx-msg" style="--d:740ms"><g fill="rgb(34.901428%, 34.901428%, 34.901428%)" fill-opacity="1">
+</g><g class="fx fx-msg chat-k1" style="--d:740ms"><g fill="rgb(34.901428%, 34.901428%, 34.901428%)" fill-opacity="1">
 <use xlink:href="#ov-glyph-3-8" x="134.041602" y="126.327297"/>
 </g>
-</g><g class="fx fx-msg" style="--d:740ms"><g fill="rgb(34.901428%, 34.901428%, 34.901428%)" fill-opacity="1">
+</g><g class="fx fx-msg chat-k1" style="--d:740ms"><g fill="rgb(34.901428%, 34.901428%, 34.901428%)" fill-opacity="1">
 <use xlink:href="#ov-glyph-3-3" x="136.792569" y="126.327297"/>
 </g>
-</g><g class="fx fx-msg" style="--d:740ms"><g fill="rgb(34.901428%, 34.901428%, 34.901428%)" fill-opacity="1">
+</g><g class="fx fx-msg chat-k1" style="--d:740ms"><g fill="rgb(34.901428%, 34.901428%, 34.901428%)" fill-opacity="1">
 <use xlink:href="#ov-glyph-3-9" x="142.795317" y="126.327297"/>
 </g>
-</g><g class="fx fx-msg" style="--d:740ms"><g fill="rgb(34.901428%, 34.901428%, 34.901428%)" fill-opacity="1">
+</g><g class="fx fx-msg chat-k1" style="--d:740ms"><g fill="rgb(34.901428%, 34.901428%, 34.901428%)" fill-opacity="1">
 <use xlink:href="#ov-glyph-3-6" x="149.048975" y="126.327297"/>
 </g>
-</g><g class="fx fx-msg" style="--d:740ms"><g fill="rgb(34.901428%, 34.901428%, 34.901428%)" fill-opacity="1">
+</g><g class="fx fx-msg chat-k1" style="--d:740ms"><g fill="rgb(34.901428%, 34.901428%, 34.901428%)" fill-opacity="1">
 <use xlink:href="#ov-glyph-3-10" x="151.549033" y="126.327297"/>
 </g>
-</g><g class="fx fx-msg" style="--d:740ms"><g clip-path="url(#ov-clip-31)">
+</g><g class="fx fx-bar chat-bar-k1" style="--d:1000ms"><g clip-path="url(#ov-clip-31)">
 <g clip-path="url(#ov-clip-32)">
 <path fill-rule="nonzero" fill="url(#ov-linear-pattern-7)" d="M 88.488281 136.722656 L 88.488281 142.222656 L 247.695312 142.222656 L 247.695312 136.722656 Z M 88.488281 136.722656 "/>
 </g>
 </g>
-</g><g class="fx fx-msg" style="--d:740ms"><g clip-path="url(#ov-clip-33)">
+</g><g class="fx fx-bar chat-bar-k1" style="--d:1000ms"><g clip-path="url(#ov-clip-33)">
 <g clip-path="url(#ov-clip-34)">
 <path fill-rule="nonzero" fill="url(#ov-linear-pattern-8)" d="M 88.488281 136.722656 L 88.488281 142.222656 L 247.695312 142.222656 L 247.695312 136.722656 Z M 88.488281 136.722656 "/>
 </g>
 </g>
-</g><g class="fx fx-msg" style="--d:740ms"><g clip-path="url(#ov-clip-35)">
+</g><g class="fx fx-bar chat-bar-k1" style="--d:1000ms"><g clip-path="url(#ov-clip-35)">
 <g clip-path="url(#ov-clip-36)">
 <path fill-rule="nonzero" fill="url(#ov-linear-pattern-9)" d="M 77.140625 148.066406 L 77.140625 153.566406 L 218.660156 153.566406 L 218.660156 148.066406 Z M 77.140625 148.066406 "/>
 </g>
 </g>
-</g><g class="fx fx-msg" style="--d:740ms"><g clip-path="url(#ov-clip-37)">
+</g><g class="fx fx-bar chat-bar-k1" style="--d:1000ms"><g clip-path="url(#ov-clip-37)">
 <g clip-path="url(#ov-clip-38)">
 <path fill-rule="nonzero" fill="url(#ov-linear-pattern-10)" d="M 77.140625 148.066406 L 77.140625 153.566406 L 218.660156 153.566406 L 218.660156 148.066406 Z M 77.140625 148.066406 "/>
 </g>
 </g>
-</g><g class="fx fx-msg" style="--d:1300ms"><g clip-path="url(#ov-clip-39)">
+</g><g class="fx fx-msg chat-k2" style="--d:1300ms"><g clip-path="url(#ov-clip-39)">
 <g clip-path="url(#ov-clip-40)">
 <g mask="url(#ov-mask-77)">
 <use xlink:href="#ov-source-471" transform="matrix(0.218182, 0, 0, 0.218182, 52.58182, 160.1455)"/>
 </g>
 </g>
 </g>
-</g><g class="fx fx-msg" style="--d:1300ms"><path fill-rule="evenodd" fill="rgb(100%, 100%, 100%)" fill-opacity="1" stroke-width="12700" stroke-linecap="butt" stroke-linejoin="miter" stroke="rgb(49.803162%, 49.803162%, 49.803162%)" stroke-opacity="1" stroke-miterlimit="8" d="M -13.922375 118014.825599 C -13.922375 52828.108935 52820.06031 -5.87375 118006.776974 -5.87375 L 2400732.485177 -5.87375 C 2465919.201841 -5.87375 2518753.184525 52828.108935 2518753.184525 118014.825599 L 2518753.184525 677261.292078 C 2518753.184525 742398.399368 2465919.201841 795232.382053 2400732.485177 795232.382053 L 118006.776974 795232.382053 C 52820.06031 795232.382053 -13.922375 742398.399368 -13.922375 677261.292078 Z M -13.922375 118014.825599 " transform="matrix(0.0000787402, 0, 0, 0.0000787402, 63.09094, 167.8364)"/>
-</g><g class="fx fx-msg" style="--d:1300ms"><g clip-path="url(#ov-clip-41)">
+</g><g class="fx fx-msg chat-k2" style="--d:1300ms"><path fill-rule="evenodd" fill="rgb(100%, 100%, 100%)" fill-opacity="1" stroke-width="12700" stroke-linecap="butt" stroke-linejoin="miter" stroke="rgb(49.803162%, 49.803162%, 49.803162%)" stroke-opacity="1" stroke-miterlimit="8" d="M -13.922375 118014.825599 C -13.922375 52828.108935 52820.06031 -5.87375 118006.776974 -5.87375 L 2400732.485177 -5.87375 C 2465919.201841 -5.87375 2518753.184525 52828.108935 2518753.184525 118014.825599 L 2518753.184525 677261.292078 C 2518753.184525 742398.399368 2465919.201841 795232.382053 2400732.485177 795232.382053 L 118006.776974 795232.382053 C 52820.06031 795232.382053 -13.922375 742398.399368 -13.922375 677261.292078 Z M -13.922375 118014.825599 " transform="matrix(0.0000787402, 0, 0, 0.0000787402, 63.09094, 167.8364)"/>
+</g><g class="fx fx-bar chat-bar-k2" style="--d:1560ms"><g clip-path="url(#ov-clip-41)">
 <g clip-path="url(#ov-clip-42)">
 <path fill-rule="nonzero" fill="url(#ov-linear-pattern-11)" d="M 88.488281 175.996094 L 88.488281 181.496094 L 247.695312 181.496094 L 247.695312 175.996094 Z M 88.488281 175.996094 "/>
 </g>
 </g>
-</g><g class="fx fx-msg" style="--d:1300ms"><g clip-path="url(#ov-clip-43)">
+</g><g class="fx fx-bar chat-bar-k2" style="--d:1560ms"><g clip-path="url(#ov-clip-43)">
 <g clip-path="url(#ov-clip-44)">
 <path fill-rule="nonzero" fill="url(#ov-linear-pattern-12)" d="M 88.488281 175.996094 L 88.488281 181.496094 L 247.695312 181.496094 L 247.695312 175.996094 Z M 88.488281 175.996094 "/>
 </g>
 </g>
-</g><g class="fx fx-msg" style="--d:1300ms"><g clip-path="url(#ov-clip-45)">
+</g><g class="fx fx-bar chat-bar-k2" style="--d:1560ms"><g clip-path="url(#ov-clip-45)">
 <g clip-path="url(#ov-clip-46)">
 <path fill-rule="nonzero" fill="url(#ov-linear-pattern-13)" d="M 77.140625 187.339844 L 77.140625 192.839844 L 218.660156 192.839844 L 218.660156 187.339844 Z M 77.140625 187.339844 "/>
 </g>
 </g>
-</g><g class="fx fx-msg" style="--d:1300ms"><g clip-path="url(#ov-clip-47)">
+</g><g class="fx fx-bar chat-bar-k2" style="--d:1560ms"><g clip-path="url(#ov-clip-47)">
 <g clip-path="url(#ov-clip-48)">
 <path fill-rule="nonzero" fill="url(#ov-linear-pattern-14)" d="M 77.140625 187.339844 L 77.140625 192.839844 L 218.660156 192.839844 L 218.660156 187.339844 Z M 77.140625 187.339844 "/>
 </g>
 </g>
-</g><g class="fx fx-pop" style="--d:1600ms"><g mask="url(#ov-mask-78)">
+</g><g class="fx fx-pop chat-pill-k2" style="--d:1600ms"><g mask="url(#ov-mask-78)">
 <use xlink:href="#ov-source-477" transform="matrix(0.218182, 0, 0, 0.218182, 164.7273, 195.9273)"/>
 </g>
-</g><g class="fx fx-pop" style="--d:1600ms"><path fill-rule="evenodd" fill="rgb(100%, 100%, 100%)" fill-opacity="0.902" stroke-width="19050" stroke-linecap="butt" stroke-linejoin="miter" stroke="rgb(84.706116%, 36.862183%, 36.470032%)" stroke-opacity="1" stroke-miterlimit="8" d="M 20.954999 108077.155292 C 20.954999 48397.079076 48390.094077 -21.669374 108070.170292 -21.669374 L 900530.301183 -21.669374 C 960210.377398 -21.669374 1008629.125849 48397.079076 1008629.125849 108077.155292 C 1008629.125849 167757.231507 960210.377398 216126.370584 900530.301183 216126.370584 L 108070.170292 216126.370584 C 48390.094077 216126.370584 20.954999 167757.231507 20.954999 108077.155292 Z M 20.954999 108077.155292 " transform="matrix(0.0000787402, 0, 0, 0.0000787402, 170.6546, 201.8728)"/>
-</g><g class="fx fx-pop" style="--d:1600ms"><g fill="rgb(84.706116%, 36.862183%, 36.470032%)" fill-opacity="1">
+</g><g class="fx fx-pop chat-pill-k2" style="--d:1600ms"><path fill-rule="evenodd" fill="rgb(100%, 100%, 100%)" fill-opacity="0.902" stroke-width="19050" stroke-linecap="butt" stroke-linejoin="miter" stroke="rgb(84.706116%, 36.862183%, 36.470032%)" stroke-opacity="1" stroke-miterlimit="8" d="M 20.954999 108077.155292 C 20.954999 48397.079076 48390.094077 -21.669374 108070.170292 -21.669374 L 900530.301183 -21.669374 C 960210.377398 -21.669374 1008629.125849 48397.079076 1008629.125849 108077.155292 C 1008629.125849 167757.231507 960210.377398 216126.370584 900530.301183 216126.370584 L 108070.170292 216126.370584 C 48390.094077 216126.370584 20.954999 167757.231507 20.954999 108077.155292 Z M 20.954999 108077.155292 " transform="matrix(0.0000787402, 0, 0, 0.0000787402, 170.6546, 201.8728)"/>
+</g><g class="fx fx-pop chat-pill-k2" style="--d:1600ms"><g fill="rgb(84.706116%, 36.862183%, 36.470032%)" fill-opacity="1">
 <use xlink:href="#ov-glyph-3-11" x="188.6957" y="214.909097"/>
 <use xlink:href="#ov-glyph-3-12" x="197.071045" y="214.909097"/>
 </g>
-</g><g class="fx fx-pop" style="--d:1600ms"><g fill="rgb(84.706116%, 36.862183%, 36.470032%)" fill-opacity="1">
+</g><g class="fx fx-pop chat-pill-k2" style="--d:1600ms"><g fill="rgb(84.706116%, 36.862183%, 36.470032%)" fill-opacity="1">
 <use xlink:href="#ov-glyph-3-13" x="203.940935" y="214.909097"/>
 </g>
-</g><g class="fx fx-pop" style="--d:1600ms"><g fill="rgb(84.706116%, 36.862183%, 36.470032%)" fill-opacity="1">
+</g><g class="fx fx-pop chat-pill-k2" style="--d:1600ms"><g fill="rgb(84.706116%, 36.862183%, 36.470032%)" fill-opacity="1">
 <use xlink:href="#ov-glyph-3-14" x="208.944062" y="214.909097"/>
 </g>
-</g><g class="fx fx-pop" style="--d:1600ms"><g fill="rgb(84.706116%, 36.862183%, 36.470032%)" fill-opacity="1">
+</g><g class="fx fx-pop chat-pill-k2" style="--d:1600ms"><g fill="rgb(84.706116%, 36.862183%, 36.470032%)" fill-opacity="1">
 <use xlink:href="#ov-glyph-3-15" x="214.940789" y="214.909097"/>
 </g>
-</g><g class="fx fx-pop" style="--d:1600ms"><g fill="rgb(84.706116%, 36.862183%, 36.470032%)" fill-opacity="1">
+</g><g class="fx fx-pop chat-pill-k2" style="--d:1600ms"><g fill="rgb(84.706116%, 36.862183%, 36.470032%)" fill-opacity="1">
 <use xlink:href="#ov-glyph-3-16" x="224.31977" y="214.909097"/>
 </g>
-</g><g class="fx fx-msg" style="--d:1300ms"><g fill="rgb(34.901428%, 34.901428%, 34.901428%)" fill-opacity="1">
+</g><g class="fx fx-msg chat-k2" style="--d:1300ms"><g fill="rgb(34.901428%, 34.901428%, 34.901428%)" fill-opacity="1">
 <use xlink:href="#ov-glyph-3-17" x="76.0784" y="214.036397"/>
 <use xlink:href="#ov-glyph-3-4" x="82.703403" y="214.036397"/>
 </g>
-</g><g class="fx fx-msg" style="--d:1300ms"><g fill="rgb(34.901428%, 34.901428%, 34.901428%)" fill-opacity="1">
+</g><g class="fx fx-msg chat-k2" style="--d:1300ms"><g fill="rgb(34.901428%, 34.901428%, 34.901428%)" fill-opacity="1">
 <use xlink:href="#ov-glyph-3-18" x="88.706152" y="214.036397"/>
 </g>
-</g><g class="fx fx-msg" style="--d:1300ms"><g fill="rgb(34.901428%, 34.901428%, 34.901428%)" fill-opacity="1">
+</g><g class="fx fx-msg chat-k2" style="--d:1300ms"><g fill="rgb(34.901428%, 34.901428%, 34.901428%)" fill-opacity="1">
 <use xlink:href="#ov-glyph-3-2" x="97.5793" y="214.036397"/>
 </g>
-</g><g class="fx fx-msg" style="--d:1300ms"><g fill="rgb(34.901428%, 34.901428%, 34.901428%)" fill-opacity="1">
+</g><g class="fx fx-msg chat-k2" style="--d:1300ms"><g fill="rgb(34.901428%, 34.901428%, 34.901428%)" fill-opacity="1">
 <use xlink:href="#ov-glyph-3-3" x="103.582049" y="214.036397"/>
 </g>
-</g><g class="fx fx-msg" style="--d:1300ms"><g fill="rgb(34.901428%, 34.901428%, 34.901428%)" fill-opacity="1">
+</g><g class="fx fx-msg chat-k2" style="--d:1300ms"><g fill="rgb(34.901428%, 34.901428%, 34.901428%)" fill-opacity="1">
 <use xlink:href="#ov-glyph-3-19" x="109.584797" y="214.036397"/>
 </g>
-</g><g class="fx fx-msg" style="--d:1300ms"><g fill="rgb(34.901428%, 34.901428%, 34.901428%)" fill-opacity="1">
+</g><g class="fx fx-msg chat-k2" style="--d:1300ms"><g fill="rgb(34.901428%, 34.901428%, 34.901428%)" fill-opacity="1">
 <use xlink:href="#ov-glyph-3-8" x="113.088491" y="214.036397"/>
 </g>
-</g><g class="fx fx-msg" style="--d:1300ms"><g fill="rgb(34.901428%, 34.901428%, 34.901428%)" fill-opacity="1">
+</g><g class="fx fx-msg chat-k2" style="--d:1300ms"><g fill="rgb(34.901428%, 34.901428%, 34.901428%)" fill-opacity="1">
 <use xlink:href="#ov-glyph-3-7" x="115.839459" y="214.036397"/>
 </g>
-</g><g class="fx fx-msg" style="--d:1300ms"><g fill="rgb(34.901428%, 34.901428%, 34.901428%)" fill-opacity="1">
+</g><g class="fx fx-msg chat-k2" style="--d:1300ms"><g fill="rgb(34.901428%, 34.901428%, 34.901428%)" fill-opacity="1">
 <use xlink:href="#ov-glyph-3-6" x="121.842207" y="214.036397"/>
 </g>
-</g><g class="fx fx-msg" style="--d:1300ms"><g fill="rgb(34.901428%, 34.901428%, 34.901428%)" fill-opacity="1">
+</g><g class="fx fx-msg chat-k2" style="--d:1300ms"><g fill="rgb(34.901428%, 34.901428%, 34.901428%)" fill-opacity="1">
 <use xlink:href="#ov-glyph-3-2" x="124.342265" y="214.036397"/>
 </g>
-</g><g class="fx fx-msg" style="--d:1300ms"><g fill="rgb(34.901428%, 34.901428%, 34.901428%)" fill-opacity="1">
+</g><g class="fx fx-msg chat-k2" style="--d:1300ms"><g fill="rgb(34.901428%, 34.901428%, 34.901428%)" fill-opacity="1">
 <use xlink:href="#ov-glyph-3-7" x="130.345014" y="214.036397"/>
 </g>
-</g><g class="fx fx-msg" style="--d:1300ms"><g fill="rgb(34.901428%, 34.901428%, 34.901428%)" fill-opacity="1">
+</g><g class="fx fx-msg chat-k2" style="--d:1300ms"><g fill="rgb(34.901428%, 34.901428%, 34.901428%)" fill-opacity="1">
 <use xlink:href="#ov-glyph-3-19" x="136.347762" y="214.036397"/>
 </g>
-</g><g class="fx fx-msg" style="--d:1300ms"><g fill="rgb(34.901428%, 34.901428%, 34.901428%)" fill-opacity="1">
+</g><g class="fx fx-msg chat-k2" style="--d:1300ms"><g fill="rgb(34.901428%, 34.901428%, 34.901428%)" fill-opacity="1">
 <use xlink:href="#ov-glyph-3-8" x="139.851457" y="214.036397"/>
 </g>
-</g><g class="fx fx-msg" style="--d:1300ms"><g fill="rgb(34.901428%, 34.901428%, 34.901428%)" fill-opacity="1">
+</g><g class="fx fx-msg chat-k2" style="--d:1300ms"><g fill="rgb(34.901428%, 34.901428%, 34.901428%)" fill-opacity="1">
 <use xlink:href="#ov-glyph-3-20" x="142.602424" y="214.036397"/>
 </g>
-</g><g class="fx fx-msg" style="--d:1300ms"><g fill="rgb(34.901428%, 34.901428%, 34.901428%)" fill-opacity="1">
+</g><g class="fx fx-msg chat-k2" style="--d:1300ms"><g fill="rgb(34.901428%, 34.901428%, 34.901428%)" fill-opacity="1">
 <use xlink:href="#ov-glyph-3-3" x="148.605172" y="214.036397"/>
 </g>
-</g><g class="fx fx-msg" style="--d:1300ms"><g fill="rgb(34.901428%, 34.901428%, 34.901428%)" fill-opacity="1">
+</g><g class="fx fx-msg chat-k2" style="--d:1300ms"><g fill="rgb(34.901428%, 34.901428%, 34.901428%)" fill-opacity="1">
 <use xlink:href="#ov-glyph-3-21" x="154.5784" y="214.036397"/>
 </g>
-</g><g class="fx fx-msg" style="--d:1860ms"><g clip-path="url(#ov-clip-49)">
+</g><g class="fx fx-msg chat-k3" style="--d:1860ms"><g clip-path="url(#ov-clip-49)">
 <g clip-path="url(#ov-clip-50)">
 <g mask="url(#ov-mask-79)">
 <use xlink:href="#ov-source-471" transform="matrix(0.218182, 0, 0, 0.218182, 52.36364, 228.2182)"/>
 </g>
 </g>
 </g>
-</g><g class="fx fx-msg" style="--d:1860ms"><path fill-rule="evenodd" fill="rgb(100%, 100%, 100%)" fill-opacity="1" stroke-width="12700" stroke-linecap="butt" stroke-linejoin="miter" stroke="rgb(49.803162%, 49.803162%, 49.803162%)" stroke-opacity="1" stroke-miterlimit="8" d="M -21.034374 117984.504349 C -21.034374 52847.397059 52812.94831 13.414375 117999.664974 13.414375 L 2400774.98255 13.414375 C 2465912.089841 13.414375 2518746.072525 52847.397059 2518746.072525 117984.504349 L 2518746.072525 677230.970829 C 2518746.072525 742417.687493 2465912.089841 795251.670177 2400774.98255 795251.670177 L 117999.664974 795251.670177 C 52812.94831 795251.670177 -21.034374 742417.687493 -21.034374 677230.970829 Z M -21.034374 117984.504349 " transform="matrix(0.0000787402, 0, 0, 0.0000787402, 62.87275, 235.9091)"/>
-</g><g class="fx fx-msg" style="--d:1860ms"><g clip-path="url(#ov-clip-51)">
+</g><g class="fx fx-msg chat-k3" style="--d:1860ms"><path fill-rule="evenodd" fill="rgb(100%, 100%, 100%)" fill-opacity="1" stroke-width="12700" stroke-linecap="butt" stroke-linejoin="miter" stroke="rgb(49.803162%, 49.803162%, 49.803162%)" stroke-opacity="1" stroke-miterlimit="8" d="M -21.034374 117984.504349 C -21.034374 52847.397059 52812.94831 13.414375 117999.664974 13.414375 L 2400774.98255 13.414375 C 2465912.089841 13.414375 2518746.072525 52847.397059 2518746.072525 117984.504349 L 2518746.072525 677230.970829 C 2518746.072525 742417.687493 2465912.089841 795251.670177 2400774.98255 795251.670177 L 117999.664974 795251.670177 C 52812.94831 795251.670177 -21.034374 742417.687493 -21.034374 677230.970829 Z M -21.034374 117984.504349 " transform="matrix(0.0000787402, 0, 0, 0.0000787402, 62.87275, 235.9091)"/>
+</g><g class="fx fx-bar chat-bar-k3" style="--d:2120ms"><g clip-path="url(#ov-clip-51)">
 <g clip-path="url(#ov-clip-52)">
 <path fill-rule="nonzero" fill="url(#ov-linear-pattern-15)" d="M 88.269531 244.503906 L 88.269531 250.003906 L 246.980469 250.003906 L 246.980469 244.503906 Z M 88.269531 244.503906 "/>
 </g>
 </g>
-</g><g class="fx fx-msg" style="--d:1860ms"><g clip-path="url(#ov-clip-53)">
+</g><g class="fx fx-bar chat-bar-k3" style="--d:2120ms"><g clip-path="url(#ov-clip-53)">
 <g clip-path="url(#ov-clip-54)">
 <path fill-rule="nonzero" fill="url(#ov-linear-pattern-16)" d="M 88.269531 244.503906 L 88.269531 250.003906 L 246.980469 250.003906 L 246.980469 244.503906 Z M 88.269531 244.503906 "/>
 </g>
 </g>
-</g><g class="fx fx-msg" style="--d:1860ms"><g clip-path="url(#ov-clip-55)">
+</g><g class="fx fx-bar chat-bar-k3" style="--d:2120ms"><g clip-path="url(#ov-clip-55)">
 <g clip-path="url(#ov-clip-56)">
 <path fill-rule="nonzero" fill="url(#ov-linear-pattern-17)" d="M 77.140625 255.851562 L 77.140625 261.351562 L 218.539062 261.351562 L 218.539062 255.851562 Z M 77.140625 255.851562 "/>
 </g>
 </g>
-</g><g class="fx fx-msg" style="--d:1860ms"><g clip-path="url(#ov-clip-57)">
+</g><g class="fx fx-bar chat-bar-k3" style="--d:2120ms"><g clip-path="url(#ov-clip-57)">
 <g clip-path="url(#ov-clip-58)">
 <path fill-rule="nonzero" fill="url(#ov-linear-pattern-18)" d="M 77.140625 255.851562 L 77.140625 261.351562 L 218.539062 261.351562 L 218.539062 255.851562 Z M 77.140625 255.851562 "/>
 </g>
 </g>
-</g><g class="fx fx-pop" style="--d:2160ms"><g mask="url(#ov-mask-80)">
+</g><g class="fx fx-pop chat-pill-k3" style="--d:2160ms"><g mask="url(#ov-mask-80)">
 <use xlink:href="#ov-source-489" transform="matrix(0.218182, 0, 0, 0.218182, 164.2909, 264.21814)"/>
 </g>
-</g><g class="fx fx-pop" style="--d:2160ms"><path fill-rule="evenodd" fill="rgb(100%, 100%, 100%)" fill-opacity="0.902" d="M 170.4375 278.890625 C 170.4375 274.191406 174.246094 270.382812 178.945312 270.382812 L 241.34375 270.382812 C 246.042969 270.382812 249.855469 274.191406 249.855469 278.890625 C 249.855469 283.589844 246.042969 287.398438 241.34375 287.398438 L 178.945312 287.398438 C 174.246094 287.398438 170.4375 283.589844 170.4375 278.890625 Z M 170.4375 278.890625 "/>
-</g><g class="fx fx-pop" style="--d:2160ms"><path fill="none" stroke-width="25400" stroke-linecap="butt" stroke-linejoin="miter" stroke="rgb(40.391541%, 65.098572%, 31.764221%)" stroke-opacity="1" stroke-miterlimit="8" d="M 13.97 108062.074042 C 13.97 48381.997827 48383.109077 12.85875 108063.185292 12.85875 L 900523.316183 12.85875 C 960253.001772 12.85875 1008622.140849 48381.997827 1008622.140849 108062.074042 C 1008622.140849 167742.150257 960253.001772 216111.289334 900523.316183 216111.289334 L 108063.185292 216111.289334 C 48383.109077 216111.289334 13.97 167742.150257 13.97 108062.074042 Z M 13.97 108062.074042 " transform="matrix(0.0000787402, 0, 0, 0.0000787402, 170.4364, 270.3818)"/>
-</g><g class="fx fx-pop" style="--d:2160ms"><g fill="rgb(40.391541%, 65.098572%, 31.764221%)" fill-opacity="1">
+</g><g class="fx fx-pop chat-pill-k3" style="--d:2160ms"><path fill-rule="evenodd" fill="rgb(100%, 100%, 100%)" fill-opacity="0.902" d="M 170.4375 278.890625 C 170.4375 274.191406 174.246094 270.382812 178.945312 270.382812 L 241.34375 270.382812 C 246.042969 270.382812 249.855469 274.191406 249.855469 278.890625 C 249.855469 283.589844 246.042969 287.398438 241.34375 287.398438 L 178.945312 287.398438 C 174.246094 287.398438 170.4375 283.589844 170.4375 278.890625 Z M 170.4375 278.890625 "/>
+</g><g class="fx fx-pop chat-pill-k3" style="--d:2160ms"><path fill="none" stroke-width="25400" stroke-linecap="butt" stroke-linejoin="miter" stroke="rgb(40.391541%, 65.098572%, 31.764221%)" stroke-opacity="1" stroke-miterlimit="8" d="M 13.97 108062.074042 C 13.97 48381.997827 48383.109077 12.85875 108063.185292 12.85875 L 900523.316183 12.85875 C 960253.001772 12.85875 1008622.140849 48381.997827 1008622.140849 108062.074042 C 1008622.140849 167742.150257 960253.001772 216111.289334 900523.316183 216111.289334 L 108063.185292 216111.289334 C 48383.109077 216111.289334 13.97 167742.150257 13.97 108062.074042 Z M 13.97 108062.074042 " transform="matrix(0.0000787402, 0, 0, 0.0000787402, 170.4364, 270.3818)"/>
+</g><g class="fx fx-pop chat-pill-k3" style="--d:2160ms"><g fill="rgb(40.391541%, 65.098572%, 31.764221%)" fill-opacity="1">
 <use xlink:href="#ov-glyph-3-11" x="183.8247" y="282.545497"/>
 <use xlink:href="#ov-glyph-3-12" x="192.200045" y="282.545497"/>
 </g>
-</g><g class="fx fx-pop" style="--d:2160ms"><g fill="rgb(40.391541%, 65.098572%, 31.764221%)" fill-opacity="1">
+</g><g class="fx fx-pop chat-pill-k3" style="--d:2160ms"><g fill="rgb(40.391541%, 65.098572%, 31.764221%)" fill-opacity="1">
 <use xlink:href="#ov-glyph-3-13" x="199.069935" y="282.545497"/>
 </g>
-</g><g class="fx fx-pop" style="--d:2160ms"><g fill="rgb(40.391541%, 65.098572%, 31.764221%)" fill-opacity="1">
+</g><g class="fx fx-pop chat-pill-k3" style="--d:2160ms"><g fill="rgb(40.391541%, 65.098572%, 31.764221%)" fill-opacity="1">
 <use xlink:href="#ov-glyph-3-16" x="204.073062" y="282.545497"/>
 </g>
-</g><g class="fx fx-pop" style="--d:2160ms"><g fill="rgb(40.391541%, 65.098572%, 31.764221%)" fill-opacity="1">
+</g><g class="fx fx-pop chat-pill-k3" style="--d:2160ms"><g fill="rgb(40.391541%, 65.098572%, 31.764221%)" fill-opacity="1">
 <use xlink:href="#ov-glyph-3-22" x="211.44477" y="282.545497"/>
 </g>
-</g><g class="fx fx-pop" style="--d:2160ms"><g fill="rgb(40.391541%, 65.098572%, 31.764221%)" fill-opacity="1">
+</g><g class="fx fx-pop chat-pill-k3" style="--d:2160ms"><g fill="rgb(40.391541%, 65.098572%, 31.764221%)" fill-opacity="1">
 <use xlink:href="#ov-glyph-3-15" x="219.318297" y="282.545497"/>
 </g>
-</g><g class="fx fx-pop" style="--d:2160ms"><g fill="rgb(40.391541%, 65.098572%, 31.764221%)" fill-opacity="1">
+</g><g class="fx fx-pop chat-pill-k3" style="--d:2160ms"><g fill="rgb(40.391541%, 65.098572%, 31.764221%)" fill-opacity="1">
 <use xlink:href="#ov-glyph-3-23" x="228.697278" y="282.545497"/>
 </g>
-</g><g class="fx fx-msg" style="--d:1860ms"><g fill="rgb(34.901428%, 34.901428%, 34.901428%)" fill-opacity="1">
+</g><g class="fx fx-msg chat-k3" style="--d:1860ms"><g fill="rgb(34.901428%, 34.901428%, 34.901428%)" fill-opacity="1">
 <use xlink:href="#ov-glyph-3-17" x="76.0784" y="282.545497"/>
 <use xlink:href="#ov-glyph-3-4" x="82.703403" y="282.545497"/>
 </g>
-</g><g class="fx fx-msg" style="--d:1860ms"><g fill="rgb(34.901428%, 34.901428%, 34.901428%)" fill-opacity="1">
+</g><g class="fx fx-msg chat-k3" style="--d:1860ms"><g fill="rgb(34.901428%, 34.901428%, 34.901428%)" fill-opacity="1">
 <use xlink:href="#ov-glyph-3-18" x="88.706152" y="282.545497"/>
 </g>
-</g><g class="fx fx-msg" style="--d:1860ms"><g fill="rgb(34.901428%, 34.901428%, 34.901428%)" fill-opacity="1">
+</g><g class="fx fx-msg chat-k3" style="--d:1860ms"><g fill="rgb(34.901428%, 34.901428%, 34.901428%)" fill-opacity="1">
 <use xlink:href="#ov-glyph-3-2" x="97.5793" y="282.545497"/>
 </g>
-</g><g class="fx fx-msg" style="--d:1860ms"><g fill="rgb(34.901428%, 34.901428%, 34.901428%)" fill-opacity="1">
+</g><g class="fx fx-msg chat-k3" style="--d:1860ms"><g fill="rgb(34.901428%, 34.901428%, 34.901428%)" fill-opacity="1">
 <use xlink:href="#ov-glyph-3-3" x="103.582049" y="282.545497"/>
 </g>
-</g><g class="fx fx-msg" style="--d:1860ms"><g fill="rgb(34.901428%, 34.901428%, 34.901428%)" fill-opacity="1">
+</g><g class="fx fx-msg chat-k3" style="--d:1860ms"><g fill="rgb(34.901428%, 34.901428%, 34.901428%)" fill-opacity="1">
 <use xlink:href="#ov-glyph-3-19" x="109.584797" y="282.545497"/>
 </g>
-</g><g class="fx fx-msg" style="--d:1860ms"><g fill="rgb(34.901428%, 34.901428%, 34.901428%)" fill-opacity="1">
+</g><g class="fx fx-msg chat-k3" style="--d:1860ms"><g fill="rgb(34.901428%, 34.901428%, 34.901428%)" fill-opacity="1">
 <use xlink:href="#ov-glyph-3-8" x="113.088491" y="282.545497"/>
 </g>
-</g><g class="fx fx-msg" style="--d:1860ms"><g fill="rgb(34.901428%, 34.901428%, 34.901428%)" fill-opacity="1">
+</g><g class="fx fx-msg chat-k3" style="--d:1860ms"><g fill="rgb(34.901428%, 34.901428%, 34.901428%)" fill-opacity="1">
 <use xlink:href="#ov-glyph-3-7" x="115.839459" y="282.545497"/>
 </g>
-</g><g class="fx fx-msg" style="--d:1860ms"><g fill="rgb(34.901428%, 34.901428%, 34.901428%)" fill-opacity="1">
+</g><g class="fx fx-msg chat-k3" style="--d:1860ms"><g fill="rgb(34.901428%, 34.901428%, 34.901428%)" fill-opacity="1">
 <use xlink:href="#ov-glyph-3-6" x="121.842207" y="282.545497"/>
 </g>
-</g><g class="fx fx-msg" style="--d:1860ms"><g fill="rgb(34.901428%, 34.901428%, 34.901428%)" fill-opacity="1">
+</g><g class="fx fx-msg chat-k3" style="--d:1860ms"><g fill="rgb(34.901428%, 34.901428%, 34.901428%)" fill-opacity="1">
 <use xlink:href="#ov-glyph-3-2" x="124.342265" y="282.545497"/>
 </g>
-</g><g class="fx fx-msg" style="--d:1860ms"><g fill="rgb(34.901428%, 34.901428%, 34.901428%)" fill-opacity="1">
+</g><g class="fx fx-msg chat-k3" style="--d:1860ms"><g fill="rgb(34.901428%, 34.901428%, 34.901428%)" fill-opacity="1">
 <use xlink:href="#ov-glyph-3-7" x="130.345014" y="282.545497"/>
 </g>
-</g><g class="fx fx-msg" style="--d:1860ms"><g fill="rgb(34.901428%, 34.901428%, 34.901428%)" fill-opacity="1">
+</g><g class="fx fx-msg chat-k3" style="--d:1860ms"><g fill="rgb(34.901428%, 34.901428%, 34.901428%)" fill-opacity="1">
 <use xlink:href="#ov-glyph-3-19" x="136.347762" y="282.545497"/>
 </g>
-</g><g class="fx fx-msg" style="--d:1860ms"><g fill="rgb(34.901428%, 34.901428%, 34.901428%)" fill-opacity="1">
+</g><g class="fx fx-msg chat-k3" style="--d:1860ms"><g fill="rgb(34.901428%, 34.901428%, 34.901428%)" fill-opacity="1">
 <use xlink:href="#ov-glyph-3-8" x="139.851457" y="282.545497"/>
 </g>
-</g><g class="fx fx-msg" style="--d:1860ms"><g fill="rgb(34.901428%, 34.901428%, 34.901428%)" fill-opacity="1">
+</g><g class="fx fx-msg chat-k3" style="--d:1860ms"><g fill="rgb(34.901428%, 34.901428%, 34.901428%)" fill-opacity="1">
 <use xlink:href="#ov-glyph-3-20" x="142.602424" y="282.545497"/>
 </g>
-</g><g class="fx fx-msg" style="--d:1860ms"><g fill="rgb(34.901428%, 34.901428%, 34.901428%)" fill-opacity="1">
+</g><g class="fx fx-msg chat-k3" style="--d:1860ms"><g fill="rgb(34.901428%, 34.901428%, 34.901428%)" fill-opacity="1">
 <use xlink:href="#ov-glyph-3-3" x="148.605172" y="282.545497"/>
 </g>
-</g><g class="fx fx-msg" style="--d:1860ms"><g fill="rgb(34.901428%, 34.901428%, 34.901428%)" fill-opacity="1">
+</g><g class="fx fx-msg chat-k3" style="--d:1860ms"><g fill="rgb(34.901428%, 34.901428%, 34.901428%)" fill-opacity="1">
 <use xlink:href="#ov-glyph-3-21" x="154.5784" y="282.545497"/>
 </g>
 </g><g class="fx fx-msg" style="--d:2420ms"><g fill="rgb(48.234558%, 68.235779%, 89.411926%)" fill-opacity="1">
@@ -4504,12 +4504,12 @@
 </g><g class="fx fx-msg" style="--d:2420ms"><g fill="rgb(48.234558%, 68.235779%, 89.411926%)" fill-opacity="1">
 <use xlink:href="#ov-glyph-2-5" x="204.624331" y="338.399997"/>
 </g>
-</g><g class="fx fx-msg" style="--d:1860ms"><g clip-path="url(#ov-clip-59)">
+</g><g class="fx fx-msg chat-k3 chat-turn" style="--d:1860ms"><g class="lp"><g clip-path="url(#ov-clip-59)">
 <g mask="url(#ov-mask-81)">
 <use xlink:href="#ov-source-495" transform="matrix(0.180683, 0, 0, 0.180682, 45.30905, 286.85458)"/>
 </g>
 </g>
-</g><g class="fx fx-rise" style="--d:993ms"><g mask="url(#ov-mask-82)">
+</g></g><g class="fx fx-rise" style="--d:993ms"><g mask="url(#ov-mask-82)">
 <use xlink:href="#ov-source-501" transform="matrix(0.218182, 0, 0, 0.218182, 183.9273, 377.45455)"/>
 </g>
 </g><g class="fx fx-rise" style="--d:993ms"><path fill-rule="evenodd" fill="rgb(100%, 100%, 100%)" fill-opacity="0.902" stroke-width="25400" stroke-linecap="butt" stroke-linejoin="miter" stroke="rgb(48.234558%, 68.235779%, 89.411926%)" stroke-opacity="1" stroke-miterlimit="8" d="M 19.288124 144102.371014 C 19.288124 64528.93606 64511.473561 -12.85875 144084.908514 -12.85875 L 861734.1043 -12.85875 C 941307.539253 -12.85875 1005849.334063 64528.93606 1005849.334063 144102.371014 C 1005849.334063 223675.805967 941307.539253 288167.991404 861734.1043 288167.991404 L 144084.908514 288167.991404 C 64511.473561 288167.991404 19.288124 223675.805967 19.288124 144102.371014 Z M 19.288124 144102.371014 " transform="matrix(0.0000787402, 0, 0, 0.0000787402, 190.0727, 383.6182)"/>
