@@ -626,6 +626,9 @@
         .bib .tool:hover { color: #fff; background: rgba(255, 255, 255, .18); }
         footer { padding: 36px 0 44px; border-top: 1px solid var(--line); color: var(--muted); font-size: .86rem; }
         footer .wrap { text-align: center; }
+        footer a { color: inherit; text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: .2em;
+                   text-decoration-color: rgba(99, 107, 117, .5); transition: color .2s, text-decoration-color .2s; }
+        footer a:hover { color: var(--blue); text-decoration-color: currentColor; }
 
         /* ================================================================
            Lightbox (phones mostly: figures are drawn for a wide page)
@@ -11608,7 +11611,7 @@ z
     </main>
 
     <footer>
-        <div class="wrap">Show Lab, National University of Singapore</div>
+        <div class="wrap"><a href="https://sites.google.com/view/showlab" target="_blank" rel="noopener">Show Lab</a>, National University of Singapore</div>
     </footer>
 
     <!-- figure viewer -->
