@@ -1,808 +1,784 @@
 <!doctype html>
-<html lang="en" class="h-100" data-bs-theme="light">
+<html lang="en" data-bs-theme="light">
 
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
     <meta name="description" content="Show-Harness: Just a VLM Agent Can Play Robots">
+    <meta name="theme-color" content="#f7f9fc">
+    <meta property="og:title" content="Show-Harness: Just a VLM Agent Can Play Robots">
+    <meta property="og:description" content="An Embodied Harness that lets VLMs play robots through a compact semantic action interface.">
+    <meta property="og:image" content="./assets/videos/posters/_main.jpg">
     <title>Show-Harness</title>
     <link rel="icon" href="./assets/images/showlab.ico" type="image/x-icon">
     <link href="./assets/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
+        /* ================================================================
+           Tokens. Arial throughout, because the figures are set in it too.
+           ================================================================ */
         :root {
-            --sl-blue: #0071BC;
-            --sl-logo-blue: #669ED3;
-            --sl-green: #67A651;
-            --sl-red: #D85E5D;
-            --sl-orange: #F3AA68;
-            --sl-ink: #16191D;
-            --sl-gray: #656D77;
+            --blue: #0071BC;          /* brand blue, AA on white at body sizes */
+            --sky: #669ED3;           /* logo blue, accents only */
+            --green: #67A651;
+            --red: #D85E5D;
+            --orange: #F3AA68;
+            --ink: #111820;
+            --ink-2: #353c45;
+            --muted: #636b75;
+            --line: rgba(17, 24, 32, .09);
+            --tint: #f5f7fa;
+            --card: #ffffff;
+            --ease: cubic-bezier(.22, .68, .32, 1);
+            --spring: cubic-bezier(.34, 1.45, .64, 1);
+            --sh-1: 0 1px 2px rgba(16, 24, 40, .05), 0 1px 3px rgba(16, 24, 40, .05);
+            --sh-2: 0 24px 48px -24px rgba(16, 32, 64, .22), 0 2px 8px rgba(16, 24, 40, .05);
+            --r: 18px;
+            --gutter: 24px;
+            --top: 56px;
         }
 
-        /* Arial, to match the figures -- they are set in it too */
-        :root { --fig-w: 700px; }   /* figures sit clearly inside the 820px text column */
+        html { scroll-behavior: smooth; scroll-padding-top: calc(var(--top) + 12px); }
+        @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
 
-        body { font-family: Arial, "Liberation Sans", Helvetica, sans-serif; }
-
-        .hero {
-            background: linear-gradient(180deg, #f7f9fc 0%, #eef3f9 100%);
-            border-bottom: 1px solid rgba(0, 0, 0, .06);
+        body {
+            font-family: Arial, "Liberation Sans", Helvetica, sans-serif;
+            color: var(--ink-2);
+            background: #fff;
+            -webkit-font-smoothing: antialiased;
+            text-rendering: optimizeLegibility;
+            overflow-x: hidden;
         }
 
-        .brand-S { color: var(--sl-logo-blue); }
-        .brand-h { color: var(--sl-green); }
-        .brand-o { color: var(--sl-red); }
-        .brand-w { color: var(--sl-orange); }
-        .brand-rest { color: var(--sl-gray); }
+        h1, h2, h3 { color: var(--ink); text-wrap: balance; }
+        p { text-wrap: pretty; }
+        a { color: var(--blue); }
+        code { color: var(--blue); font-size: .9em; }
 
-        .title-main { font-weight: 700; letter-spacing: -.02em; }
+        .wrap { max-width: 1120px; margin-inline: auto; padding-inline: var(--gutter); }
+        .measure { max-width: 760px; margin-inline: auto; }
+        .wide { max-width: 980px; margin-inline: auto; }
 
-        /* pretty only guards against a one-word last line; it does not touch
-           the measure. Captions are left-aligned to the figure edge instead, so
-           a short last line reads as ordinary ragged-right rather than a stray. */
-        p, .lead-abstract, .res-text, .fig-caption { text-wrap: pretty; }
+        .sec { padding-block: clamp(64px, 9vw, 112px); position: relative; }
+        .sec.tint { background: var(--tint); }
+        .sec + .sec:not(.tint) { border-top: 1px solid var(--line); }
+        .sec.tint + .sec:not(.tint), .sec:not(.tint) + .sec.tint { border-top: 0; }
 
-        /* caption sits in the same column as the figure above it */
-        .fig-caption { max-width: var(--fig-w); margin: .85rem auto 0; text-align: left; }
-        .subtitle { color: var(--sl-gray); font-weight: 400; }
-
-        /* a name is one word as far as wrapping is concerned -- "Wenzheng Zeng"
-           breaking across lines reads as two authors */
-        .authors a, .authors .au { white-space: nowrap; }
-
-        .authors a {
-            color: inherit;
-            text-decoration: underline;
-            text-decoration-thickness: 1px;
-            text-underline-offset: .18em;
-            text-decoration-color: rgba(108, 117, 125, .45);
+        /* ---------- section heading: eyebrow, title, one-line lead ---------- */
+        .eyebrow {
+            display: inline-flex; align-items: center; gap: .6rem;
+            font-size: .74rem; font-weight: 700; letter-spacing: .16em; text-transform: uppercase;
+            color: var(--blue); margin-bottom: .9rem;
         }
-        .authors a:hover { color: var(--sl-blue); text-decoration-color: currentColor; }
-        .authors sup { color: var(--sl-gray); }
-
-        /* brand marks sit inline with the label and take the button's own colour */
-        .pill svg {
-            width: 1em; height: 1em;
-            margin-right: .45em;
-            vertical-align: -.13em;
-            fill: currentColor;
+        .eyebrow .num {
+            font-family: ui-monospace, SFMono-Regular, Menlo, monospace; letter-spacing: 0;
+            color: #fff; background: var(--blue); border-radius: 6px; padding: .12rem .42rem; font-size: .72rem;
         }
-
-        .pill {
-            border-radius: 999px;
-            padding: .45rem 1.1rem;
-            font-size: .95rem;
-            font-weight: 500;
+        .eyebrow .tag {
+            letter-spacing: .02em; text-transform: none; font-weight: 600; color: var(--muted);
+            border: 1px solid var(--line); border-radius: 999px; padding: .08rem .55rem; background: #fff;
         }
-
-        /* Hugging Face Daily Papers. It keeps btn-dark's shape and background, so the
-           row still reads as one set of pills; only the label and -- through
-           currentColor -- the mark carry HF's yellow. A tinted foreground is a much
-           lighter touch than a filled yellow pill, which pulled the eye away from
-           the title. Colours go through Bootstrap 5.3's --bs-btn-* vars rather than
-           a plain color override, so hover and active inherit it too instead of
-           falling back to white. On btn-dark this yellow reads 10.6:1 at rest and
-           5.5:1 at its lightest (active), so every state clears AA. */
-        .pill-hf {
-            --bs-btn-color: #FFD21E;
-            --bs-btn-hover-color: #FFD21E;
-            --bs-btn-active-color: #FFD21E;
+        .sec-title {
+            font-weight: 700; letter-spacing: -.022em; line-height: 1.12;
+            font-size: clamp(1.6rem, 3.4vw, 2.5rem); margin: 0 0 .9rem;
         }
+        .lead-1 { font-size: clamp(1rem, 1.5vw, 1.12rem); line-height: 1.65; color: var(--muted); margin: 0; max-width: 680px; }
+        .sec-head { margin-bottom: clamp(28px, 4vw, 44px); }
+        .sec-head.center { text-align: center; }
+        .sec-head.center .lead-1 { margin-inline: auto; }
 
-        .section-title {
-            font-weight: 700;
-            letter-spacing: -.01em;
-            margin-bottom: .35rem;
+        /* ================================================================
+           Top bar: appears once the hero is behind you
+           ================================================================ */
+        .topbar {
+            position: fixed; inset: 0 0 auto 0; z-index: 50; height: var(--top);
+            background: rgba(255, 255, 255, .82);
+            -webkit-backdrop-filter: saturate(1.6) blur(14px); backdrop-filter: saturate(1.6) blur(14px);
+            border-bottom: 1px solid var(--line);
+            transform: translateY(-100%); transition: transform .35s var(--ease);
         }
-
-        .title-note {
-            white-space: nowrap;
-            margin-left: .6rem;
-            font-size: .5em;
-            font-weight: 600;
-            letter-spacing: 0;
-            /* the logo blue is only 2.84 against white at this size; the darker
-               brand blue clears AA and still reads as the same accent */
-            color: var(--sl-blue);
-            vertical-align: .28em;
+        .topbar.is-on { transform: none; }
+        .topbar-inner { height: 100%; display: flex; align-items: center; gap: 1.25rem; }
+        .mini-mark { font-weight: 700; letter-spacing: -.02em; font-size: 1.06rem; text-decoration: none; color: #5d6670; white-space: nowrap; }
+        .toplinks { display: flex; gap: .2rem; margin-left: auto; overflow-x: auto; scrollbar-width: none; }
+        .toplinks::-webkit-scrollbar { display: none; }
+        .toplinks a {
+            white-space: nowrap; text-decoration: none; color: var(--muted); font-size: .88rem;
+            padding: .38rem .7rem; border-radius: 999px; transition: color .2s, background .2s;
         }
-        .section-rule {
-            width: 3rem; height: 3px; border-radius: 2px;
-            background: var(--sl-logo-blue);
-            margin-bottom: 1.75rem;
+        .toplinks a:hover { color: var(--ink); background: rgba(17, 24, 32, .05); }
+        .toplinks a.is-on { color: var(--blue); background: rgba(0, 113, 188, .09); }
+        .top-cta {
+            white-space: nowrap; text-decoration: none; font-size: .84rem; font-weight: 600;
+            color: #fff; background: var(--ink); border-radius: 999px; padding: .4rem .9rem;
+        }
+        .top-cta:hover { color: #fff; background: #000; }
+        .progress-line { position: absolute; left: 0; right: 0; bottom: -1px; height: 2px; }
+        .progress-line span {
+            display: block; height: 100%; transform-origin: 0 50%; transform: scaleX(0);
+            background: linear-gradient(90deg, var(--sky), var(--green), var(--orange), var(--red));
         }
 
-        /* figures carry their own white ground, so no frame is added here */
-        /* a wide figure reads better inset than edge-to-edge in its column */
-        .figure-plain { max-width: var(--fig-w); margin-inline: auto; }
-        .figure-plain img { display: block; width: 100%; height: auto; }
+        /* ================================================================
+           Hero
+           ================================================================ */
+        .brand-S { color: var(--sky); }
+        .brand-h { color: var(--green); }
+        .brand-o { color: var(--red); }
+        .brand-w { color: var(--orange); }
+        .brand-rest { color: #5d6670; }
 
-        /* ---------- scroll reveal ----------
-           Elements start pushed down and transparent and rise into place the
-           first time they cross into view. The transition lives on the base
-           class, not on .is-in, so the animation does not depend on the
-           browser picking up a transition that appears in the same restyle. */
-        .reveal {
-            opacity: 0;
-            transform: translateY(30px);
-            transition: opacity .8s cubic-bezier(.22, .68, .32, 1) var(--rise-delay, 0s),
-                        transform .8s cubic-bezier(.22, .68, .32, 1) var(--rise-delay, 0s);
-            will-change: opacity, transform;
+        .hero { position: relative; overflow: hidden; padding: clamp(72px, 11vw, 132px) 0 clamp(40px, 6vw, 72px); isolation: isolate; }
+        .hero-bg { position: absolute; inset: 0; z-index: -1; background: linear-gradient(180deg, #f6f9fd 0%, #f1f5fa 62%, #fff 100%); }
+        .hero-bg .blob { position: absolute; border-radius: 50%; filter: blur(60px); opacity: .5; animation: drift 22s ease-in-out infinite alternate; }
+        .hero-bg .b1 { width: 46vw; height: 46vw; max-width: 620px; max-height: 620px; left: -10vw; top: -16vw; background: radial-gradient(circle, rgba(102, 158, 211, .55), transparent 65%); }
+        .hero-bg .b2 { width: 38vw; height: 38vw; max-width: 520px; max-height: 520px; right: -8vw; top: -6vw; background: radial-gradient(circle, rgba(243, 170, 104, .42), transparent 65%); animation-delay: -7s; }
+        .hero-bg .b3 { width: 34vw; height: 34vw; max-width: 460px; max-height: 460px; left: 34%; top: 22%; background: radial-gradient(circle, rgba(103, 166, 81, .28), transparent 65%); animation-delay: -13s; }
+        .hero-bg .dots {
+            position: absolute; inset: 0;
+            background-image: radial-gradient(rgba(17, 24, 32, .09) 1px, transparent 1.2px);
+            background-size: 22px 22px;
+            -webkit-mask-image: radial-gradient(ellipse 70% 60% at 50% 30%, #000 30%, transparent 75%);
+            mask-image: radial-gradient(ellipse 70% 60% at 50% 30%, #000 30%, transparent 75%);
         }
-        .reveal.is-in { opacity: 1; transform: none; }
+        @keyframes drift {
+            0%   { transform: translate(0, 0) scale(1); }
+            50%  { transform: translate(3vw, 2vw) scale(1.08); }
+            100% { transform: translate(-2vw, 3vw) scale(.96); }
+        }
+
+        .hero-inner { text-align: center; }
+        .wordmark { font-weight: 800; letter-spacing: -.035em; line-height: 1; font-size: clamp(2.9rem, 8.4vw, 5.4rem); margin: 0 0 1rem; }
+        .tagline { font-size: clamp(1.12rem, 2.4vw, 1.6rem); color: var(--muted); margin: 0 auto 1.6rem; letter-spacing: -.005em; }
+        .authors { max-width: 780px; margin: 0 auto .55rem; font-size: 1.02rem; line-height: 1.75; color: var(--ink-2); text-wrap: balance; }
+        .authors .au { white-space: nowrap; }
+        .authors a { color: inherit; text-decoration: none; background-image: linear-gradient(currentColor, currentColor); background-size: 0 1px; background-repeat: no-repeat; background-position: 0 100%; transition: background-size .3s var(--ease), color .2s; }
+        .authors a:hover { color: var(--blue); background-size: 100% 1px; }
+        .authors sup { color: var(--muted); }
+        .affil { color: var(--muted); margin: 0 0 .25rem; }
+        .notes { color: var(--muted); font-size: .84rem; margin: 0 0 1.9rem; }
+
+        .links { display: flex; flex-wrap: wrap; justify-content: center; gap: .55rem; }
+        .link-btn {
+            display: inline-flex; align-items: center; gap: .5rem;
+            padding: .62rem 1.15rem; border-radius: 999px; text-decoration: none;
+            background: var(--ink); color: #fff; font-size: .95rem; font-weight: 600;
+            box-shadow: 0 1px 0 rgba(255, 255, 255, .12) inset, 0 6px 16px -8px rgba(17, 24, 32, .55);
+            transition: transform .2s var(--ease), box-shadow .2s, background .2s;
+        }
+        .link-btn:hover { color: #fff; background: #000; transform: translateY(-2px); box-shadow: 0 1px 0 rgba(255, 255, 255, .12) inset, 0 12px 22px -10px rgba(17, 24, 32, .6); }
+        .link-btn svg { width: 1.05em; height: 1.05em; fill: currentColor; flex: none; }
+        .link-btn.hf, .link-btn.hf:hover { color: #FFD21E; }   /* HF Daily Papers: tinted label, same pill */
+
+        .hero-media { margin-top: clamp(40px, 6vw, 64px); }
+        .video-frame {
+            position: relative; max-width: 1000px; margin-inline: auto; border-radius: 20px; padding: 8px;
+            background: rgba(255, 255, 255, .7); border: 1px solid rgba(255, 255, 255, .9);
+            box-shadow: var(--sh-2), 0 0 0 1px var(--line);
+            -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
+        }
+        .video-frame video { display: block; width: 100%; height: auto; border-radius: 14px; background: transparent; }
+
+        /* ================================================================
+           Cards and figures
+           ================================================================ */
+        .card-x {
+            position: relative; background: var(--card); border: 1px solid var(--line); border-radius: var(--r);
+            box-shadow: var(--sh-1); padding: clamp(10px, 2vw, 22px);
+        }
+        .fig { margin: 0; }
+        .fig-cap { font-size: .9rem; line-height: 1.6; color: var(--muted); margin: 1rem auto 0; max-width: 760px; text-align: center; }
+
+        /* live illustrations: the SVG is fetched and inlined so its parts can move */
+        .fig-live { position: relative; width: 100%; }
+        .fig-live > svg, .fig-live > img { display: block; width: 100%; height: auto; }
+        .fig-live:not([data-ready]) { background: linear-gradient(100deg, #f3f5f8 30%, #fafbfc 50%, #f3f5f8 70%) 0 0 / 200% 100%; border-radius: 10px; animation: shimmer 1.4s linear infinite; }
+        @keyframes shimmer { to { background-position: -200% 0; } }
+
+        .fig-tools { position: absolute; top: 10px; right: 10px; display: flex; gap: 6px; z-index: 2; opacity: 0; transition: opacity .2s; }
+        .card-x:hover .fig-tools, .card-x:focus-within .fig-tools { opacity: 1; }
+        .tool {
+            display: inline-flex; align-items: center; gap: .35rem; height: 32px; padding: 0 .7rem; border-radius: 999px;
+            border: 1px solid var(--line); background: rgba(255, 255, 255, .92); color: var(--ink-2);
+            font-size: .78rem; font-weight: 600; box-shadow: var(--sh-1); cursor: pointer;
+        }
+        .tool:hover { color: var(--blue); border-color: rgba(0, 113, 188, .35); }
+        .tool svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
+        /* ---------- entrance choreography inside the inlined SVGs ----------
+           animsvg.py wrapped every drawable in <g class="fx fx-ROLE" style="--d">;
+           --u converts a CSS px of travel into that drawing's own units. */
+        .fig-live { --u: 1; }
+        .fig-live[data-kind="method"] { --u: 3.2; }
+        .fig-live .fx {
+            transform-box: fill-box; transform-origin: center;
+            transition: opacity .6s var(--ease) var(--d, 0ms), transform .8s var(--ease) var(--d, 0ms);
+        }
+        .fig-live .fx-pop, .fig-live .fx-letter { transition-timing-function: var(--ease), var(--spring); transition-duration: .4s, .6s; }
+        .fig-live:not(.is-in) .fx { opacity: 0; }
+        .fig-live:not(.is-in) .fx-rise { transform: translateY(calc(12px * var(--u))); }
+        .fig-live:not(.is-in) .fx-zoom { transform: scale(.94); }
+        .fig-live:not(.is-in) .fx-pop { transform: scale(.55); }
+        .fig-live:not(.is-in) .fx-letter { transform: translateY(calc(10px * var(--u))) scale(.7); }
+        .fig-live:not(.is-in) .fx-arrow { transform: translate(calc(var(--ax) * -22px), calc(var(--ay) * -22px)); }
+        .fig-live:not(.is-in) .fx-spin { transform: rotate(calc(var(--dir) * -40deg)); }
+        .fig-live .fx-wipe, .fig-live .fx-sweep { clip-path: inset(-2% -2% -2% -2%); transition: opacity .3s ease var(--d), clip-path 1s var(--ease) var(--d); }
+        .fig-live .fx-sweep { transition-duration: .3s, 1.3s; }
+        .fig-live:not(.is-in) .fx-wipe, .fig-live:not(.is-in) .fx-sweep { clip-path: inset(-2% 102% -2% -2%); }
+        .fig-live .fx-head { transition-duration: .25s, .25s; }
+
+        /* dotted trajectories: dots light up one after another, then a spark runs along them */
+        .fig-live .fx-dots .dot { transform-box: fill-box; transform-origin: center; transition: opacity .2s ease calc(var(--d) + var(--i) * 34ms); }
+        .fig-live:not(.is-in) .fx-dots .dot { opacity: 0; }
+        .fig-live.is-loop .fx-dots .dot { animation: spark calc(var(--n) * 70ms + 1400ms) ease-out calc(var(--i) * 70ms) infinite; }
+        @keyframes spark {
+            0%   { transform: scale(1); fill: rgb(194, 241, 200); }
+            6%   { transform: scale(1.9); fill: #fff; }
+            22%, 100% { transform: scale(1); fill: rgb(194, 241, 200); }
+        }
+
+        /* loops, each on the inner .lp so it never fights the entrance transform */
+        .fig-live .lp { transform-box: fill-box; transform-origin: center; }
+        .fig-live.is-loop .fx-arrow > .lp { animation: nudge 1.9s ease-in-out var(--ph, 0s) infinite; }
+        @keyframes nudge {
+            0%, 100% { transform: translate(0, 0); }
+            50% { transform: translate(calc(var(--ax) * 7px), calc(var(--ay) * 7px)); }
+        }
+        .fig-live.is-loop .fx-spin > .lp { animation: rock 2.6s ease-in-out infinite; }
+        @keyframes rock {
+            0%, 100% { transform: rotate(0deg); }
+            50% { transform: rotate(calc(var(--dir) * 12deg)); }
+        }
+        .fig-live.is-loop .fx-mascot > .lp { animation: bob 3.2s ease-in-out infinite; }
+        @keyframes bob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
+        .fig-live.is-loop .fx-wipe > .lp { animation: rewipe 3.4s var(--ease) infinite; }
+        @keyframes rewipe {
+            0% { clip-path: inset(-2% 102% -2% -2%); }
+            38%, 100% { clip-path: inset(-2% -2% -2% -2%); }
+        }
+
+        /* method: centre-lines draw each stream, the arrow proper lands at the end */
+        .fig-live .flow { visibility: visible; pointer-events: none; }
+        .fig-live .flow .draw {
+            stroke-dasharray: var(--len) var(--len); stroke-dashoffset: var(--len);
+            transition: stroke-dashoffset var(--dur) linear var(--d), opacity .25s ease calc(var(--d) + var(--dur) + 120ms);
+        }
+        .fig-live.is-in .flow .draw { stroke-dashoffset: 0; opacity: 0; }
+        .fig-live .flow .pulse, .fig-live .flow .pulse-glow { stroke-linecap: round; opacity: 0; }
+        .fig-live.is-loop .flow .pulse { opacity: 1; stroke-width: 8; }
+        .fig-live.is-loop .flow .pulse-glow { opacity: .5; stroke-width: 28; }
+
+        .fig-live.is-paused .lp, .fig-live.is-paused .dot { animation-play-state: paused !important; }
+        .fig-live.is-static .fx, .fig-live.is-static .dot, .fig-live.is-static .draw { transition: none !important; }
 
         @media (prefers-reduced-motion: reduce) {
-            .reveal { opacity: 1; transform: none; transition: none; }
+            .fig-live .fx, .fig-live .dot, .fig-live .draw { transition: none !important; }
+            .fig-live .lp, .fig-live .dot { animation: none !important; }
+            .fig-live .pulse, .fig-live .pulse-glow { display: none; }
         }
 
-        /* ---------- figure internals ----------
-           The plotting scripts tag every bar and switch with a gid, which
-           matplotlib writes as the id of that artist's <g>; page/tools/figures.py
-           inlines the SVG so the ids are reachable from here and namespaces them
-           per figure, hence the substring match. Bars grow out of their baseline
-           and switches slide on when the figure is scrolled to; JS sets each
-           element's transform-origin and its own --d so a panel reads across
-           rather than snapping in all at once. */
+        /* ---------- matplotlib figures (bars grow, switches slide) ---------- */
         .fig-svg { display: block; width: 100%; height: auto; }
-
-        .fig-anim [id*="-sp-bar-"],
-        .fig-anim [id*="-sp-hbar-"],
-        .fig-anim [id*="-sp-seg-"] {
-            transform-box: view-box;
-            transition: transform .9s cubic-bezier(.2, .78, .3, 1) var(--d, 0s);
+        .fig-anim [id*="-sp-bar-"], .fig-anim [id*="-sp-hbar-"], .fig-anim [id*="-sp-seg-"] {
+            transform-box: view-box; transition: transform .9s cubic-bezier(.2, .78, .3, 1) var(--d, 0s);
         }
         .fig-anim [id*="-sp-bar-"] { transform: scaleY(.001); }
-        .fig-anim [id*="-sp-hbar-"],
-        .fig-anim [id*="-sp-seg-"] { transform: scaleX(.001); }
-
+        .fig-anim [id*="-sp-hbar-"], .fig-anim [id*="-sp-seg-"] { transform: scaleX(.001); }
         .fig-anim [id*="-sp-knob-"] {
-            transform-box: view-box;
-            opacity: 0;
-            transition: opacity .3s ease var(--d, 0s),
-                        transform .5s cubic-bezier(.3, .8, .3, 1) var(--d, 0s);
+            transform-box: view-box; opacity: 0;
+            transition: opacity .3s ease var(--d, 0s), transform .5s cubic-bezier(.3, .8, .3, 1) var(--d, 0s);
         }
         .fig-anim [id*="-sp-knob-on-"] { transform: translateX(var(--slide, -6px)); }
-
-        .fig-anim.is-in [id*="-sp-bar-"],
-        .fig-anim.is-in [id*="-sp-hbar-"],
-        .fig-anim.is-in [id*="-sp-seg-"],
+        .fig-anim.is-in [id*="-sp-bar-"], .fig-anim.is-in [id*="-sp-hbar-"], .fig-anim.is-in [id*="-sp-seg-"],
         .fig-anim.is-in [id*="-sp-knob-on-"] { transform: none; }
         .fig-anim.is-in [id*="-sp-knob-"] { opacity: 1; }
-
         @media (prefers-reduced-motion: reduce) {
-            .fig-anim [id*="-sp-bar-"],
-            .fig-anim [id*="-sp-hbar-"],
-            .fig-anim [id*="-sp-seg-"],
+            .fig-anim [id*="-sp-bar-"], .fig-anim [id*="-sp-hbar-"], .fig-anim [id*="-sp-seg-"],
             .fig-anim [id*="-sp-knob-"] { transform: none; opacity: 1; transition: none; }
         }
 
-        /* fixed ratio keeps every tile the same height, so the captions
-           below them line up and nothing gets clipped */
-        .video-card {
-            border-radius: .6rem;
-            overflow: hidden;
-            aspect-ratio: 16 / 9;
-            background: transparent;
+        /* media rises into place the first time it is scrolled to; text does not move */
+        .reveal { opacity: 0; transform: translateY(28px) scale(.985); transition: opacity .8s var(--ease) var(--rise-delay, 0s), transform .9s var(--ease) var(--rise-delay, 0s); }
+        .reveal.is-in { opacity: 1; transform: none; }
+        @media (prefers-reduced-motion: reduce) { .reveal { opacity: 1; transform: none; transition: none; } }
+
+        /* ================================================================
+           Abstract
+           ================================================================ */
+        .abstract { display: grid; grid-template-columns: 200px minmax(0, 1fr); gap: 48px; align-items: start; max-width: 980px; margin-inline: auto; }
+        .abstract .sec-title { position: sticky; top: calc(var(--top) + 24px); }
+        .abstract-text {
+            font-size: 1.06rem; line-height: 1.8; color: var(--ink-2); margin: 0;
+            text-align: justify; -webkit-hyphens: auto; hyphens: auto;
         }
-        .video-card video {
-            display: block;
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-        .video-card.has-alt { cursor: pointer; }
-        .video-card.has-alt:focus-visible {
-            outline: 2px solid var(--sl-logo-blue);
-            outline-offset: 2px;
-        }
+        .abstract-text strong { color: var(--ink); }
 
-        /* ---------- demo deck (one page of clips at a time) ---------- */
-        .deck-tabs { display: flex; flex-wrap: wrap; gap: .4rem; margin-bottom: 1.1rem; }
-
-        .deck-tab {
-            font-size: .82rem;
-            padding: .32rem .8rem;
-            border-radius: 999px;
-            border: 1px solid rgba(0, 0, 0, .12);
-            background: #fff;
-            color: var(--sl-gray);
-            cursor: pointer;
-            transition: background .15s, color .15s, border-color .15s;
-        }
-
-        .deck-tab:hover { border-color: var(--sl-logo-blue); color: var(--sl-ink); }
-        .deck-tab.is-on { background: var(--sl-logo-blue); border-color: var(--sl-logo-blue); color: #fff; }
-        .deck-tab .n { opacity: .62; margin-left: .35rem; font-variant-numeric: tabular-nums; }
-
-        .deck-subgroup {
-            display: inline-flex;
-            align-items: center;
-            gap: .3rem;
-            padding: .22rem .5rem .22rem .22rem;
-            border-radius: 999px;
-            background: linear-gradient(180deg, rgba(102, 158, 211, .13), rgba(102, 158, 211, .07));
-            border: 1px solid rgba(102, 158, 211, .22);
-            box-shadow: inset 0 1px 0 rgba(255, 255, 255, .7);
-            overflow: hidden;
-            white-space: nowrap;
-            min-width: 0;
-        }
-
-        /* 0fr -> 1fr animates to the content's own width, so the capsule unfolds
-           to exactly its natural size and the next pill is pushed along with it */
-        .deck-fold {
-            display: inline-grid;
-            grid-template-columns: 0fr;
-            opacity: 0;
-            margin-right: -.4rem;        /* swallow the row gap while folded */
-            transition: grid-template-columns .34s cubic-bezier(.22, .68, .32, 1),
-                        opacity .2s ease,
-                        margin-right .34s cubic-bezier(.22, .68, .32, 1);
-        }
-
-        .deck-fold[data-open="true"] {
-            grid-template-columns: 1fr;
-            opacity: 1;
-            margin-right: 0;
-        }
-
-        .deck-elbow {
-            color: var(--sl-logo-blue);
-            opacity: .55;
-            font-size: 1rem;
-            line-height: 1;
-            padding: 0 .1rem 0 .15rem;
-        }
-
-        .deck-sub {
-            font-size: .78rem;
-            padding: .26rem .7rem;
-            border-color: transparent;
-            background: transparent;
-            color: var(--sl-gray);
-            transition: background .18s ease, color .18s ease, box-shadow .18s ease;
-        }
-
-        .deck-sub:hover { background: rgba(255, 255, 255, .7); border-color: transparent; color: var(--sl-ink); }
-
-        .deck-sub.is-on {
-            background: #fff;
-            border-color: transparent;
-            color: var(--sl-ink);
-            box-shadow: 0 1px 3px rgba(16, 25, 45, .14);
-        }
-
-        .deck-sub.is-on .n { color: var(--sl-logo-blue); opacity: 1; }
-
-
-
-
-        .clip-task {
-            margin: .5rem 0 0;
-            font-size: .8rem;
-            line-height: 1.45;
-            color: var(--sl-gray);
-        }
-
-        /* the page arrows flank the grid instead of sitting in a bar above it,
-           so the thing you click is next to the thing it moves */
-        .deck-frame {
-            display: grid;
-            grid-template-columns: auto minmax(0, 1fr) auto;
-            align-items: center;
-            gap: .55rem;
-        }
-
-        .deck-arrow {
-            width: 2.4rem; height: 2.4rem;
-            border-radius: 999px;
-            border: 1px solid rgba(0, 0, 0, .14);
-            background: #fff;
-            color: var(--sl-ink);
-            display: grid; place-items: center;
-            font-size: 1.15rem; line-height: 1;
-            padding: 0;
-            transition: background .15s, border-color .15s, transform .12s, opacity .15s;
-        }
-
-        .deck-arrow:hover:not([disabled]) { background: #eff5fb; border-color: var(--sl-logo-blue); }
-        .deck-arrow:active:not([disabled]) { transform: scale(.93); }
-        .deck-arrow[disabled] { opacity: .25; cursor: default; }
-        .deck-arrow:focus-visible { outline: 2px solid var(--sl-logo-blue); outline-offset: 2px; }
-
-        .deck-bar {
-            display: flex;
-            align-items: baseline;
-            gap: .75rem;
-            flex-wrap: wrap;
-            margin-bottom: 1.1rem;
-        }
-        .deck-tag { font-weight: 600; color: var(--sl-ink); }
-        .deck-count {
-            font-weight: 400;
-            font-size: .8rem;
-            color: var(--sl-gray);
-            border: 1px solid rgba(0, 0, 0, .12);
-            border-radius: 999px;
-            padding: .1rem .5rem;
-        }
-        .deck-note {
-            font-size: .88rem;
-            line-height: 1.6;
-            color: var(--sl-gray);
-            margin: 0 0 1.5rem;
-        }
-
-        .deck-nav { display: flex; align-items: center; gap: .4rem; margin-left: auto; }
-        .deck-btn {
-            width: 2.3rem; height: 2.3rem;
-            border-radius: 999px;
-            border: 1px solid rgba(0, 0, 0, .14);
-            background: #fff;
-            color: var(--sl-ink);
-            display: grid; place-items: center;
-            font-size: 1.1rem; line-height: 1;
-            padding: 0;
-            transition: background .15s, border-color .15s, transform .12s;
-        }
-        .deck-btn:hover { background: #eff5fb; border-color: var(--sl-logo-blue); }
-        .deck-btn:active { transform: scale(.93); }
-        .deck-btn:focus-visible { outline: 2px solid var(--sl-logo-blue); outline-offset: 2px; }
-        .deck-pos {
-            font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-            font-size: .78rem;
-            color: var(--sl-gray);
-            min-width: 3.4rem;
-            text-align: center;
-        }
-
-        /* the track holds every page side by side and slides horizontally;
-           pages that are off to the side are clipped away here, which is also
-           what keeps their clips from loading until they are needed */
-        /* Switching shelves swaps every tile at once, so the height is animated
-           too -- 12 clips and 3 clips are three rows apart, and without this the
-           page under the deck jumps by that much the instant a tab is clicked. */
-        .deck-viewport { overflow: hidden; position: relative; }
-
-        /* invisible stand-in for the tallest shelf; it holds the box open so that
-           switching shelves never moves anything below the deck */
-        .deck-ballast { visibility: hidden; pointer-events: none; }
-        .deck-viewport > .deck-track { position: absolute; top: 0; left: 0; width: 100%; }
-        .deck-track.is-out { opacity: 0; }
-
-        @keyframes card-in {
-            from { opacity: 0; transform: translateY(12px); }
-            to   { opacity: 1; transform: none; }
-        }
-
-        .video-card.card-in {
-            animation: card-in .4s cubic-bezier(.22, .68, .32, 1) both;
-            animation-delay: calc(var(--i, 0) * 26ms);
-        }
-        .deck-track {
-            display: flex;
-            align-items: flex-start;
-            transition: transform .45s cubic-bezier(.3, .72, .3, 1),
-                        opacity .18s ease;
-        }
-        .deck-slide { flex: 0 0 100%; min-width: 100%; }
-
-        @media (prefers-reduced-motion: reduce) {
-            .deck-track { transition: none; }
-            .video-card.card-in { animation: none; }
-            .deck-fold { transition: none; }
-        }
-
-        .deck-dots {
-            display: flex; justify-content: center; flex-wrap: wrap;
-            gap: .3rem; margin-top: 1.15rem;
-        }
-        .deck-dot {
-            width: .5rem; height: .5rem; padding: 0;
-            border: 0; border-radius: 999px;
-            background: rgba(0, 0, 0, .16);
-            transition: width .25s, background .25s;
-        }
-        .deck-dot:hover { background: rgba(0, 0, 0, .32); }
-        .deck-dot.is-on { width: 1.5rem; background: var(--sl-logo-blue); }
-
-        .clip-meta {
-            display: block;
-            font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-            font-size: .74rem;
-            opacity: .65;
-        }
-
-        .clip-note { display: block; font-size: .85rem; }
-
-        .video-caption {
-            color: var(--sl-gray);
-            font-size: .85rem;
-            text-align: center;
-            margin: .45rem 0 0;
-        }
-        .main-video {
-            border-radius: .8rem;
-            overflow: hidden;
-            /* no backing colour: the clip's antialiased corner pixels blend
-               whatever is behind the video, and a black backing showed there as
-               a dark arc tracing each corner (measured 152/255 against 245) */
-            box-shadow: 0 8px 28px rgba(16, 25, 40, .12);
-        }
-
-        .main-video video {
-            display: block;
-            width: 100%;
-            height: auto;
-            /* the video paints on its own layer, so clipping it only from the
-               parent leaves the black backing visible along the corner arcs */
-            border-radius: inherit;
-        }
-
-        .video-wide {
-            border-radius: .6rem;
-            overflow: hidden;
-            background: transparent;
-        }
-        .video-wide video { display: block; width: 100%; height: auto; }
-
-        .unit-rows { text-align: center; }
-
-        .unit-desc {
-            max-width: 820px;
-            margin: .9rem auto 0;
-            text-align: left;
-            min-height: 3.4em;
-            color: var(--sl-gray);
-            font-size: .92rem;
-            line-height: 1.55;
-        }
-
-        .unit-desc code { color: var(--sl-blue); font-weight: 700; }
+        /* ================================================================
+           01 Interface: unit pad + a stage that acts each unit out
+           ================================================================ */
+        .iface { display: grid; grid-template-columns: minmax(0, 1.08fr) minmax(0, 1fr); gap: 20px; align-items: stretch; }
+        .pad { display: grid; gap: 14px; align-content: start; }
+        .pad-group { display: grid; gap: 8px; }
+        .pad-label { font-size: .7rem; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
+        .pad-keys { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+        .pad-row { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+        .pad-row .pad-keys { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 
         .unit-chip {
-            cursor: pointer;
+            position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px;
+            min-height: 70px; padding: 10px 4px; border-radius: 14px; cursor: pointer;
+            border: 1px solid var(--line); background: #fff; color: var(--ink-2);
+            box-shadow: var(--sh-1);
+            transition: transform .2s var(--ease), background .2s, color .2s, border-color .2s, box-shadow .2s;
+        }
+        .unit-chip svg { width: 22px; height: 22px; stroke: currentColor; fill: none; stroke-width: 1.9; stroke-linecap: round; stroke-linejoin: round; color: var(--blue); transition: color .2s; }
+        .unit-chip .u { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: .78rem; font-weight: 600; letter-spacing: -.01em; white-space: nowrap; }
+        .unit-chip:hover { transform: translateY(-2px); border-color: rgba(0, 113, 188, .35); box-shadow: 0 10px 20px -12px rgba(0, 113, 188, .45); }
+        .unit-chip:focus-visible { outline: 2px solid var(--sky); outline-offset: 2px; }
+        .unit-chip.is-auto { border-color: rgba(0, 113, 188, .45); background: rgba(0, 113, 188, .05); }
+        .unit-chip.is-on { background: var(--blue); border-color: var(--blue); color: #fff; box-shadow: 0 12px 22px -12px rgba(0, 113, 188, .8); }
+        .unit-chip.is-on svg { color: #fff; }
+
+        .stage {
+            position: relative; border-radius: var(--r); border: 1px solid var(--line); overflow: hidden;
+            background: radial-gradient(120% 90% at 50% 0%, #fbfdff 0%, #eef3f9 100%);
+            min-height: 280px; display: flex; flex-direction: column;
+        }
+        .stage svg { display: block; width: 100%; height: auto; flex: 1; }
+        .stage-cap {
+            display: flex; align-items: center; justify-content: space-between; gap: .75rem;
+            padding: 10px 14px; border-top: 1px solid var(--line); background: rgba(255, 255, 255, .7); font-size: .8rem; color: var(--muted);
+        }
+        .stage-cap code { font-weight: 700; font-size: .82rem; }
+        .stage-cap .hint { white-space: nowrap; }
+        .unit-desc {
+            margin: 16px 0 0; min-height: 3.3em; font-size: .95rem; line-height: 1.6; color: var(--muted);
+        }
+        .unit-desc code { font-weight: 700; }
+
+        /* ================================================================
+           Results
+           ================================================================ */
+        .result { margin-top: clamp(48px, 7vw, 84px); }
+        .result-head { max-width: 760px; margin: 0 auto 18px; text-align: center; }
+        .result-head h3 { font-size: clamp(1.15rem, 2vw, 1.4rem); font-weight: 700; letter-spacing: -.012em; margin: 0 0 .5rem; }
+        .takeaway { font-size: 1rem; line-height: 1.6; color: var(--ink-2); margin: 0; }
+        .takeaway strong { color: var(--blue); }
+        .result .card-x { max-width: 920px; margin-inline: auto; }
+        .result .card-x .fig-anim { max-width: 860px; margin-inline: auto; }
+
+        details.more { max-width: 760px; margin: 14px auto 0; text-align: center; }
+        details.more .more-body { text-align: left; }
+        details.more summary {
+            list-style: none; cursor: pointer; display: inline-flex; align-items: center; gap: .45rem;
+            font-size: .85rem; font-weight: 600; color: var(--muted); padding: .35rem .2rem; border-radius: 8px;
+        }
+        details.more summary::-webkit-details-marker { display: none; }
+        details.more summary::before {
+            content: ""; width: 16px; height: 16px; border-radius: 50%; border: 1.5px solid currentColor;
+            background: linear-gradient(currentColor, currentColor) center / 8px 1.5px no-repeat,
+                        linear-gradient(currentColor, currentColor) center / 1.5px 8px no-repeat;
+            transition: transform .25s var(--ease);
+        }
+        details.more[open] summary::before { transform: rotate(45deg); }
+        details.more summary:hover { color: var(--blue); }
+        details.more .more-body { font-size: .95rem; line-height: 1.7; color: var(--ink-2); padding: .4rem 0 0 1.6rem; }
+        details.more .more-body p { margin: 0 0 .8rem; }
+
+        .stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; max-width: 920px; margin: 0 auto; }
+        .stat { border: 1px solid var(--line); border-radius: 16px; background: #fff; padding: 18px 18px 16px; box-shadow: var(--sh-1); }
+        .stat-lab { font-size: .76rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin-bottom: 10px; }
+        .stat-lab span { font-weight: 600; letter-spacing: 0; text-transform: none; }
+        .stat-nums { display: flex; align-items: baseline; gap: .55rem; margin-bottom: 12px; }
+        .stat-num { font-size: clamp(1.7rem, 3vw, 2.15rem); font-weight: 800; letter-spacing: -.03em; color: var(--ink); line-height: 1; font-variant-numeric: tabular-nums; }
+        .stat-num small { font-size: .55em; font-weight: 700; color: var(--muted); margin-left: 1px; }
+        .stat-num.zs { color: var(--blue); }
+        .stat-num.ft { color: var(--green); }
+        .stat-nums .sep { color: #c3c9d0; font-size: 1.4rem; }
+        .bars { display: grid; gap: 6px; }
+        .bar { display: grid; grid-template-columns: 2.6rem minmax(0, 1fr); align-items: center; gap: 8px; font-size: .72rem; color: var(--muted); }
+        .bar i { display: block; height: 6px; border-radius: 99px; background: #edf0f4; overflow: hidden; }
+        .bar i b { display: block; height: 100%; width: var(--v); border-radius: inherit; transform-origin: 0 50%; transition: transform 1.1s var(--ease) var(--bd, 0s); }
+        .bar.zs b { background: var(--blue); } .bar.ft b { background: var(--green); } .bar.base b { background: #b9c0c8; }
+        .stats.armed .bar b { transform: scaleX(0); }
+        .stats.armed.is-in .bar b { transform: none; }
+        .stat-sub { font-size: .76rem; color: var(--muted); margin-top: 10px; }
+
+        /* ================================================================
+           Demo deck
+           ================================================================ */
+        .deck-tabs { display: flex; flex-wrap: wrap; align-items: center; gap: .45rem; margin-bottom: 1rem; }
+        .deck-tab {
+            font-size: .84rem; padding: .42rem .9rem; border-radius: 999px; border: 1px solid var(--line);
+            background: #fff; color: var(--muted); cursor: pointer; white-space: nowrap; box-shadow: var(--sh-1);
             transition: background .15s, color .15s, border-color .15s;
-            display: inline-block;
-            font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-            font-size: .82rem;
-            padding: .3rem .6rem;
-            margin: .2rem;
-            border-radius: .4rem;
-            background: rgba(102, 158, 211, .14);
-            color: var(--sl-blue);
-            border: 1px solid rgba(102, 158, 211, .3);
         }
-
-        .unit-chip:hover, .unit-chip:focus-visible { background: rgba(102, 158, 211, .28); }
-
-        .unit-chip.is-on {
-            background: var(--sl-blue);
-            border-color: var(--sl-blue);
-            color: #fff;
+        .deck-tab:hover { border-color: rgba(0, 113, 188, .35); color: var(--ink); }
+        .deck-tab.is-on { background: var(--ink); border-color: var(--ink); color: #fff; }
+        .deck-tab .n { opacity: .6; margin-left: .38rem; font-variant-numeric: tabular-nums; }
+        .deck-subgroup {
+            display: inline-flex; align-items: center; gap: .25rem; padding: .22rem;
+            border-radius: 999px; background: rgba(17, 24, 32, .05); border: 1px solid var(--line);
+            overflow: hidden; white-space: nowrap; min-width: 0;
         }
-
-        /* The vocabulary is the point of this section, so it introduces itself:
-           each unit flashes once, in order, the first time the list is seen. */
-        @keyframes unit-flash {
-            0%   { background: rgba(102, 158, 211, .14); color: var(--sl-blue); }
-            35%  { background: var(--sl-blue); color: #fff; }
-            100% { background: rgba(102, 158, 211, .14); color: var(--sl-blue); }
+        .deck-fold {
+            display: inline-grid; grid-template-columns: 0fr; opacity: 0; margin-right: -.45rem;
+            transition: grid-template-columns .34s var(--ease), opacity .2s ease, margin-right .34s var(--ease);
         }
+        .deck-fold[data-open="true"] { grid-template-columns: 1fr; opacity: 1; margin-right: 0; }
+        .deck-elbow { display: none; }
+        .deck-sub { font-size: .8rem; padding: .32rem .78rem; border: 0; background: transparent; box-shadow: none; color: var(--muted); }
+        .deck-sub:hover { background: rgba(255, 255, 255, .8); color: var(--ink); }
+        .deck-sub.is-on { background: #fff; color: var(--ink); box-shadow: 0 1px 3px rgba(16, 25, 45, .16); }
+        .deck-sub.is-on .n { color: var(--blue); opacity: 1; }
+        .deck-note { font-size: .92rem; line-height: 1.6; color: var(--muted); margin: 0 0 1.25rem; min-height: 1.6em; }
 
-        .unit-chip.flash { animation: unit-flash .5s ease-out both; }
-
-        /* the pinned unit keeps a slow breath so it stays findable */
-        @keyframes unit-breathe {
-            0%, 100% { box-shadow: 0 0 0 0 rgba(102, 158, 211, .45); }
-            50%      { box-shadow: 0 0 0 5px rgba(102, 158, 211, 0); }
+        .deck-frame { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: .55rem; }
+        .deck-arrow {
+            width: 2.4rem; height: 2.4rem; border-radius: 999px; border: 1px solid var(--line); background: #fff;
+            color: var(--ink); display: grid; place-items: center; font-size: 1.15rem; line-height: 1; padding: 0;
+            transition: background .15s, border-color .15s, transform .12s, opacity .15s;
         }
+        .deck-arrow:hover:not([disabled]) { background: #eff5fb; border-color: var(--sky); }
+        .deck-arrow[disabled] { opacity: .25; cursor: default; }
+        .deck-viewport { overflow: hidden; position: relative; }
+        .deck-ballast { visibility: hidden; pointer-events: none; }
+        .deck-viewport > .deck-track { position: absolute; top: 0; left: 0; width: 100%; }
+        .deck-track { display: flex; align-items: flex-start; transition: transform .45s cubic-bezier(.3, .72, .3, 1), opacity .18s ease; }
+        .deck-track.is-out { opacity: 0; }
+        .deck-slide { flex: 0 0 100%; min-width: 100%; }
+        .deck-dots { display: flex; justify-content: center; flex-wrap: wrap; gap: .3rem; margin-top: 1.15rem; }
+        .deck-dot { width: .5rem; height: .5rem; padding: 0; border: 0; border-radius: 999px; background: rgba(0, 0, 0, .16); transition: width .25s, background .25s; }
+        .deck-dot.is-on { width: 1.5rem; background: var(--sky); }
 
-        .unit-chip.is-on { animation: unit-breathe 2s ease-out infinite; }
+        .video-card { border-radius: 12px; overflow: hidden; aspect-ratio: 16 / 9; background: #e9edf2; box-shadow: var(--sh-1); transition: transform .3s var(--ease), box-shadow .3s; }
+        .video-card:hover { transform: translateY(-3px); box-shadow: 0 14px 28px -16px rgba(16, 32, 64, .45); }
+        .video-card video { display: block; width: 100%; height: 100%; object-fit: cover; }
+        .video-card.has-alt { cursor: pointer; }
+        @keyframes card-in { from { opacity: 0; transform: translateY(14px) scale(.98); } to { opacity: 1; transform: none; } }
+        .video-card.card-in { animation: card-in .45s var(--ease) both; animation-delay: calc(var(--i, 0) * 30ms); }
+        .clip-task { margin: .5rem 0 0; font-size: .8rem; line-height: 1.45; color: var(--muted); }
+        @media (prefers-reduced-motion: reduce) { .deck-track, .deck-fold { transition: none; } .video-card.card-in { animation: none; } }
 
-        @media (prefers-reduced-motion: reduce) {
-            .unit-chip.flash, .unit-chip.is-on { animation: none; }
-        }
+        /* ================================================================
+           GUMI: the clip sits in a browser window, because that is what it is
+           ================================================================ */
+        .browser { max-width: 1000px; margin-inline: auto; border-radius: 16px; overflow: hidden; background: #fff; border: 1px solid var(--line); box-shadow: var(--sh-2); }
+        .browser-bar { display: flex; align-items: center; gap: 7px; height: 34px; padding: 0 14px; background: #f3f5f8; border-bottom: 1px solid var(--line); }
+        .browser-bar i { width: 10px; height: 10px; border-radius: 50%; background: #dfe3e8; }
+        .browser-bar i:nth-child(1) { background: #f0a19f; } .browser-bar i:nth-child(2) { background: #f5cf86; } .browser-bar i:nth-child(3) { background: #a9d59a; }
+        .browser-bar span { margin-left: 10px; font-size: .74rem; color: var(--muted); font-family: ui-monospace, SFMono-Regular, Menlo, monospace; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .browser video { display: block; width: 100%; height: auto; }
 
-        /* ---------- phones ----------
-           The desktop layout assumes a row wide enough for twelve action units
-           or five tabs. Below that they have to fold, and the interesting part
-           is folding them on purpose: left to itself the browser drops one chip
-           onto a line of its own, and the deck's capsule -- clipped for its
-           unfold animation -- hides whole shelves rather than wrapping them. */
-        @media (max-width: 575.98px) {
-            .wide-only { display: none; }
-
-            /* Five resource pills now, which no longer fit one 360 px line -- they
-               wrap to 4 + 1. Keep the tightened padding and gap anyway: it is what
-               keeps the first row from breaking up any earlier than that. */
-            .pill { padding: .38rem .6rem; font-size: .82rem; }
-            .pill svg { margin-right: .34em; }
-            .hero .gap-2 { gap: .28rem !important; }
-
-            /* three across, so each group reads as two even rows instead of 5 + 1 */
-            .unit-rows > div {
-                display: grid;
-                grid-template-columns: repeat(3, minmax(0, 1fr));
-                gap: .35rem;
-                margin-bottom: .35rem;
-            }
-
-            .unit-chip { margin: 0; width: 100%; font-size: .74rem; padding: .3rem .2rem; }
-
-            .unit-desc { min-height: 4.6em; }
-
-            /* embodiments on the first line, the open shelf below them */
-            .deck-tabs > .deck-tab { order: 1; }
-
-            .deck-fold {
-                order: 2;
-                flex-basis: 100%;
-                display: none;
-                margin-right: 0;
-                opacity: 1;
-                transition: none;
-            }
-
-            .deck-fold[data-open="true"] { display: block; }
-
-            /* the capsule wraps here instead of clipping what will not fit */
-            .deck-subgroup {
-                display: flex;
-                flex-wrap: wrap;
-                white-space: normal;
-                overflow: visible;
-                gap: .3rem;
-                padding: .3rem .45rem;
-            }
-
-            .deck-elbow { display: none; }
-        }
-
+        /* ================================================================
+           Cite, footer
+           ================================================================ */
+        .bib { position: relative; }
         pre.bibtex {
-            background: #f6f8fa;
-            border: 1px solid rgba(0, 0, 0, .08);
-            border-radius: .6rem;
-            padding: 1rem 1.25rem;
-            font-size: .85rem;
-            /* a BibTeX entry has no short lines to wrap at, so let it break
-               anywhere rather than pushing a scrollbar under the block */
-            white-space: pre-wrap;
-            overflow-wrap: anywhere;
+            background: #0f1720; color: #dce3ea; border-radius: 14px; padding: 1.2rem 1.35rem; font-size: .84rem; line-height: 1.6;
+            white-space: pre-wrap; overflow-wrap: anywhere; margin: 0; box-shadow: var(--sh-2);
+        }
+        .bib .tool { position: absolute; top: 10px; right: 10px; background: rgba(255, 255, 255, .1); color: #e8edf2; border-color: rgba(255, 255, 255, .16); box-shadow: none; }
+        .bib .tool:hover { color: #fff; background: rgba(255, 255, 255, .18); }
+        footer { padding: 36px 0 44px; border-top: 1px solid var(--line); color: var(--muted); font-size: .86rem; }
+        footer .wrap { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: .75rem; }
+        footer a { color: var(--muted); text-decoration: none; }
+        footer a:hover { color: var(--blue); }
+
+        /* ================================================================
+           Lightbox (phones mostly: figures are drawn for a wide page)
+           ================================================================ */
+        .lb { position: fixed; inset: 0; z-index: 80; background: #fafbfd; display: flex; flex-direction: column; opacity: 0; pointer-events: none; transition: opacity .25s ease; }
+        .lb.is-open { opacity: 1; pointer-events: auto; }
+        .lb-bar { display: flex; align-items: center; justify-content: space-between; padding: max(10px, env(safe-area-inset-top)) 14px 10px; border-bottom: 1px solid var(--line); font-size: .82rem; color: var(--muted); }
+        .lb-scroll { flex: 1; overflow: auto; -webkit-overflow-scrolling: touch; display: flex; padding: 18px; }
+        .lb-content { width: min(1400px, 100%); margin: auto; flex: none; }   /* auto margins: overflow stays scrollable */
+        .lb-content.wide { width: 960px; }
+        .lb-content svg, .lb-content img { display: block; width: 100%; height: auto; }
+        body.lb-lock { overflow: hidden; }
+
+        /* ================================================================
+           Tablets
+           ================================================================ */
+        @media (max-width: 991.98px) {
+            .iface { grid-template-columns: 1fr; }
+            /* stacked: the stage goes first, so the unit you tap is acted out where you can see it */
+            .stage { min-height: 0; order: -1; width: 100%; max-width: 560px; margin-inline: auto; }
+            .abstract { grid-template-columns: 1fr; gap: 6px; }
+            .abstract .sec-title { position: static; }
+            .top-cta { display: none; }
         }
 
-        .res-head {
-            font-weight: 600;
-            font-size: 1.05rem;
-            margin: 0 0 .85rem;
-            color: var(--sl-ink);
-        }
+        /* ================================================================
+           Phones: nothing is left to wrap where it happens to land.
+           Rows that must stay one line become grids or horizontal scrollers.
+           ================================================================ */
+        @media (max-width: 640px) {
+            :root { --gutter: 16px; --top: 50px; --r: 14px; }
+            body { font-size: 15.5px; }
+            .sec { padding-block: 56px; }
+            .sec-head { margin-bottom: 24px; }
+            .eyebrow { margin-bottom: .7rem; }
 
-        .res-text {
-            font-size: .95rem;
-            line-height: 1.7;
-            color: #33383f;
-        }
+            .topbar-inner { gap: .6rem; padding-right: 0; }
+            .mini-mark { font-size: .95rem; }
+            .toplinks { -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 14px, #000 calc(100% - 22px), transparent); mask-image: linear-gradient(90deg, transparent 0, #000 14px, #000 calc(100% - 22px), transparent); padding: 0 18px 0 8px; }
+            .toplinks a { font-size: .82rem; padding: .34rem .58rem; }
 
-        /* a one-line claim under a figure, for the thing the figure is really
-           about -- distinct from the caption, which only says what is drawn */
-        .res-takeaway {
-            font-size: .95rem;
-            line-height: 1.65;
-            color: #33383f;
-            border-left: 3px solid var(--sl-logo-blue);
-            background: #f7fafd;
-            border-radius: 0 .4rem .4rem 0;
-            padding: .7rem 1rem;
-            margin: 0 0 1.1rem;
-        }
+            .hero { padding-top: 64px; }
+            .wordmark { margin-bottom: .7rem; }
+            .tagline { margin-bottom: 1.2rem; }
+            .authors { font-size: .9rem; line-height: 1.7; }
+            .notes { margin-bottom: 1.4rem; font-size: .78rem; }
+            /* five equal tiles in one row, icon over label: never 4 + 1 */
+            .links { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 6px; }
+            .link-btn { flex-direction: column; gap: 5px; padding: 10px 2px 9px; border-radius: 14px; font-size: .68rem; font-weight: 600; letter-spacing: -.01em; white-space: nowrap; }
+            .link-btn svg { width: 18px; height: 18px; }
+            .video-frame { padding: 4px; border-radius: 14px; }
+            .video-frame video { border-radius: 10px; }
 
-        .stat {
-            height: 100%;
-            border: 1px solid rgba(0, 0, 0, .09);
-            border-radius: .7rem;
-            padding: 1rem 1.1rem;
-            background: #fbfcfe;
-        }
+            .card-x { padding: 8px; border-radius: 14px; }
+            .fig-cap { font-size: .84rem; text-align: left; margin-top: .8rem; }
+            .card-x { margin-bottom: 0; }
+            .fig-tools { opacity: 1; position: static; justify-content: flex-end; margin: 8px 0 0; }
+            .tool { height: 28px; padding: 0 .55rem; font-size: .72rem; }
+            .tool .lbl { display: none; }
 
-        .stat-lab {
-            font-size: .78rem;
-            color: var(--sl-gray);
-            margin-bottom: .35rem;
-        }
+            .abstract-text { font-size: 1rem; line-height: 1.75; text-align: left; -webkit-hyphens: manual; hyphens: manual; }
 
-        .stat-val {
-            font-size: 1.9rem;
-            font-weight: 700;
-            color: var(--sl-blue);
-            line-height: 1.1;
-        }
+            .pad { gap: 10px; }
+            .pad-group { gap: 6px; }
+            .pad-keys { gap: 6px; }
+            .pad-row { gap: 6px; }
+            .pad-row .pad-keys { grid-template-columns: 1fr; }
+            .pad-label { font-size: .62rem; letter-spacing: .1em; }
+            .unit-chip { min-height: 50px; padding: 6px 2px; border-radius: 12px; gap: 3px; }
+            .unit-chip svg { width: 18px; height: 18px; }
+            .unit-chip .u { font-size: .68rem; }
+            .unit-desc { min-height: 4.8em; font-size: .9rem; }
+            .stage-cap .hint { display: none; }
 
-        .stat-val small { font-size: 1rem; font-weight: 600; }
-        .stat-val .sep { color: var(--sl-gray); font-weight: 400; }
+            .stats { grid-template-columns: 1fr; gap: 10px; }
+            .stat { padding: 14px 16px; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr); column-gap: 16px; align-items: center; }
+            .stat-lab { grid-column: 1 / -1; }
+            .stat-nums { margin-bottom: 0; }
+            .stat-sub { grid-column: 1 / -1; margin-top: 8px; }
+            .result-head { text-align: left; }
+            details.more .more-body { padding-left: 0; font-size: .92rem; }
 
-        .stat-sub {
-            font-size: .78rem;
-            color: var(--sl-gray);
-            margin-top: .35rem;
-        }
+            /* demo deck: embodiments as a two-way switch, shelves as a scroller */
+            .deck-tabs { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+            .deck-tabs > .deck-tab { order: 1; text-align: center; padding: .5rem .4rem; }
+            .deck-fold { order: 2; grid-column: 1 / -1; display: none; margin: 4px 0 0; opacity: 1; transition: none; }
+            .deck-fold[data-open="true"] { display: block; }
+            .deck-subgroup {
+                display: flex; width: 100%; overflow-x: auto; scrollbar-width: none; border-radius: 12px;
+                -webkit-mask-image: linear-gradient(90deg, #000 calc(100% - 24px), transparent); mask-image: linear-gradient(90deg, #000 calc(100% - 24px), transparent);
+            }
+            .deck-subgroup::-webkit-scrollbar { display: none; }
+            .deck-sub { flex: none; border-radius: 9px; }
+            .deck-frame { grid-template-columns: minmax(0, 1fr); }
+            .deck-arrow { display: none; }
+            .deck-note { font-size: .86rem; }
 
-        /* The abstract is the one block set justified, and justification needs
-           hyphenation to go with it: at this measure the long compounds
-           ("embodiment-specific", "teleoperation") would otherwise stretch the
-           word spaces into rivers. lang="en" on <html> is what lets the browser
-           break them correctly. text-wrap: pretty (above) still guards the last
-           line against a lone word, and orphans/widows only bite when the page
-           is printed. */
-        .lead-abstract {
-            font-size: 1.03rem;
-            line-height: 1.75;
-            text-align: justify;
-            -webkit-hyphens: auto;
-            hyphens: auto;
-            orphans: 3;
-            widows: 3;
+            .browser { border-radius: 12px; }
+            .browser-bar { height: 26px; padding: 0 10px; gap: 5px; }
+            .browser-bar i { width: 7px; height: 7px; }
+            .browser-bar span { font-size: .64rem; }
+            pre.bibtex { font-size: .74rem; padding: 2.6rem 1rem 1rem; }
+            footer .wrap { justify-content: center; text-align: center; }
         }
     </style>
 </head>
 
-<body class="d-flex flex-column h-100">
+<body>
+
+    <!-- ================= TOP BAR ================= -->
+    <nav class="topbar" id="topbar" aria-label="Sections">
+        <div class="wrap topbar-inner">
+            <a class="mini-mark" href="#top"><span class="brand-S">S</span><span class="brand-h">h</span><span class="brand-o">o</span><span class="brand-w">w</span><span class="brand-rest">-Harness</span></a>
+            <div class="toplinks" id="toplinks">
+                <a href="#overview">Overview</a>
+                <a href="#interface">Interface</a>
+                <a href="#harness">Harness</a>
+                <a href="#demos">Demos</a>
+                <a href="#gumi">GUMI</a>
+                <a href="#results">Results</a>
+                <a href="#cite">Cite</a>
+            </div>
+            <a class="top-cta" href="https://arxiv.org/abs/2609.10522" target="_blank" rel="noopener">Paper</a>
+        </div>
+        <div class="progress-line"><span id="progress"></span></div>
+    </nav>
 
     <!-- ================= HERO ================= -->
-    <section class="hero py-5">
-        <div class="container py-4" style="max-width: 940px;">
-            <h1 class="title-main display-4 text-center mb-3">
-                <span class="brand-S">S</span><span class="brand-h">h</span><span class="brand-o">o</span><span
-                    class="brand-w">w</span><span class="brand-rest">-Harness</span>
-            </h1>
-            <p class="subtitle fs-4 text-center mb-4">Just a VLM Agent Can Play Robots</p>
-
-            <p class="authors text-center mb-1">
-                <a href="https://chenanno.github.io/" target="_blank" rel="noopener">Yanzhe Chen</a><sup>*</sup>,
-                <a href="https://www.baizechen.site/" target="_blank" rel="noopener">Zechen Bai</a><sup>*</sup>,
-                <a href="https://caozhijun.top/" target="_blank" rel="noopener">Zhijun Cao</a><sup>*</sup>,
-                <a href="https://wenzhengzeng.github.io/" target="_blank" rel="noopener">Wenzheng Zeng</a><sup>*</sup>,
-                <a href="https://qhlin.me/" target="_blank" rel="noopener">Kevin Qinghong Lin</a>,<br class="wide-only">
-                <a href="https://linyq17.github.io/" target="_blank" rel="noopener">Yiqi Lin</a>,
-                <a href="https://ethanliang99.github.io/" target="_blank" rel="noopener">Guoqiang Liang</a>,
-                <a href="https://kevinskwk.github.io/" target="_blank" rel="noopener">Kevin Yuchen Ma</a>,
-                <a href="https://github.com/ceilingFan456/" target="_blank" rel="noopener">Qiming Huang</a>,
-                <a href="https://sites.google.com/view/showlab" target="_blank" rel="noopener">Mike Zheng Shou</a><sup>&dagger;</sup>
+    <header class="hero" id="top">
+        <div class="hero-bg" aria-hidden="true"><span class="blob b1"></span><span class="blob b2"></span><span class="blob b3"></span><div class="dots"></div></div>
+        <div class="wrap hero-inner">
+            <h1 class="wordmark"><span class="brand-S">S</span><span class="brand-h">h</span><span class="brand-o">o</span><span class="brand-w">w</span><span class="brand-rest">-Harness</span></h1>
+            <p class="tagline">Just a VLM Agent Can Play Robots</p>
+            <p class="authors">
+                <span class="au"><a href="https://chenanno.github.io/" target="_blank" rel="noopener">Yanzhe Chen</a><sup>*</sup>,</span>
+                <span class="au"><a href="https://www.baizechen.site/" target="_blank" rel="noopener">Zechen Bai</a><sup>*</sup>,</span>
+                <span class="au"><a href="https://caozhijun.top/" target="_blank" rel="noopener">Zhijun Cao</a><sup>*</sup>,</span>
+                <span class="au"><a href="https://wenzhengzeng.github.io/" target="_blank" rel="noopener">Wenzheng Zeng</a><sup>*</sup>,</span>
+                <span class="au"><a href="https://qhlin.me/" target="_blank" rel="noopener">Kevin Qinghong Lin</a>,</span>
+                <span class="au"><a href="https://linyq17.github.io/" target="_blank" rel="noopener">Yiqi Lin</a>,</span>
+                <span class="au"><a href="https://ethanliang99.github.io/" target="_blank" rel="noopener">Guoqiang Liang</a>,</span>
+                <span class="au"><a href="https://kevinskwk.github.io/" target="_blank" rel="noopener">Kevin Yuchen Ma</a>,</span>
+                <span class="au"><a href="https://github.com/ceilingFan456/" target="_blank" rel="noopener">Qiming Huang</a>,</span>
+                <span class="au"><a href="https://sites.google.com/view/showlab" target="_blank" rel="noopener">Mike Zheng Shou</a><sup>&dagger;</sup></span>
             </p>
-            <p class="text-center subtitle mb-1">Show Lab, National University of Singapore</p>
-            <p class="text-center subtitle small mb-4">
-                <sup>*</sup>Equal contribution &nbsp;&middot;&nbsp; <sup>&dagger;</sup>Corresponding author
-            </p>
-
-            <div class="d-flex flex-wrap justify-content-center gap-2">
-                <a href="https://arxiv.org/abs/2609.10522" target="_blank" rel="noopener"
-                   class="btn btn-dark pill"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3.8423 0a1.0037 1.0037 0 0 0-.922.6078c-.1536.3687-.0438.6275.2938 1.1113l6.9185 8.3597-1.0223 1.1058a1.0393 1.0393 0 0 0 .003 1.4229l1.2292 1.3135-5.4391 6.4444c-.2803.299-.4538.823-.2971 1.1986a1.0253 1.0253 0 0 0 .9585.635.9133.9133 0 0 0 .6891-.3405l5.783-6.126 7.4902 8.0051a.8527.8527 0 0 0 .6835.2597.9575.9575 0 0 0 .8777-.6138c.1577-.377-.017-.7502-.306-1.1407l-7.0518-8.3418 1.0632-1.13a.9626.9626 0 0 0 .0089-1.3165L4.6336.4639s-.3733-.4535-.768-.463zm0 .272h.0166c.2179.0052.4874.2715.5644.3639l.005.006.0052.0055 10.169 10.9905a.6915.6915 0 0 1-.0072.945l-1.0666 1.133-1.4982-1.7724-8.5994-10.39c-.3286-.472-.352-.6183-.2592-.841a.7307.7307 0 0 1 .6704-.4401Zm14.341 1.5701a.877.877 0 0 0-.6554.2418l-5.6962 6.1584 1.6944 1.8319 5.3089-6.5138c.3251-.4335.479-.6603.3247-1.0292a1.1205 1.1205 0 0 0-.9763-.689zm-7.6557 12.2823 1.3186 1.4135-5.7864 6.1295a.6494.6494 0 0 1-.4959.26.7516.7516 0 0 1-.706-.4669c-.1119-.2682.0359-.6864.2442-.9083l.0051-.0055.0047-.0055z"/></svg>Paper</a>
-                <!-- Same dark pill as the rest; only the mark and label carry HF's yellow. -->
-                <a href="https://huggingface.co/papers/2609.10522" target="_blank" rel="noopener"
-                   class="btn btn-dark pill pill-hf"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M1.4446 11.5059c0 1.1021.1673 2.1585.4847 3.1563-.0378-.0028-.0691-.0058-.1058-.0058-.4209 0-.8015.16-1.0704.4512-.3454.3737-.4984.8335-.4316 1.293a1.576 1.576 0 0 0 .2148.5978c-.2319.1864-.4018.4456-.4844.7578-.0646.2448-.131.7543.2149 1.2794a1.4552 1.4552 0 0 0-.0625.1055c-.208.3923-.2207.8372-.0371 1.25.2783.6258.9696 1.1175 2.3126 1.6467.8356.3292 1.5988.5411 1.6056.543 1.1046.2847 2.104.4277 2.969.4277 1.4173 0 2.4754-.3849 3.1525-1.1446 1.538.2651 2.791.1403 3.592.006.6773.7555 1.7332 1.1387 3.1467 1.1387.8649 0 1.8643-.143 2.969-.4278.0068-.0019.77-.2138 1.6056-.543 1.343-.5292 2.0343-1.0208 2.3126-1.6466.1836-.4129.171-.8577-.037-1.25a1.4685 1.4685 0 0 0-.0626-.1056c.346-.525.2795-1.0346.2149-1.2793-.0826-.3122-.2525-.5714-.4844-.7579.11-.1816.1831-.3788.2148-.5977.0669-.4595-.0862-.9193-.4316-1.293-.2688-.2913-.6495-.4513-1.0704-.4513-.0209 0-.0376.0008-.0588.0018.3162-.9966.4846-2.0518.4846-3.1523 0-5.807-4.7362-10.5144-10.5789-10.5144-5.8426 0-10.5788 4.7073-10.5788 10.5144Zm10.5788-9.4831c5.2727 0 9.5476 4.246 9.5476 9.483a9.4201 9.4201 0 0 1-.2696 2.2365c-.0039-.0047-.0079-.011-.0117-.0156-.274-.3255-.6679-.5059-1.1075-.5059-.352 0-.714.1155-1.0763.3438-.2403.1517-.5058.422-.7793.7598-.2534-.3492-.608-.5832-1.0137-.6465a1.5174 1.5174 0 0 0-.2344-.0176c-.9263 0-1.4828.7993-1.6935 1.5177-.1046.2426-.6065 1.3482-1.3614 2.0978-1.1681 1.1601-1.4458 2.3534-.8396 3.6382-.843.1029-1.5836.0927-2.365-.006.5906-1.212.3626-2.4388-.8426-3.6322-.755-.7496-1.2568-1.8552-1.3614-2.0978-.2107-.7184-.7673-1.5177-1.6935-1.5177-.078 0-.1568.0054-.2344.0176-.4057.0633-.7604.2973-1.0137.6465-.2735-.3379-.539-.6081-.7794-.7598-.3622-.2283-.7243-.3438-1.0762-.3438-.4266 0-.8094.171-1.0821.4786a9.4208 9.4208 0 0 1-.2598-2.1936c0-5.237 4.2749-9.483 9.5475-9.483zM8.6443 7.0036c-.4838.0043-.9503.2667-1.1934.7227-.3536.6633-.1006 1.4873.5645 1.84.351.1862.4883-.5261.836-.6485.3107-.1095.841.399 1.0078.086.3536-.6634.1025-1.4874-.5625-1.84a1.3659 1.3659 0 0 0-.6524-.1602Zm6.8403 0c-.2199-.002-.4426.05-.6504.1602-.665.3526-.9181 1.1766-.5645 1.84.1669.313.6971-.1955 1.0079-.086.3476.1224.4867.8347.838.6485.6649-.3527.916-1.1767.5624-1.84-.243-.456-.7096-.7184-1.1934-.7227Zm-9.7565 1.418a.8768.8768 0 0 0-.877.877c0 .4846.3925.877.877.877a.8768.8768 0 0 0 .877-.877.8768.8768 0 0 0-.877-.877zm12.6434 0c-.4845 0-.879.3925-.879.877 0 .4846.3945.877.879.877a.8768.8768 0 0 0 .877-.877.8768.8768 0 0 0-.877-.877zM8.7927 11.459c-.179-.003-.2793.1107-.2793.416 0 .8097.3874 2.125 1.4279 2.924.207-.7123 1.3453-1.2832 1.5079-1.2012.2315.1167.2191.4417.6074.7266.3884-.285.374-.6098.6056-.7266.1627-.082 1.3009.4889 1.5079 1.2012 1.0404-.799 1.4278-2.1144 1.4278-2.924 0-1.2212-1.583.6402-3.5413.6485-1.4686-.0061-2.7266-1.0558-3.2639-1.0645zM4.312 14.4768c.5792.365 1.6964 2.2751 2.1056 3.0177.1371.2488.371.3536.582.3536.4188 0 .7465-.4138.0391-.9395-1.0636-.791-.6914-2.0846-.1836-2.1642a.4302.4302 0 0 1 .0664-.004c.4616 0 .666.7892.666.7892s.5959 1.4898 1.6213 2.508c.942.9356 1.062 1.703.4961 2.6661-.0164-.004-.0159.0236-.1484.2149-.1853.2673-.4322.4688-.7188.6152-.5062.2269-1.1397.2696-1.7833.2696-1.037 0-2.1017-.1824-2.6975-.336-.0293-.0075-3.6505-.9567-3.1916-1.8224.0771-.1454.2033-.2031.3633-.2031.6463 0 1.823.9551 2.3283.9551.113 0 .196-.0865.2285-.2031.2249-.8045-3.2787-1.0522-2.9846-2.1642.0519-.1967.193-.2757.3907-.2754.854 0 2.7704 1.4923 3.172 1.4923.0307 0 .0525-.0085.0645-.0274.2012-.3227.1096-.5865-1.3087-1.4395-1.4182-.8533-2.4315-1.329-1.8653-1.9416.0651-.0707.1574-.1015.2695-.1015.8611.0002 2.8948 1.84 2.8948 1.84s.5487.5683.8809.5683c.0762 0 .1416-.0315.1855-.1054.2355-.3946-2.1858-2.2183-2.3224-2.971-.0926-.51.0641-.7676.3555-.7676-.0006.008.1701-.0285.4942.1759zm16.2257.5918c-.1366.7526-2.5579 2.5764-2.3224 2.9709.044.074.1092.1055.1855.1055.3321 0 .881-.5684.881-.5684s2.0336-1.8397 2.8947-1.84c.1121 0 .2044.0308.2695.1016.5662.6125-.447 1.0882-1.8653 1.9415-1.4183.853-1.51 1.1168-1.3087 1.4396.012.0188.0337.0273.0644.0273.4016 0 2.3181-1.4923 3.1721-1.4923.1977-.0002.3388.0787.3907.2754.294 1.112-3.2095 1.3597-2.9846 2.1642.0325.1166.1156.2032.2285.2032.5054 0 1.682-.9552 2.3283-.9552.16 0 .2862.0577.3633.2032.459.8656-3.1623 1.8149-3.1916 1.8224-.5958.1535-1.6605.336-2.6975.336-.6351 0-1.261-.0409-1.7638-.2599-.2949-.1472-.5488-.3516-.7383-.625-.0411-.0682-.1026-.1476-.1426-.205-.5726-.9679-.455-1.7371.4903-2.676 1.0254-1.0182 1.6212-2.508 1.6212-2.508s.2044-.7891.666-.7891a.4318.4318 0 0 1 .0665.0039c.5078.0796.88 1.3732-.1836 2.1642-.7074.5257-.3797.9395.039.9395.211 0 .445-.1047.5821-.3535.4092-.7426 1.5264-2.6527 2.1056-3.0178.5588-.3524.99-.1816.8497.5918z"/></svg>Daily Paper</a>
-                <a href="https://github.com/showlab/Show-Harness" target="_blank" rel="noopener"
-                   class="btn btn-dark pill"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>GitHub</a>
-                <a href="https://huggingface.co/showlab/Show-Harness-VLMs" target="_blank" rel="noopener"
-                   class="btn btn-dark pill"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M1.4446 11.5059c0 1.1021.1673 2.1585.4847 3.1563-.0378-.0028-.0691-.0058-.1058-.0058-.4209 0-.8015.16-1.0704.4512-.3454.3737-.4984.8335-.4316 1.293a1.576 1.576 0 0 0 .2148.5978c-.2319.1864-.4018.4456-.4844.7578-.0646.2448-.131.7543.2149 1.2794a1.4552 1.4552 0 0 0-.0625.1055c-.208.3923-.2207.8372-.0371 1.25.2783.6258.9696 1.1175 2.3126 1.6467.8356.3292 1.5988.5411 1.6056.543 1.1046.2847 2.104.4277 2.969.4277 1.4173 0 2.4754-.3849 3.1525-1.1446 1.538.2651 2.791.1403 3.592.006.6773.7555 1.7332 1.1387 3.1467 1.1387.8649 0 1.8643-.143 2.969-.4278.0068-.0019.77-.2138 1.6056-.543 1.343-.5292 2.0343-1.0208 2.3126-1.6466.1836-.4129.171-.8577-.037-1.25a1.4685 1.4685 0 0 0-.0626-.1056c.346-.525.2795-1.0346.2149-1.2793-.0826-.3122-.2525-.5714-.4844-.7579.11-.1816.1831-.3788.2148-.5977.0669-.4595-.0862-.9193-.4316-1.293-.2688-.2913-.6495-.4513-1.0704-.4513-.0209 0-.0376.0008-.0588.0018.3162-.9966.4846-2.0518.4846-3.1523 0-5.807-4.7362-10.5144-10.5789-10.5144-5.8426 0-10.5788 4.7073-10.5788 10.5144Zm10.5788-9.4831c5.2727 0 9.5476 4.246 9.5476 9.483a9.4201 9.4201 0 0 1-.2696 2.2365c-.0039-.0047-.0079-.011-.0117-.0156-.274-.3255-.6679-.5059-1.1075-.5059-.352 0-.714.1155-1.0763.3438-.2403.1517-.5058.422-.7793.7598-.2534-.3492-.608-.5832-1.0137-.6465a1.5174 1.5174 0 0 0-.2344-.0176c-.9263 0-1.4828.7993-1.6935 1.5177-.1046.2426-.6065 1.3482-1.3614 2.0978-1.1681 1.1601-1.4458 2.3534-.8396 3.6382-.843.1029-1.5836.0927-2.365-.006.5906-1.212.3626-2.4388-.8426-3.6322-.755-.7496-1.2568-1.8552-1.3614-2.0978-.2107-.7184-.7673-1.5177-1.6935-1.5177-.078 0-.1568.0054-.2344.0176-.4057.0633-.7604.2973-1.0137.6465-.2735-.3379-.539-.6081-.7794-.7598-.3622-.2283-.7243-.3438-1.0762-.3438-.4266 0-.8094.171-1.0821.4786a9.4208 9.4208 0 0 1-.2598-2.1936c0-5.237 4.2749-9.483 9.5475-9.483zM8.6443 7.0036c-.4838.0043-.9503.2667-1.1934.7227-.3536.6633-.1006 1.4873.5645 1.84.351.1862.4883-.5261.836-.6485.3107-.1095.841.399 1.0078.086.3536-.6634.1025-1.4874-.5625-1.84a1.3659 1.3659 0 0 0-.6524-.1602Zm6.8403 0c-.2199-.002-.4426.05-.6504.1602-.665.3526-.9181 1.1766-.5645 1.84.1669.313.6971-.1955 1.0079-.086.3476.1224.4867.8347.838.6485.6649-.3527.916-1.1767.5624-1.84-.243-.456-.7096-.7184-1.1934-.7227Zm-9.7565 1.418a.8768.8768 0 0 0-.877.877c0 .4846.3925.877.877.877a.8768.8768 0 0 0 .877-.877.8768.8768 0 0 0-.877-.877zm12.6434 0c-.4845 0-.879.3925-.879.877 0 .4846.3945.877.879.877a.8768.8768 0 0 0 .877-.877.8768.8768 0 0 0-.877-.877zM8.7927 11.459c-.179-.003-.2793.1107-.2793.416 0 .8097.3874 2.125 1.4279 2.924.207-.7123 1.3453-1.2832 1.5079-1.2012.2315.1167.2191.4417.6074.7266.3884-.285.374-.6098.6056-.7266.1627-.082 1.3009.4889 1.5079 1.2012 1.0404-.799 1.4278-2.1144 1.4278-2.924 0-1.2212-1.583.6402-3.5413.6485-1.4686-.0061-2.7266-1.0558-3.2639-1.0645zM4.312 14.4768c.5792.365 1.6964 2.2751 2.1056 3.0177.1371.2488.371.3536.582.3536.4188 0 .7465-.4138.0391-.9395-1.0636-.791-.6914-2.0846-.1836-2.1642a.4302.4302 0 0 1 .0664-.004c.4616 0 .666.7892.666.7892s.5959 1.4898 1.6213 2.508c.942.9356 1.062 1.703.4961 2.6661-.0164-.004-.0159.0236-.1484.2149-.1853.2673-.4322.4688-.7188.6152-.5062.2269-1.1397.2696-1.7833.2696-1.037 0-2.1017-.1824-2.6975-.336-.0293-.0075-3.6505-.9567-3.1916-1.8224.0771-.1454.2033-.2031.3633-.2031.6463 0 1.823.9551 2.3283.9551.113 0 .196-.0865.2285-.2031.2249-.8045-3.2787-1.0522-2.9846-2.1642.0519-.1967.193-.2757.3907-.2754.854 0 2.7704 1.4923 3.172 1.4923.0307 0 .0525-.0085.0645-.0274.2012-.3227.1096-.5865-1.3087-1.4395-1.4182-.8533-2.4315-1.329-1.8653-1.9416.0651-.0707.1574-.1015.2695-.1015.8611.0002 2.8948 1.84 2.8948 1.84s.5487.5683.8809.5683c.0762 0 .1416-.0315.1855-.1054.2355-.3946-2.1858-2.2183-2.3224-2.971-.0926-.51.0641-.7676.3555-.7676-.0006.008.1701-.0285.4942.1759zm16.2257.5918c-.1366.7526-2.5579 2.5764-2.3224 2.9709.044.074.1092.1055.1855.1055.3321 0 .881-.5684.881-.5684s2.0336-1.8397 2.8947-1.84c.1121 0 .2044.0308.2695.1016.5662.6125-.447 1.0882-1.8653 1.9415-1.4183.853-1.51 1.1168-1.3087 1.4396.012.0188.0337.0273.0644.0273.4016 0 2.3181-1.4923 3.1721-1.4923.1977-.0002.3388.0787.3907.2754.294 1.112-3.2095 1.3597-2.9846 2.1642.0325.1166.1156.2032.2285.2032.5054 0 1.682-.9552 2.3283-.9552.16 0 .2862.0577.3633.2032.459.8656-3.1623 1.8149-3.1916 1.8224-.5958.1535-1.6605.336-2.6975.336-.6351 0-1.261-.0409-1.7638-.2599-.2949-.1472-.5488-.3516-.7383-.625-.0411-.0682-.1026-.1476-.1426-.205-.5726-.9679-.455-1.7371.4903-2.676 1.0254-1.0182 1.6212-2.508 1.6212-2.508s.2044-.7891.666-.7891a.4318.4318 0 0 1 .0665.0039c.5078.0796.88 1.3732-.1836 2.1642-.7074.5257-.3797.9395.039.9395.211 0 .445-.1047.5821-.3535.4092-.7426 1.5264-2.6527 2.1056-3.0178.5588-.3524.99-.1816.8497.5918z"/></svg>Models</a>
-                <a href="https://huggingface.co/datasets/showlab/Show-Harness-Data" target="_blank" rel="noopener"
-                   class="btn btn-dark pill"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M1.4446 11.5059c0 1.1021.1673 2.1585.4847 3.1563-.0378-.0028-.0691-.0058-.1058-.0058-.4209 0-.8015.16-1.0704.4512-.3454.3737-.4984.8335-.4316 1.293a1.576 1.576 0 0 0 .2148.5978c-.2319.1864-.4018.4456-.4844.7578-.0646.2448-.131.7543.2149 1.2794a1.4552 1.4552 0 0 0-.0625.1055c-.208.3923-.2207.8372-.0371 1.25.2783.6258.9696 1.1175 2.3126 1.6467.8356.3292 1.5988.5411 1.6056.543 1.1046.2847 2.104.4277 2.969.4277 1.4173 0 2.4754-.3849 3.1525-1.1446 1.538.2651 2.791.1403 3.592.006.6773.7555 1.7332 1.1387 3.1467 1.1387.8649 0 1.8643-.143 2.969-.4278.0068-.0019.77-.2138 1.6056-.543 1.343-.5292 2.0343-1.0208 2.3126-1.6466.1836-.4129.171-.8577-.037-1.25a1.4685 1.4685 0 0 0-.0626-.1056c.346-.525.2795-1.0346.2149-1.2793-.0826-.3122-.2525-.5714-.4844-.7579.11-.1816.1831-.3788.2148-.5977.0669-.4595-.0862-.9193-.4316-1.293-.2688-.2913-.6495-.4513-1.0704-.4513-.0209 0-.0376.0008-.0588.0018.3162-.9966.4846-2.0518.4846-3.1523 0-5.807-4.7362-10.5144-10.5789-10.5144-5.8426 0-10.5788 4.7073-10.5788 10.5144Zm10.5788-9.4831c5.2727 0 9.5476 4.246 9.5476 9.483a9.4201 9.4201 0 0 1-.2696 2.2365c-.0039-.0047-.0079-.011-.0117-.0156-.274-.3255-.6679-.5059-1.1075-.5059-.352 0-.714.1155-1.0763.3438-.2403.1517-.5058.422-.7793.7598-.2534-.3492-.608-.5832-1.0137-.6465a1.5174 1.5174 0 0 0-.2344-.0176c-.9263 0-1.4828.7993-1.6935 1.5177-.1046.2426-.6065 1.3482-1.3614 2.0978-1.1681 1.1601-1.4458 2.3534-.8396 3.6382-.843.1029-1.5836.0927-2.365-.006.5906-1.212.3626-2.4388-.8426-3.6322-.755-.7496-1.2568-1.8552-1.3614-2.0978-.2107-.7184-.7673-1.5177-1.6935-1.5177-.078 0-.1568.0054-.2344.0176-.4057.0633-.7604.2973-1.0137.6465-.2735-.3379-.539-.6081-.7794-.7598-.3622-.2283-.7243-.3438-1.0762-.3438-.4266 0-.8094.171-1.0821.4786a9.4208 9.4208 0 0 1-.2598-2.1936c0-5.237 4.2749-9.483 9.5475-9.483zM8.6443 7.0036c-.4838.0043-.9503.2667-1.1934.7227-.3536.6633-.1006 1.4873.5645 1.84.351.1862.4883-.5261.836-.6485.3107-.1095.841.399 1.0078.086.3536-.6634.1025-1.4874-.5625-1.84a1.3659 1.3659 0 0 0-.6524-.1602Zm6.8403 0c-.2199-.002-.4426.05-.6504.1602-.665.3526-.9181 1.1766-.5645 1.84.1669.313.6971-.1955 1.0079-.086.3476.1224.4867.8347.838.6485.6649-.3527.916-1.1767.5624-1.84-.243-.456-.7096-.7184-1.1934-.7227Zm-9.7565 1.418a.8768.8768 0 0 0-.877.877c0 .4846.3925.877.877.877a.8768.8768 0 0 0 .877-.877.8768.8768 0 0 0-.877-.877zm12.6434 0c-.4845 0-.879.3925-.879.877 0 .4846.3945.877.879.877a.8768.8768 0 0 0 .877-.877.8768.8768 0 0 0-.877-.877zM8.7927 11.459c-.179-.003-.2793.1107-.2793.416 0 .8097.3874 2.125 1.4279 2.924.207-.7123 1.3453-1.2832 1.5079-1.2012.2315.1167.2191.4417.6074.7266.3884-.285.374-.6098.6056-.7266.1627-.082 1.3009.4889 1.5079 1.2012 1.0404-.799 1.4278-2.1144 1.4278-2.924 0-1.2212-1.583.6402-3.5413.6485-1.4686-.0061-2.7266-1.0558-3.2639-1.0645zM4.312 14.4768c.5792.365 1.6964 2.2751 2.1056 3.0177.1371.2488.371.3536.582.3536.4188 0 .7465-.4138.0391-.9395-1.0636-.791-.6914-2.0846-.1836-2.1642a.4302.4302 0 0 1 .0664-.004c.4616 0 .666.7892.666.7892s.5959 1.4898 1.6213 2.508c.942.9356 1.062 1.703.4961 2.6661-.0164-.004-.0159.0236-.1484.2149-.1853.2673-.4322.4688-.7188.6152-.5062.2269-1.1397.2696-1.7833.2696-1.037 0-2.1017-.1824-2.6975-.336-.0293-.0075-3.6505-.9567-3.1916-1.8224.0771-.1454.2033-.2031.3633-.2031.6463 0 1.823.9551 2.3283.9551.113 0 .196-.0865.2285-.2031.2249-.8045-3.2787-1.0522-2.9846-2.1642.0519-.1967.193-.2757.3907-.2754.854 0 2.7704 1.4923 3.172 1.4923.0307 0 .0525-.0085.0645-.0274.2012-.3227.1096-.5865-1.3087-1.4395-1.4182-.8533-2.4315-1.329-1.8653-1.9416.0651-.0707.1574-.1015.2695-.1015.8611.0002 2.8948 1.84 2.8948 1.84s.5487.5683.8809.5683c.0762 0 .1416-.0315.1855-.1054.2355-.3946-2.1858-2.2183-2.3224-2.971-.0926-.51.0641-.7676.3555-.7676-.0006.008.1701-.0285.4942.1759zm16.2257.5918c-.1366.7526-2.5579 2.5764-2.3224 2.9709.044.074.1092.1055.1855.1055.3321 0 .881-.5684.881-.5684s2.0336-1.8397 2.8947-1.84c.1121 0 .2044.0308.2695.1016.5662.6125-.447 1.0882-1.8653 1.9415-1.4183.853-1.51 1.1168-1.3087 1.4396.012.0188.0337.0273.0644.0273.4016 0 2.3181-1.4923 3.1721-1.4923.1977-.0002.3388.0787.3907.2754.294 1.112-3.2095 1.3597-2.9846 2.1642.0325.1166.1156.2032.2285.2032.5054 0 1.682-.9552 2.3283-.9552.16 0 .2862.0577.3633.2032.459.8656-3.1623 1.8149-3.1916 1.8224-.5958.1535-1.6605.336-2.6975.336-.6351 0-1.261-.0409-1.7638-.2599-.2949-.1472-.5488-.3516-.7383-.625-.0411-.0682-.1026-.1476-.1426-.205-.5726-.9679-.455-1.7371.4903-2.676 1.0254-1.0182 1.6212-2.508 1.6212-2.508s.2044-.7891.666-.7891a.4318.4318 0 0 1 .0665.0039c.5078.0796.88 1.3732-.1836 2.1642-.7074.5257-.3797.9395.039.9395.211 0 .445-.1047.5821-.3535.4092-.7426 1.5264-2.6527 2.1056-3.0178.5588-.3524.99-.1816.8497.5918z"/></svg>Dataset</a>
+            <p class="affil">Show Lab, National University of Singapore</p>
+            <p class="notes"><sup>*</sup>Equal contribution &nbsp;&middot;&nbsp; <sup>&dagger;</sup>Corresponding author</p>
+            <div class="links">
+                <a href="https://arxiv.org/abs/2609.10522" target="_blank" rel="noopener" class="link-btn"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3.8423 0a1.0037 1.0037 0 0 0-.922.6078c-.1536.3687-.0438.6275.2938 1.1113l6.9185 8.3597-1.0223 1.1058a1.0393 1.0393 0 0 0 .003 1.4229l1.2292 1.3135-5.4391 6.4444c-.2803.299-.4538.823-.2971 1.1986a1.0253 1.0253 0 0 0 .9585.635.9133.9133 0 0 0 .6891-.3405l5.783-6.126 7.4902 8.0051a.8527.8527 0 0 0 .6835.2597.9575.9575 0 0 0 .8777-.6138c.1577-.377-.017-.7502-.306-1.1407l-7.0518-8.3418 1.0632-1.13a.9626.9626 0 0 0 .0089-1.3165L4.6336.4639s-.3733-.4535-.768-.463zm0 .272h.0166c.2179.0052.4874.2715.5644.3639l.005.006.0052.0055 10.169 10.9905a.6915.6915 0 0 1-.0072.945l-1.0666 1.133-1.4982-1.7724-8.5994-10.39c-.3286-.472-.352-.6183-.2592-.841a.7307.7307 0 0 1 .6704-.4401Zm14.341 1.5701a.877.877 0 0 0-.6554.2418l-5.6962 6.1584 1.6944 1.8319 5.3089-6.5138c.3251-.4335.479-.6603.3247-1.0292a1.1205 1.1205 0 0 0-.9763-.689zm-7.6557 12.2823 1.3186 1.4135-5.7864 6.1295a.6494.6494 0 0 1-.4959.26.7516.7516 0 0 1-.706-.4669c-.1119-.2682.0359-.6864.2442-.9083l.0051-.0055.0047-.0055z"/></svg><span>Paper</span></a>
+                <a href="https://huggingface.co/papers/2609.10522" target="_blank" rel="noopener" class="link-btn hf"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M1.4446 11.5059c0 1.1021.1673 2.1585.4847 3.1563-.0378-.0028-.0691-.0058-.1058-.0058-.4209 0-.8015.16-1.0704.4512-.3454.3737-.4984.8335-.4316 1.293a1.576 1.576 0 0 0 .2148.5978c-.2319.1864-.4018.4456-.4844.7578-.0646.2448-.131.7543.2149 1.2794a1.4552 1.4552 0 0 0-.0625.1055c-.208.3923-.2207.8372-.0371 1.25.2783.6258.9696 1.1175 2.3126 1.6467.8356.3292 1.5988.5411 1.6056.543 1.1046.2847 2.104.4277 2.969.4277 1.4173 0 2.4754-.3849 3.1525-1.1446 1.538.2651 2.791.1403 3.592.006.6773.7555 1.7332 1.1387 3.1467 1.1387.8649 0 1.8643-.143 2.969-.4278.0068-.0019.77-.2138 1.6056-.543 1.343-.5292 2.0343-1.0208 2.3126-1.6466.1836-.4129.171-.8577-.037-1.25a1.4685 1.4685 0 0 0-.0626-.1056c.346-.525.2795-1.0346.2149-1.2793-.0826-.3122-.2525-.5714-.4844-.7579.11-.1816.1831-.3788.2148-.5977.0669-.4595-.0862-.9193-.4316-1.293-.2688-.2913-.6495-.4513-1.0704-.4513-.0209 0-.0376.0008-.0588.0018.3162-.9966.4846-2.0518.4846-3.1523 0-5.807-4.7362-10.5144-10.5789-10.5144-5.8426 0-10.5788 4.7073-10.5788 10.5144Zm10.5788-9.4831c5.2727 0 9.5476 4.246 9.5476 9.483a9.4201 9.4201 0 0 1-.2696 2.2365c-.0039-.0047-.0079-.011-.0117-.0156-.274-.3255-.6679-.5059-1.1075-.5059-.352 0-.714.1155-1.0763.3438-.2403.1517-.5058.422-.7793.7598-.2534-.3492-.608-.5832-1.0137-.6465a1.5174 1.5174 0 0 0-.2344-.0176c-.9263 0-1.4828.7993-1.6935 1.5177-.1046.2426-.6065 1.3482-1.3614 2.0978-1.1681 1.1601-1.4458 2.3534-.8396 3.6382-.843.1029-1.5836.0927-2.365-.006.5906-1.212.3626-2.4388-.8426-3.6322-.755-.7496-1.2568-1.8552-1.3614-2.0978-.2107-.7184-.7673-1.5177-1.6935-1.5177-.078 0-.1568.0054-.2344.0176-.4057.0633-.7604.2973-1.0137.6465-.2735-.3379-.539-.6081-.7794-.7598-.3622-.2283-.7243-.3438-1.0762-.3438-.4266 0-.8094.171-1.0821.4786a9.4208 9.4208 0 0 1-.2598-2.1936c0-5.237 4.2749-9.483 9.5475-9.483zM8.6443 7.0036c-.4838.0043-.9503.2667-1.1934.7227-.3536.6633-.1006 1.4873.5645 1.84.351.1862.4883-.5261.836-.6485.3107-.1095.841.399 1.0078.086.3536-.6634.1025-1.4874-.5625-1.84a1.3659 1.3659 0 0 0-.6524-.1602Zm6.8403 0c-.2199-.002-.4426.05-.6504.1602-.665.3526-.9181 1.1766-.5645 1.84.1669.313.6971-.1955 1.0079-.086.3476.1224.4867.8347.838.6485.6649-.3527.916-1.1767.5624-1.84-.243-.456-.7096-.7184-1.1934-.7227Zm-9.7565 1.418a.8768.8768 0 0 0-.877.877c0 .4846.3925.877.877.877a.8768.8768 0 0 0 .877-.877.8768.8768 0 0 0-.877-.877zm12.6434 0c-.4845 0-.879.3925-.879.877 0 .4846.3945.877.879.877a.8768.8768 0 0 0 .877-.877.8768.8768 0 0 0-.877-.877zM8.7927 11.459c-.179-.003-.2793.1107-.2793.416 0 .8097.3874 2.125 1.4279 2.924.207-.7123 1.3453-1.2832 1.5079-1.2012.2315.1167.2191.4417.6074.7266.3884-.285.374-.6098.6056-.7266.1627-.082 1.3009.4889 1.5079 1.2012 1.0404-.799 1.4278-2.1144 1.4278-2.924 0-1.2212-1.583.6402-3.5413.6485-1.4686-.0061-2.7266-1.0558-3.2639-1.0645zM4.312 14.4768c.5792.365 1.6964 2.2751 2.1056 3.0177.1371.2488.371.3536.582.3536.4188 0 .7465-.4138.0391-.9395-1.0636-.791-.6914-2.0846-.1836-2.1642a.4302.4302 0 0 1 .0664-.004c.4616 0 .666.7892.666.7892s.5959 1.4898 1.6213 2.508c.942.9356 1.062 1.703.4961 2.6661-.0164-.004-.0159.0236-.1484.2149-.1853.2673-.4322.4688-.7188.6152-.5062.2269-1.1397.2696-1.7833.2696-1.037 0-2.1017-.1824-2.6975-.336-.0293-.0075-3.6505-.9567-3.1916-1.8224.0771-.1454.2033-.2031.3633-.2031.6463 0 1.823.9551 2.3283.9551.113 0 .196-.0865.2285-.2031.2249-.8045-3.2787-1.0522-2.9846-2.1642.0519-.1967.193-.2757.3907-.2754.854 0 2.7704 1.4923 3.172 1.4923.0307 0 .0525-.0085.0645-.0274.2012-.3227.1096-.5865-1.3087-1.4395-1.4182-.8533-2.4315-1.329-1.8653-1.9416.0651-.0707.1574-.1015.2695-.1015.8611.0002 2.8948 1.84 2.8948 1.84s.5487.5683.8809.5683c.0762 0 .1416-.0315.1855-.1054.2355-.3946-2.1858-2.2183-2.3224-2.971-.0926-.51.0641-.7676.3555-.7676-.0006.008.1701-.0285.4942.1759zm16.2257.5918c-.1366.7526-2.5579 2.5764-2.3224 2.9709.044.074.1092.1055.1855.1055.3321 0 .881-.5684.881-.5684s2.0336-1.8397 2.8947-1.84c.1121 0 .2044.0308.2695.1016.5662.6125-.447 1.0882-1.8653 1.9415-1.4183.853-1.51 1.1168-1.3087 1.4396.012.0188.0337.0273.0644.0273.4016 0 2.3181-1.4923 3.1721-1.4923.1977-.0002.3388.0787.3907.2754.294 1.112-3.2095 1.3597-2.9846 2.1642.0325.1166.1156.2032.2285.2032.5054 0 1.682-.9552 2.3283-.9552.16 0 .2862.0577.3633.2032.459.8656-3.1623 1.8149-3.1916 1.8224-.5958.1535-1.6605.336-2.6975.336-.6351 0-1.261-.0409-1.7638-.2599-.2949-.1472-.5488-.3516-.7383-.625-.0411-.0682-.1026-.1476-.1426-.205-.5726-.9679-.455-1.7371.4903-2.676 1.0254-1.0182 1.6212-2.508 1.6212-2.508s.2044-.7891.666-.7891a.4318.4318 0 0 1 .0665.0039c.5078.0796.88 1.3732-.1836 2.1642-.7074.5257-.3797.9395.039.9395.211 0 .445-.1047.5821-.3535.4092-.7426 1.5264-2.6527 2.1056-3.0178.5588-.3524.99-.1816.8497.5918z"/></svg><span>Daily Paper</span></a>
+                <a href="https://github.com/showlab/Show-Harness" target="_blank" rel="noopener" class="link-btn"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg><span>GitHub</span></a>
+                <a href="https://huggingface.co/showlab/Show-Harness-VLMs" target="_blank" rel="noopener" class="link-btn"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M1.4446 11.5059c0 1.1021.1673 2.1585.4847 3.1563-.0378-.0028-.0691-.0058-.1058-.0058-.4209 0-.8015.16-1.0704.4512-.3454.3737-.4984.8335-.4316 1.293a1.576 1.576 0 0 0 .2148.5978c-.2319.1864-.4018.4456-.4844.7578-.0646.2448-.131.7543.2149 1.2794a1.4552 1.4552 0 0 0-.0625.1055c-.208.3923-.2207.8372-.0371 1.25.2783.6258.9696 1.1175 2.3126 1.6467.8356.3292 1.5988.5411 1.6056.543 1.1046.2847 2.104.4277 2.969.4277 1.4173 0 2.4754-.3849 3.1525-1.1446 1.538.2651 2.791.1403 3.592.006.6773.7555 1.7332 1.1387 3.1467 1.1387.8649 0 1.8643-.143 2.969-.4278.0068-.0019.77-.2138 1.6056-.543 1.343-.5292 2.0343-1.0208 2.3126-1.6466.1836-.4129.171-.8577-.037-1.25a1.4685 1.4685 0 0 0-.0626-.1056c.346-.525.2795-1.0346.2149-1.2793-.0826-.3122-.2525-.5714-.4844-.7579.11-.1816.1831-.3788.2148-.5977.0669-.4595-.0862-.9193-.4316-1.293-.2688-.2913-.6495-.4513-1.0704-.4513-.0209 0-.0376.0008-.0588.0018.3162-.9966.4846-2.0518.4846-3.1523 0-5.807-4.7362-10.5144-10.5789-10.5144-5.8426 0-10.5788 4.7073-10.5788 10.5144Zm10.5788-9.4831c5.2727 0 9.5476 4.246 9.5476 9.483a9.4201 9.4201 0 0 1-.2696 2.2365c-.0039-.0047-.0079-.011-.0117-.0156-.274-.3255-.6679-.5059-1.1075-.5059-.352 0-.714.1155-1.0763.3438-.2403.1517-.5058.422-.7793.7598-.2534-.3492-.608-.5832-1.0137-.6465a1.5174 1.5174 0 0 0-.2344-.0176c-.9263 0-1.4828.7993-1.6935 1.5177-.1046.2426-.6065 1.3482-1.3614 2.0978-1.1681 1.1601-1.4458 2.3534-.8396 3.6382-.843.1029-1.5836.0927-2.365-.006.5906-1.212.3626-2.4388-.8426-3.6322-.755-.7496-1.2568-1.8552-1.3614-2.0978-.2107-.7184-.7673-1.5177-1.6935-1.5177-.078 0-.1568.0054-.2344.0176-.4057.0633-.7604.2973-1.0137.6465-.2735-.3379-.539-.6081-.7794-.7598-.3622-.2283-.7243-.3438-1.0762-.3438-.4266 0-.8094.171-1.0821.4786a9.4208 9.4208 0 0 1-.2598-2.1936c0-5.237 4.2749-9.483 9.5475-9.483zM8.6443 7.0036c-.4838.0043-.9503.2667-1.1934.7227-.3536.6633-.1006 1.4873.5645 1.84.351.1862.4883-.5261.836-.6485.3107-.1095.841.399 1.0078.086.3536-.6634.1025-1.4874-.5625-1.84a1.3659 1.3659 0 0 0-.6524-.1602Zm6.8403 0c-.2199-.002-.4426.05-.6504.1602-.665.3526-.9181 1.1766-.5645 1.84.1669.313.6971-.1955 1.0079-.086.3476.1224.4867.8347.838.6485.6649-.3527.916-1.1767.5624-1.84-.243-.456-.7096-.7184-1.1934-.7227Zm-9.7565 1.418a.8768.8768 0 0 0-.877.877c0 .4846.3925.877.877.877a.8768.8768 0 0 0 .877-.877.8768.8768 0 0 0-.877-.877zm12.6434 0c-.4845 0-.879.3925-.879.877 0 .4846.3945.877.879.877a.8768.8768 0 0 0 .877-.877.8768.8768 0 0 0-.877-.877zM8.7927 11.459c-.179-.003-.2793.1107-.2793.416 0 .8097.3874 2.125 1.4279 2.924.207-.7123 1.3453-1.2832 1.5079-1.2012.2315.1167.2191.4417.6074.7266.3884-.285.374-.6098.6056-.7266.1627-.082 1.3009.4889 1.5079 1.2012 1.0404-.799 1.4278-2.1144 1.4278-2.924 0-1.2212-1.583.6402-3.5413.6485-1.4686-.0061-2.7266-1.0558-3.2639-1.0645zM4.312 14.4768c.5792.365 1.6964 2.2751 2.1056 3.0177.1371.2488.371.3536.582.3536.4188 0 .7465-.4138.0391-.9395-1.0636-.791-.6914-2.0846-.1836-2.1642a.4302.4302 0 0 1 .0664-.004c.4616 0 .666.7892.666.7892s.5959 1.4898 1.6213 2.508c.942.9356 1.062 1.703.4961 2.6661-.0164-.004-.0159.0236-.1484.2149-.1853.2673-.4322.4688-.7188.6152-.5062.2269-1.1397.2696-1.7833.2696-1.037 0-2.1017-.1824-2.6975-.336-.0293-.0075-3.6505-.9567-3.1916-1.8224.0771-.1454.2033-.2031.3633-.2031.6463 0 1.823.9551 2.3283.9551.113 0 .196-.0865.2285-.2031.2249-.8045-3.2787-1.0522-2.9846-2.1642.0519-.1967.193-.2757.3907-.2754.854 0 2.7704 1.4923 3.172 1.4923.0307 0 .0525-.0085.0645-.0274.2012-.3227.1096-.5865-1.3087-1.4395-1.4182-.8533-2.4315-1.329-1.8653-1.9416.0651-.0707.1574-.1015.2695-.1015.8611.0002 2.8948 1.84 2.8948 1.84s.5487.5683.8809.5683c.0762 0 .1416-.0315.1855-.1054.2355-.3946-2.1858-2.2183-2.3224-2.971-.0926-.51.0641-.7676.3555-.7676-.0006.008.1701-.0285.4942.1759zm16.2257.5918c-.1366.7526-2.5579 2.5764-2.3224 2.9709.044.074.1092.1055.1855.1055.3321 0 .881-.5684.881-.5684s2.0336-1.8397 2.8947-1.84c.1121 0 .2044.0308.2695.1016.5662.6125-.447 1.0882-1.8653 1.9415-1.4183.853-1.51 1.1168-1.3087 1.4396.012.0188.0337.0273.0644.0273.4016 0 2.3181-1.4923 3.1721-1.4923.1977-.0002.3388.0787.3907.2754.294 1.112-3.2095 1.3597-2.9846 2.1642.0325.1166.1156.2032.2285.2032.5054 0 1.682-.9552 2.3283-.9552.16 0 .2862.0577.3633.2032.459.8656-3.1623 1.8149-3.1916 1.8224-.5958.1535-1.6605.336-2.6975.336-.6351 0-1.261-.0409-1.7638-.2599-.2949-.1472-.5488-.3516-.7383-.625-.0411-.0682-.1026-.1476-.1426-.205-.5726-.9679-.455-1.7371.4903-2.676 1.0254-1.0182 1.6212-2.508 1.6212-2.508s.2044-.7891.666-.7891a.4318.4318 0 0 1 .0665.0039c.5078.0796.88 1.3732-.1836 2.1642-.7074.5257-.3797.9395.039.9395.211 0 .445-.1047.5821-.3535.4092-.7426 1.5264-2.6527 2.1056-3.0178.5588-.3524.99-.1816.8497.5918z"/></svg><span>Models</span></a>
+                <a href="https://huggingface.co/datasets/showlab/Show-Harness-Data" target="_blank" rel="noopener" class="link-btn"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M1.4446 11.5059c0 1.1021.1673 2.1585.4847 3.1563-.0378-.0028-.0691-.0058-.1058-.0058-.4209 0-.8015.16-1.0704.4512-.3454.3737-.4984.8335-.4316 1.293a1.576 1.576 0 0 0 .2148.5978c-.2319.1864-.4018.4456-.4844.7578-.0646.2448-.131.7543.2149 1.2794a1.4552 1.4552 0 0 0-.0625.1055c-.208.3923-.2207.8372-.0371 1.25.2783.6258.9696 1.1175 2.3126 1.6467.8356.3292 1.5988.5411 1.6056.543 1.1046.2847 2.104.4277 2.969.4277 1.4173 0 2.4754-.3849 3.1525-1.1446 1.538.2651 2.791.1403 3.592.006.6773.7555 1.7332 1.1387 3.1467 1.1387.8649 0 1.8643-.143 2.969-.4278.0068-.0019.77-.2138 1.6056-.543 1.343-.5292 2.0343-1.0208 2.3126-1.6466.1836-.4129.171-.8577-.037-1.25a1.4685 1.4685 0 0 0-.0626-.1056c.346-.525.2795-1.0346.2149-1.2793-.0826-.3122-.2525-.5714-.4844-.7579.11-.1816.1831-.3788.2148-.5977.0669-.4595-.0862-.9193-.4316-1.293-.2688-.2913-.6495-.4513-1.0704-.4513-.0209 0-.0376.0008-.0588.0018.3162-.9966.4846-2.0518.4846-3.1523 0-5.807-4.7362-10.5144-10.5789-10.5144-5.8426 0-10.5788 4.7073-10.5788 10.5144Zm10.5788-9.4831c5.2727 0 9.5476 4.246 9.5476 9.483a9.4201 9.4201 0 0 1-.2696 2.2365c-.0039-.0047-.0079-.011-.0117-.0156-.274-.3255-.6679-.5059-1.1075-.5059-.352 0-.714.1155-1.0763.3438-.2403.1517-.5058.422-.7793.7598-.2534-.3492-.608-.5832-1.0137-.6465a1.5174 1.5174 0 0 0-.2344-.0176c-.9263 0-1.4828.7993-1.6935 1.5177-.1046.2426-.6065 1.3482-1.3614 2.0978-1.1681 1.1601-1.4458 2.3534-.8396 3.6382-.843.1029-1.5836.0927-2.365-.006.5906-1.212.3626-2.4388-.8426-3.6322-.755-.7496-1.2568-1.8552-1.3614-2.0978-.2107-.7184-.7673-1.5177-1.6935-1.5177-.078 0-.1568.0054-.2344.0176-.4057.0633-.7604.2973-1.0137.6465-.2735-.3379-.539-.6081-.7794-.7598-.3622-.2283-.7243-.3438-1.0762-.3438-.4266 0-.8094.171-1.0821.4786a9.4208 9.4208 0 0 1-.2598-2.1936c0-5.237 4.2749-9.483 9.5475-9.483zM8.6443 7.0036c-.4838.0043-.9503.2667-1.1934.7227-.3536.6633-.1006 1.4873.5645 1.84.351.1862.4883-.5261.836-.6485.3107-.1095.841.399 1.0078.086.3536-.6634.1025-1.4874-.5625-1.84a1.3659 1.3659 0 0 0-.6524-.1602Zm6.8403 0c-.2199-.002-.4426.05-.6504.1602-.665.3526-.9181 1.1766-.5645 1.84.1669.313.6971-.1955 1.0079-.086.3476.1224.4867.8347.838.6485.6649-.3527.916-1.1767.5624-1.84-.243-.456-.7096-.7184-1.1934-.7227Zm-9.7565 1.418a.8768.8768 0 0 0-.877.877c0 .4846.3925.877.877.877a.8768.8768 0 0 0 .877-.877.8768.8768 0 0 0-.877-.877zm12.6434 0c-.4845 0-.879.3925-.879.877 0 .4846.3945.877.879.877a.8768.8768 0 0 0 .877-.877.8768.8768 0 0 0-.877-.877zM8.7927 11.459c-.179-.003-.2793.1107-.2793.416 0 .8097.3874 2.125 1.4279 2.924.207-.7123 1.3453-1.2832 1.5079-1.2012.2315.1167.2191.4417.6074.7266.3884-.285.374-.6098.6056-.7266.1627-.082 1.3009.4889 1.5079 1.2012 1.0404-.799 1.4278-2.1144 1.4278-2.924 0-1.2212-1.583.6402-3.5413.6485-1.4686-.0061-2.7266-1.0558-3.2639-1.0645zM4.312 14.4768c.5792.365 1.6964 2.2751 2.1056 3.0177.1371.2488.371.3536.582.3536.4188 0 .7465-.4138.0391-.9395-1.0636-.791-.6914-2.0846-.1836-2.1642a.4302.4302 0 0 1 .0664-.004c.4616 0 .666.7892.666.7892s.5959 1.4898 1.6213 2.508c.942.9356 1.062 1.703.4961 2.6661-.0164-.004-.0159.0236-.1484.2149-.1853.2673-.4322.4688-.7188.6152-.5062.2269-1.1397.2696-1.7833.2696-1.037 0-2.1017-.1824-2.6975-.336-.0293-.0075-3.6505-.9567-3.1916-1.8224.0771-.1454.2033-.2031.3633-.2031.6463 0 1.823.9551 2.3283.9551.113 0 .196-.0865.2285-.2031.2249-.8045-3.2787-1.0522-2.9846-2.1642.0519-.1967.193-.2757.3907-.2754.854 0 2.7704 1.4923 3.172 1.4923.0307 0 .0525-.0085.0645-.0274.2012-.3227.1096-.5865-1.3087-1.4395-1.4182-.8533-2.4315-1.329-1.8653-1.9416.0651-.0707.1574-.1015.2695-.1015.8611.0002 2.8948 1.84 2.8948 1.84s.5487.5683.8809.5683c.0762 0 .1416-.0315.1855-.1054.2355-.3946-2.1858-2.2183-2.3224-2.971-.0926-.51.0641-.7676.3555-.7676-.0006.008.1701-.0285.4942.1759zm16.2257.5918c-.1366.7526-2.5579 2.5764-2.3224 2.9709.044.074.1092.1055.1855.1055.3321 0 .881-.5684.881-.5684s2.0336-1.8397 2.8947-1.84c.1121 0 .2044.0308.2695.1016.5662.6125-.447 1.0882-1.8653 1.9415-1.4183.853-1.51 1.1168-1.3087 1.4396.012.0188.0337.0273.0644.0273.4016 0 2.3181-1.4923 3.1721-1.4923.1977-.0002.3388.0787.3907.2754.294 1.112-3.2095 1.3597-2.9846 2.1642.0325.1166.1156.2032.2285.2032.5054 0 1.682-.9552 2.3283-.9552.16 0 .2862.0577.3633.2032.459.8656-3.1623 1.8149-3.1916 1.8224-.5958.1535-1.6605.336-2.6975.336-.6351 0-1.261-.0409-1.7638-.2599-.2949-.1472-.5488-.3516-.7383-.625-.0411-.0682-.1026-.1476-.1426-.205-.5726-.9679-.455-1.7371.4903-2.676 1.0254-1.0182 1.6212-2.508 1.6212-2.508s.2044-.7891.666-.7891a.4318.4318 0 0 1 .0665.0039c.5078.0796.88 1.3732-.1836 2.1642-.7074.5257-.3797.9395.039.9395.211 0 .445-.1047.5821-.3535.4092-.7426 1.5264-2.6527 2.1056-3.0178.5588-.3524.99-.1816.8497.5918z"/></svg><span>Dataset</span></a>
             </div>
         </div>
-    </section>
-
-    <!-- ================= MAIN VIDEO ================= -->
-    <section class="pt-5 pb-2">
-        <div class="container" style="max-width: 940px;">
-            <div class="main-video">
+        <div class="wrap hero-media">
+            <div class="video-frame reveal">
                 <!-- browsers only autoplay muted video; the clip carries narration,
                      so it starts silent and the viewer can unmute from the controls -->
-                <video muted autoplay loop controls playsinline preload="auto"
-                       poster="./assets/videos/posters/_main.jpg">
+                <video muted autoplay loop controls playsinline preload="auto" poster="./assets/videos/posters/_main.jpg">
                     <source src="./assets/videos/Show-Harness-Main.mp4" type="video/mp4">
                 </video>
             </div>
-            <!-- <p class="video-caption">Playing muted &mdash; use the speaker icon for narration.</p> -->
+        </div>
+    </header>
+
+    <main>
+    <!-- ================= TEASER + ABSTRACT + OVERVIEW ================= -->
+    <section class="sec" id="overview" style="padding-top: clamp(24px, 4vw, 40px);">
+        <div class="wrap">
+            <figure class="fig wide">
+                <div class="card-x reveal">
+                    <div class="fig-live" data-svg="./assets/images/top_demo.svg" data-kind="teaser" data-total="2200"
+                         data-alt="Show-Harness in the open world" style="aspect-ratio: 780 / 353;">
+                        <noscript><img src="./assets/images/top_demo.svg" alt="Show-Harness in the open world"></noscript>
+                    </div>
+                </div>
+                <figcaption class="fig-cap">One interface across scenes, tasks and embodiments &mdash; frontier VLMs zero-shot, or the same
+                    interface fine-tuned onto open-source backbones at 12&ndash;33&nbsp;Hz.</figcaption>
+            </figure>
         </div>
     </section>
 
-    <!-- ================= TEASER ================= -->
-    <section class="py-5">
-        <div class="container" style="max-width: 940px;">
-            <div class="figure-plain reveal">
-                <img src="./assets/images/top_demo.svg" class="img-fluid w-100"
-                     alt="Show-Harness in the open world">
+    <section class="sec tint" id="abstract">
+        <div class="wrap">
+            <div class="abstract">
+                <h2 class="sec-title">Abstract</h2>
+                <p class="abstract-text">
+                    Foundation vision&ndash;language models (VLMs) exhibit broad intelligence about the world, yet
+                    translating this intelligence into robot control remains challenging. We present
+                    <strong>Show-Harness</strong>, an <em>Embodied Harness</em> that enables VLMs to
+                    <strong>&ldquo;play&rdquo; robots</strong> through a compact semantic interface linking intent to
+                    action. Show-Harness exposes discrete semantic action units that VLMs can naturally reason over,
+                    while embodiment-specific interpreters deterministically ground them into local robot actions, keeping
+                    the VLM directly responsible for fine-grained physical decisions. Through the same interface,
+                    Show-Harness demonstrates the feasibility of (1) directly unlocking closed-source frontier VLMs for
+                    zero-shot robot control, and (2) adapting small-scale open-source VLMs for low-cost deployment with
+                    <strong>just a few GPU-hours</strong> of fine-tuning. We further develop
+                    <strong>GUMI</strong> (<strong>GU</strong>I <strong>M</strong>anipulation <strong>I</strong>nterface),
+                    which extends the same semantic action space to GUI-based demonstration collection, allowing humans
+                    and agents to &ldquo;play&rdquo; robots across embodiments without specialized teleoperation hardware.
+                    Extensive experiments show that Show-Harness-equipped VLM agents generalize robustly across tasks,
+                    embodiments, and environments, outperforming representative agentic and VLA paradigms. These results
+                    suggest that <strong>the right interface can unlock substantial embodied capability from foundation
+                    VLMs</strong>, without requiring additional model capacity or costly embodiment-specific pretraining.
+                </p>
             </div>
-            <p class="fig-caption subtitle small mb-0 reveal" style="--rise-delay: .1s">
-                One interface across scenes, tasks and embodiments. Frontier VLMs hold the top band at seconds
-                per step, and the same interface fine-tuned onto open-source backbones holds it from 12&nbsp;Hz up
-                to 33&nbsp;Hz &mdash; while &pi;<sub>0.5</sub> and GR00T sit a band below at 20 and 24&nbsp;Hz.
-            </p>
         </div>
     </section>
 
-    <!-- ================= ABSTRACT ================= -->
-    <section class="py-5 bg-body-tertiary">
-        <div class="container" style="max-width: 820px;">
-            <h2 class="section-title">Abstract</h2>
-            <div class="section-rule"></div>
-            <p class="lead-abstract mb-0">
-                Foundation vision&ndash;language models (VLMs) exhibit broad intelligence about the world, yet
-                translating this intelligence into robot control remains challenging. We present
-                <strong>Show-Harness</strong>, an <em>Embodied Harness</em> that enables VLMs to
-                <strong>&ldquo;play&rdquo; robots</strong> through a compact semantic interface linking intent to
-                action. Show-Harness exposes discrete semantic action units that VLMs can naturally reason over,
-                while embodiment-specific interpreters deterministically ground them into local robot actions, keeping
-                the VLM directly responsible for fine-grained physical decisions. Through the same interface,
-                Show-Harness demonstrates the feasibility of (1) directly unlocking closed-source frontier VLMs for
-                zero-shot robot control, and (2) adapting small-scale open-source VLMs for low-cost deployment with
-                <strong>just a few GPU-hours</strong> of fine-tuning. We further develop
-                <strong>GUMI</strong> (<strong>GU</strong>I <strong>M</strong>anipulation <strong>I</strong>nterface),
-                which extends the same semantic action space to GUI-based demonstration collection, allowing humans
-                and agents to &ldquo;play&rdquo; robots across embodiments without specialized teleoperation hardware.
-                Extensive experiments show that Show-Harness-equipped VLM agents generalize robustly across tasks,
-                embodiments, and environments, outperforming representative agentic and VLA paradigms. These results
-                suggest that <strong>the right interface can unlock substantial embodied capability from foundation
-                VLMs</strong>, without requiring additional model capacity or costly embodiment-specific pretraining.
-            </p>
+    <section class="sec">
+        <div class="wrap">
+            <figure class="fig wide">
+                <div class="card-x reveal">
+                    <div class="fig-live" data-svg="./assets/images/overview.svg" data-kind="overview" data-total="1900"
+                         data-alt="Show-Harness overview" style="aspect-ratio: 875 / 512;">
+                        <noscript><img src="./assets/images/overview.svg" alt="Show-Harness overview"></noscript>
+                    </div>
+                </div>
+                <figcaption class="fig-cap">A VLM becomes a situated agent: it reasons and acts through semantic action units that
+                    embodiment-specific interpreters ground into robot motion.</figcaption>
+            </figure>
         </div>
     </section>
 
-    <!-- ================= OVERVIEW ================= -->
-    <section class="py-5">
-        <div class="container" style="max-width: 940px;">
-            <div class="figure-plain reveal">
-                <img src="./assets/images/overview.svg" class="img-fluid w-100" alt="Show-Harness overview">
+    <!-- ================= 01 INTERFACE ================= -->
+    <section class="sec tint" id="interface">
+        <div class="wrap">
+            <div class="sec-head wide">
+                <div class="eyebrow"><span class="num">01</span>Interface</div>
+                <h2 class="sec-title">The Semantic Action Space</h2>
+                <p class="lead-1">Parameter-free units a VLM reasons about directly. The interpreter supplies each unit&rsquo;s
+                    magnitude, so one vocabulary drives a Franka, an AgileX and a simulator.</p>
             </div>
-            <p class="fig-caption subtitle small mb-0 reveal" style="--rise-delay: .1s">
-                Show-Harness turns a VLM into a situated agent: it perceives, reasons, and acts through a compact set of
-                semantic action units that embodiment-specific interpreters ground into robot motion.
-            </p>
-        </div>
-    </section>
 
-    <!-- ================= ACTION SPACE ================= -->
-    <section class="py-5">
-        <div class="container" style="max-width: 820px;">
-            <h2 class="section-title">The Semantic Action Space</h2>
-            <div class="section-rule"></div>
-            <p class="mb-3">
-                Robot control is reformulated into parameter-free units that a VLM can reason about directly. Each unit
-                is a bare symbol; the interpreter supplies its metric magnitude, so the same vocabulary drives a 7-DoF
-                Franka, a 6-DoF AgileX, and a simulator without changing the model.
-            </p>
-            <!-- one row of translation, one of everything else; the split is the
-                 vocabulary's own, so it should not be left to where the line happens to wrap.
-                 Each unit carries its own meaning, so the chips are buttons: hover to preview,
-                 click to pin, and the panel below never changes height so nothing jumps. -->
-            <div class="unit-rows" id="unitRows">
-                <div><button type="button" class="unit-chip" aria-pressed="false"
-                            data-unit="MV_FWD" data-desc="Move the end effector one step forward, along a direction defined relative to the reference view chosen from the current observations.">MV_FWD</button><button type="button" class="unit-chip" aria-pressed="false"
-                            data-unit="MV_BACK" data-desc="Move the end effector one step backward, relative to the same reference view.">MV_BACK</button><button type="button" class="unit-chip" aria-pressed="false"
-                            data-unit="MV_LEFT" data-desc="Move the end effector one step left. Whose left is fixed by the naming convention, not left to the model to guess.">MV_LEFT</button><button type="button" class="unit-chip" aria-pressed="false"
-                            data-unit="MV_RIGHT" data-desc="Move the end effector one step right, under the same convention.">MV_RIGHT</button><button type="button" class="unit-chip" aria-pressed="false"
-                            data-unit="MV_UP" data-desc="Raise the end effector by one step.">MV_UP</button><button type="button" class="unit-chip" aria-pressed="false"
-                            data-unit="MV_DOWN" data-desc="Lower the end effector by one step.">MV_DOWN</button></div>
-                <div><button type="button" class="unit-chip" aria-pressed="false"
-                            data-unit="GRASP" data-desc="Close the gripper.">GRASP</button><button type="button" class="unit-chip" aria-pressed="false"
-                            data-unit="RELEASE" data-desc="Open the gripper.">RELEASE</button><button type="button" class="unit-chip" aria-pressed="false"
-                            data-unit="DONE" data-desc="Declare the task complete and end the episode.">DONE</button><button type="button" class="unit-chip" aria-pressed="false"
-                            data-unit="ROTATE_CW" data-desc="Rotate the end effector one increment clockwise about a specified axis (x, y or z).">ROTATE_CW</button><button type="button" class="unit-chip" aria-pressed="false"
-                            data-unit="ROTATE_CCW" data-desc="Rotate the end effector one increment counterclockwise about the specified axis.">ROTATE_CCW</button><button type="button" class="unit-chip" aria-pressed="false"
-                            data-unit="STILL" data-desc="Hold this arm where it is. Used in dual-arm control, where a single model call drives both arms.">STILL</button></div>
+            <div class="iface wide">
+                <div>
+                    <div class="pad" id="unitRows">
+                        <div class="pad-group">
+                            <span class="pad-label">Move</span>
+                            <div class="pad-keys">
+                                <button type="button" class="unit-chip" aria-pressed="false" data-unit="MV_FWD" data-desc="Move the end effector one step forward, along a direction defined relative to the reference view chosen from the current observations."><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17L17 7"/><path d="M9.5 7H17v7.5"/></svg><span class="u">MV_FWD</span></button>
+                                <button type="button" class="unit-chip" aria-pressed="false" data-unit="MV_BACK" data-desc="Move the end effector one step backward, relative to the same reference view."><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M17 7L7 17"/><path d="M14.5 17H7V9.5"/></svg><span class="u">MV_BACK</span></button>
+                                <button type="button" class="unit-chip" aria-pressed="false" data-unit="MV_LEFT" data-desc="Move the end effector one step left. Whose left is fixed by the naming convention, not left to the model to guess."><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 12H5"/><path d="M11 6l-6 6 6 6"/></svg><span class="u">MV_LEFT</span></button>
+                                <button type="button" class="unit-chip" aria-pressed="false" data-unit="MV_RIGHT" data-desc="Move the end effector one step right, under the same convention."><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14"/><path d="M13 6l6 6-6 6"/></svg><span class="u">MV_RIGHT</span></button>
+                                <button type="button" class="unit-chip" aria-pressed="false" data-unit="MV_UP" data-desc="Raise the end effector by one step."><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 19V5"/><path d="M6 11l6-6 6 6"/></svg><span class="u">MV_UP</span></button>
+                                <button type="button" class="unit-chip" aria-pressed="false" data-unit="MV_DOWN" data-desc="Lower the end effector by one step."><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14"/><path d="M6 13l6 6 6-6"/></svg><span class="u">MV_DOWN</span></button>
+                            </div>
+                        </div>
+                        <div class="pad-row">
+                            <div class="pad-group"><span class="pad-label">Rotate</span><div class="pad-keys">
+                                <button type="button" class="unit-chip" aria-pressed="false" data-unit="ROTATE_CW" data-desc="Rotate the end effector one increment clockwise about a specified axis (x, y or z)."><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 12a8 8 0 1 1-2.6-5.9"/><path d="M20 4v5h-5"/></svg><span class="u">ROTATE_CW</span></button>
+                                <button type="button" class="unit-chip" aria-pressed="false" data-unit="ROTATE_CCW" data-desc="Rotate the end effector one increment counterclockwise about the specified axis."><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12a8 8 0 1 0 2.6-5.9"/><path d="M4 4v5h5"/></svg><span class="u">ROTATE_CCW</span></button>
+                            </div></div>
+                            <div class="pad-group"><span class="pad-label">Gripper</span><div class="pad-keys">
+                                <button type="button" class="unit-chip" aria-pressed="false" data-unit="GRASP" data-desc="Close the gripper."><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5v14M20 5v14"/><path d="M7 12h3.5M8.8 9.8L11 12l-2.2 2.2M17 12h-3.5M15.2 9.8L13 12l2.2 2.2"/></svg><span class="u">GRASP</span></button>
+                                <button type="button" class="unit-chip" aria-pressed="false" data-unit="RELEASE" data-desc="Open the gripper."><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 5v14M14 5v14"/><path d="M7.5 12H3.5M5.5 9.8L3.3 12l2.2 2.2M16.5 12h4M18.5 9.8l2.2 2.2-2.2 2.2"/></svg><span class="u">RELEASE</span></button>
+                            </div></div>
+                            <div class="pad-group"><span class="pad-label">Control</span><div class="pad-keys">
+                                <button type="button" class="unit-chip" aria-pressed="false" data-unit="DONE" data-desc="Declare the task complete and end the episode."><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M8 12.3l2.7 2.7L16.2 9.5"/></svg><span class="u">DONE</span></button>
+                                <button type="button" class="unit-chip" aria-pressed="false" data-unit="STILL" data-desc="Hold this arm where it is. Used in dual-arm control, where a single model call drives both arms."><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6.5v11M15 6.5v11"/></svg><span class="u">STILL</span></button>
+                            </div></div>
+                        </div>
+                    </div>
+                    <p class="unit-desc" id="unitDesc" aria-live="polite">Hover or tap a unit to see what it does.</p>
+                </div>
+
+                <div class="stage" aria-hidden="true">
+                    <svg viewBox="0 -6 360 226" id="stageSvg">
+                        <defs>
+                            <linearGradient id="st-floor" x1="0" y1="0" x2="0" y2="1">
+                                <stop offset="0" stop-color="#e6edf5"/><stop offset="1" stop-color="#d6e1ec"/>
+                            </linearGradient>
+                            <marker id="st-head" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+                                <path d="M1 1L8 5L1 9" fill="none" stroke="#0071BC" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </marker>
+                        </defs>
+                        <g id="stFloor"></g>
+                        <ellipse id="stShadow" cx="0" cy="0" rx="24" ry="7" fill="rgba(17,24,32,.16)"/>
+                        <path id="stTrail" d="" fill="none" stroke="#0071BC" stroke-width="2.4" stroke-linecap="round" stroke-dasharray="4 6" marker-end="url(#st-head)" opacity="0"/>
+                        <g id="stGhost" opacity="0"></g>
+                        <g id="stGrip"></g>
+                        <g id="stBadge" opacity="0"></g>
+                    </svg>
+                    <div class="stage-cap"><span>Acting out <code id="stageUnit">MV_FWD</code></span><span class="hint">one unit = one bounded step</span></div>
+                </div>
             </div>
-            <p class="unit-desc mb-5" id="unitDesc" aria-live="polite">
-                A unit is a bare symbol &mdash; the interpreter supplies its metric magnitude.
-                Pick one to see what it does.
-            </p>
 
-            <h5 class="res-head">Where does the interface get its leverage?</h5>
-            <p class="res-text mb-3">
-                A unit like <code>MV_LEFT</code> carries a <em>name</em> the model already knows plus a <em>convention</em>
-                fixing whose left it is. Arbitrary symbols <code>A</code>&ndash;<code>F</code> work if the convention
-                is spelled out (95% vs 100%); the names alone, unexplained, still reach 90%.
-            </p>
-            <div class="figure-plain fig-anim mb-3 reveal">
-                <!-- fig:action_repr -->
+            <div class="result">
+                <div class="result-head">
+                    <h3>Where does the interface get its leverage?</h3>
+                    <p class="takeaway">Remove both the names and the convention, and success collapses to <strong>5%</strong> &mdash; 19 of 20 episodes time out.</p>
+                </div>
+                <div class="card-x reveal">
+                    <div class="fig-anim">
+                        <!-- fig:action_repr -->
 <svg xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 439.2 123.84" xmlns="http://www.w3.org/2000/svg" version="1.1" id="fig-action_repr" class="fig-svg" width="100%" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Action representation ablation">
  <defs>
   <style type="text/css">#fig-action_repr *{stroke-linejoin: round; stroke-linecap: butt}</style>
@@ -1929,106 +1905,131 @@ z
  </defs>
 </svg>
 <!-- /fig:action_repr -->
+                    </div>
+                </div>
+                <details class="more">
+                    <summary>More details</summary>
+                    <div class="more-body">
+                        <p>A unit like <code>MV_LEFT</code> carries a <em>name</em> the model already knows plus a <em>convention</em>
+                            fixing whose left it is. Arbitrary symbols <code>A</code>&ndash;<code>F</code> work if the convention
+                            is spelled out (95% vs 100%); the names alone, unexplained, still reach 90%.</p>
+                        <p>Asked to write that mapping down, the model gets 23.3% of six directions right against a 16.7% chance rate,
+                            and 11 of 20 trials mirror left and right. The interface is not decoration around the action space;
+                            it <em>is</em> the action space.</p>
+                    </div>
+                </details>
             </div>
-            <p class="res-takeaway reveal" style="--rise-delay: .08s">
-                Remove both and the agent has to infer the mapping from its own interaction &mdash; success collapses
-                to <strong>5%</strong>, with 19 of 20 episodes timing out.
-            </p>
-            <p class="res-text mb-0">
-                Asked to write that mapping down, the model gets 23.3% of six directions right against a 16.7% chance rate,
-                and 11 of 20 trials mirror left and right. The interface is not decoration around the action space;
-                it <em>is</em> the action space.
-            </p>
         </div>
     </section>
 
-    <!-- ================= METHOD ================= -->
-    <section class="py-5 bg-body-tertiary">
-        <div class="container" style="max-width: 940px;">
-            <h2 class="section-title">Inside the Harness</h2>
-            <div class="section-rule"></div>
-            <div class="figure-plain reveal">
-                <img src="./assets/images/method.svg" class="img-fluid w-100" alt="Show-Harness architecture">
+    <!-- ================= 02 HARNESS ================= -->
+    <section class="sec" id="harness">
+        <div class="wrap">
+            <div class="sec-head wide">
+                <div class="eyebrow"><span class="num">02</span>Harness</div>
+                <h2 class="sec-title">Inside the Harness</h2>
+                <p class="lead-1">Each step closes the loop: plugins assemble the context, the VLM emits one semantic action unit,
+                    and the interpreter grounds it into motion.</p>
             </div>
-            <p class="fig-caption subtitle small mb-0 reveal" style="--rise-delay: .1s">
-                Each step closes the loop: plugins assemble the context, the VLM emits one semantic action unit, and
-                the interpreter grounds it into motion.
-            </p>
+            <figure class="fig wide">
+                <div class="card-x reveal">
+                    <div class="fig-live" data-svg="./assets/images/method.svg" data-kind="method" data-total="3600"
+                         data-alt="Show-Harness architecture" style="aspect-ratio: 2948 / 1485;">
+                        <noscript><img src="./assets/images/method.svg" alt="Show-Harness architecture"></noscript>
+                    </div>
+                </div>
+            </figure>
         </div>
     </section>
 
-    <!-- ================= DEMOS ================= -->
-    <section class="py-5" id="demos">
-        <div class="container" style="max-width: 940px;">
-            <h2 class="section-title">Real-Robot Demonstrations<span class="title-note">2&times; speed</span></h2>
-            <div class="section-rule"></div>
-            <div id="deck"></div>
+    <!-- ================= 03 DEMOS ================= -->
+    <section class="sec tint" id="demos">
+        <div class="wrap">
+            <div class="sec-head wide">
+                <div class="eyebrow"><span class="num">03</span>Demos<span class="tag">2&times; speed</span></div>
+                <h2 class="sec-title">Real-Robot Demonstrations</h2>
+            </div>
+            <div class="wide" id="deck"></div>
         </div>
     </section>
 
-    <!-- ================= GUMI ================= -->
-    <section class="py-5 bg-body-tertiary">
-        <div class="container" style="max-width: 940px;">
-            <h2 class="section-title">GUMI &mdash; Collecting Demonstrations by Playing</h2>
-            <div class="section-rule"></div>
-            <p class="mb-4">
-                Every action unit is a labeled key, so demonstrating a task amounts to playing the robot. A human at
-                the keyboard and a GUI agent reading the same screen drive the robot identically, and every recorded
-                step is a ready training pair &mdash; no specialized teleoperation hardware required.
-            </p>
-            <div class="video-wide reveal">
+    <!-- ================= 04 GUMI ================= -->
+    <section class="sec" id="gumi">
+        <div class="wrap">
+            <div class="sec-head wide">
+                <div class="eyebrow"><span class="num">04</span>GUMI</div>
+                <h2 class="sec-title">Collecting Demonstrations by Playing</h2>
+                <p class="lead-1">Every action unit is a labeled key: a human and a GUI agent drive the robot the same way, and
+                    every recorded step is a ready training pair &mdash; no specialized teleoperation hardware required.</p>
+            </div>
+            <div class="browser reveal">
+                <div class="browser-bar"><i></i><i></i><i></i><span>GUMI &middot; GUI Manipulation Interface</span></div>
                 <video muted autoplay loop playsinline controls preload="metadata">
                     <source src="./assets/videos/gumi_rollout.mp4" type="video/mp4">
                 </video>
             </div>
-            <p class="video-caption">A GUI agent driving the dual-arm robot through GUMI, one action unit per keystroke.</p>
+            <p class="fig-cap">A GUI agent driving the dual-arm robot through GUMI, one action unit per keystroke.</p>
         </div>
     </section>
 
-    <!-- ================= RESULTS ================= -->
-    <section class="py-5">
-        <div class="container" style="max-width: 940px;">
-            <h2 class="section-title">Results</h2>
-            <div class="section-rule"></div>
+    <!-- ================= 05 RESULTS ================= -->
+    <section class="sec tint" id="results">
+        <div class="wrap">
+            <div class="sec-head wide">
+                <div class="eyebrow"><span class="num">05</span>Results</div>
+                <h2 class="sec-title">Generalization across tasks, environments, and embodiments</h2>
+                <p class="lead-1">Two routes, one interface &mdash; a zero-shot agent (ZS) on Gemini-3.1&nbsp;Pro and a fine-tuned
+                    Qwen3.5-2B (FT) both beat VLA, VLA-centric agent and code-as-policy baselines.</p>
+            </div>
 
-            <h5 class="res-head">Generalization across tasks, environments, and embodiments</h5>
-            <p class="res-text">
-                Two routes, one interface: a zero-shot agent (ZS) on Gemini-3.1&nbsp;Pro, and a fine-tuned Qwen3.5-2B (FT).
-                Both beat all three baseline families &mdash; VLA (&pi;0.5, GR00T), VLA-centric agents (H-VLA, G-VLA)
-                and code-as-policy (CaP-X, RATS).
-            </p>
-            <div class="row row-cols-1 row-cols-md-3 g-3 mb-4">
-                <div class="col">
-                    <div class="stat reveal">
-                        <div class="stat-lab">Cross-task &middot; 10 tasks</div>
-                        <div class="stat-val">89<small>%</small> <span class="sep">/</span> 86<small>%</small></div>
-                        <div class="stat-sub">ZS / FT &nbsp;&middot;&nbsp; best baseline 57%</div>
+            <div class="stats armed" id="stats">
+                <div class="stat">
+                    <div class="stat-lab">Cross-task <span>&middot; 10 tasks</span></div>
+                    <div class="stat-nums"><span class="stat-num zs" data-count="89">89<small>%</small></span><span class="sep">/</span><span class="stat-num ft" data-count="86">86<small>%</small></span></div>
+                    <div class="bars">
+                        <div class="bar zs"><span>ZS</span><i><b style="--v:89%"></b></i></div>
+                        <div class="bar ft"><span>FT</span><i><b style="--v:86%; --bd:.08s"></b></i></div>
+                        <div class="bar base"><span>Best&nbsp;BL</span><i><b style="--v:57%; --bd:.16s"></b></i></div>
                     </div>
                 </div>
-                <div class="col">
-                    <div class="stat reveal" style="--rise-delay: .09s">
-                        <div class="stat-lab">Cross-environment &middot; 4 shifts</div>
-                        <div class="stat-val">100<small>%</small> <span class="sep">/</span> 88<small>%</small></div>
-                        <div class="stat-sub">background, lighting, viewpoint, distractors</div>
+                <div class="stat">
+                    <div class="stat-lab">Cross-environment <span>&middot; 4 shifts</span></div>
+                    <div class="stat-nums"><span class="stat-num zs" data-count="100">100<small>%</small></span><span class="sep">/</span><span class="stat-num ft" data-count="88">88<small>%</small></span></div>
+                    <div class="bars">
+                        <div class="bar zs"><span>ZS</span><i><b style="--v:100%"></b></i></div>
+                        <div class="bar ft"><span>FT</span><i><b style="--v:88%; --bd:.08s"></b></i></div>
                     </div>
+                    <div class="stat-sub">background, lighting, viewpoint, distractors</div>
                 </div>
-                <div class="col">
-                    <div class="stat reveal" style="--rise-delay: .18s">
-                        <div class="stat-lab">Cross-embodiment &middot; Franka + AgileX</div>
-                        <div class="stat-val">93<small>%</small> <span class="sep">/</span> 87<small>%</small></div>
-                        <div class="stat-sub">ZS / FT &nbsp;&middot;&nbsp; best baseline 52%</div>
+                <div class="stat">
+                    <div class="stat-lab">Cross-embodiment <span>&middot; Franka + AgileX</span></div>
+                    <div class="stat-nums"><span class="stat-num zs" data-count="93">93<small>%</small></span><span class="sep">/</span><span class="stat-num ft" data-count="87">87<small>%</small></span></div>
+                    <div class="bars">
+                        <div class="bar zs"><span>ZS</span><i><b style="--v:93%"></b></i></div>
+                        <div class="bar ft"><span>FT</span><i><b style="--v:87%; --bd:.08s"></b></i></div>
+                        <div class="bar base"><span>Best&nbsp;BL</span><i><b style="--v:52%; --bd:.16s"></b></i></div>
                     </div>
                 </div>
             </div>
-            <p class="res-text mb-5">
-                ZS clears every environment shift at 20/20, including the Teddy and Chess tasks held out from fine-tuning.
-                Trained only in simulation, FT still transfers to the real robot at 13/20 &mdash; both trainable VLA
-                baselines score 0/20.
-            </p>
+            <details class="more">
+                <summary>More details</summary>
+                <div class="more-body">
+                    <p>Baselines span VLA (&pi;0.5, GR00T), VLA-centric agents (H-VLA, G-VLA) and code-as-policy (CaP-X, RATS).
+                        ZS clears every environment shift at 20/20, including the Teddy and Chess tasks held out from fine-tuning.
+                        Trained only in simulation, FT still transfers to the real robot at 13/20 &mdash; both trainable VLA
+                        baselines score 0/20.</p>
+                </div>
+            </details>
 
-            <h5 class="res-head">Physical and semantic adaptability</h5>
-            <div class="figure-plain fig-anim mb-3 reveal">
-                <!-- fig:generalization -->
+            <article class="result">
+                <div class="result-head">
+                    <h3>Physical and semantic adaptability</h3>
+                    <p class="takeaway">Adapting to a new physical demand is a change to the <em>interpreter</em>, not to the model
+                        &mdash; a smaller step, an extra unit, a joint prediction over two arms.</p>
+                </div>
+                <div class="card-x reveal">
+                    <div class="fig-anim">
+                        <!-- fig:generalization -->
 <svg xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 439.2 329.76" xmlns="http://www.w3.org/2000/svg" version="1.1" id="fig-generalization" class="fig-svg" width="100%" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Physical and semantic adaptability">
  <defs>
   <style type="text/css">#fig-generalization *{stroke-linejoin: round; stroke-linecap: butt}</style>
@@ -5616,24 +5617,30 @@ z
  </defs>
 </svg>
 <!-- /fig:generalization -->
-            </div>
-            <p class="res-takeaway reveal" style="--rise-delay: .08s">
-                Adapting to a new physical demand is a change to the <em>interpreter</em>, not to the model &mdash;
-                a smaller step, an extra unit, a joint prediction over two arms.
-            </p>
-            <p class="res-text mb-5">
-                <strong>Physical.</strong> A 1&nbsp;cm interpreter step lifts ZS 60%&nbsp;&rarr;&nbsp;80% and FT
-                40%&nbsp;&rarr;&nbsp;65% with no retraining, where &pi;0.5 needs its entire budget on fine-grained data
-                to reach 60%. Rotation units extrapolate to an unseen 90&deg; (ZS 10/10, &pi;0.5 20%), and joint
-                dual-arm prediction lifts the average 50%&nbsp;&rarr;&nbsp;80% while removing every collision.
-                <br><br>
-                <strong>Semantic.</strong> Situated Planning takes ZS to 85% where FT alone gets 10%. A single video
-                demonstration has ZS follow the demonstrated order 20/20, against 20% with nothing to watch.
-            </p>
+                    </div>
+                </div>
+                <details class="more">
+                    <summary>More details</summary>
+                    <div class="more-body">
+                        <p><strong>Physical.</strong> A 1&nbsp;cm interpreter step lifts ZS 60%&nbsp;&rarr;&nbsp;80% and FT
+                            40%&nbsp;&rarr;&nbsp;65% with no retraining, where &pi;0.5 needs its entire budget on fine-grained data
+                            to reach 60%. Rotation units extrapolate to an unseen 90&deg; (ZS 10/10, &pi;0.5 20%), and joint
+                            dual-arm prediction lifts the average 50%&nbsp;&rarr;&nbsp;80% while removing every collision.</p>
+                        <p><strong>Semantic.</strong> Situated Planning takes ZS to 85% where FT alone gets 10%. A single video
+                            demonstration has ZS follow the demonstrated order 20/20, against 20% with nothing to watch.</p>
+                    </div>
+                </details>
+            </article>
 
-            <h5 class="res-head">Frontier VLM choice and thinking effort</h5>
-            <div class="figure-plain fig-anim mb-3 reveal">
-                <!-- fig:model_api -->
+            <article class="result">
+                <div class="result-head">
+                    <h3>Frontier VLM choice and thinking effort</h3>
+                    <p class="takeaway">Among frontier VLMs with strong reasoning, zero-shot robot control is limited by
+                        <strong>fine-grained spatial grounding</strong>, not by language understanding or planning.</p>
+                </div>
+                <div class="card-x reveal">
+                    <div class="fig-anim">
+                        <!-- fig:model_api -->
 <svg xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 439.2 141.12" xmlns="http://www.w3.org/2000/svg" version="1.1" id="fig-model_api" class="fig-svg" width="100%" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Frontier VLM ablation">
  <defs>
   <style type="text/css">#fig-model_api *{stroke-linejoin: round; stroke-linecap: butt}</style>
@@ -7027,22 +7034,28 @@ z
  </defs>
 </svg>
 <!-- /fig:model_api -->
-            </div>
-            <p class="res-takeaway reveal" style="--rise-delay: .08s">
-                Among frontier VLMs with strong reasoning, zero-shot robot control is limited by
-                <strong>fine-grained spatial grounding</strong>, not by language understanding or planning.
-            </p>
-            <p class="res-text mb-5">
-                Five frontier VLMs under one harness split into two tiers: Gemini-3.1&nbsp;Pro, GPT-5.6-sol and Opus&nbsp;5
-                at 86&ndash;96%, GPT-5.6-luna and Gemini-3.6-flash at 72&ndash;78%. Thinking effort mainly shortens
-                episodes &mdash; 37 to 30 steps for GPT-5.6-sol, at 3.4&times; the wall-clock. Planning is not the gap:
-                instruction following (&ge;98%) and subtask plans (&ge;97%) are near-saturated everywhere, while empty
-                grasps climb from 6% to 26% down the ranking. The models miss on the centimetres.
-            </p>
+                    </div>
+                </div>
+                <details class="more">
+                    <summary>More details</summary>
+                    <div class="more-body">
+                        <p>Five frontier VLMs under one harness split into two tiers: Gemini-3.1&nbsp;Pro, GPT-5.6-sol and Opus&nbsp;5
+                            at 86&ndash;96%, GPT-5.6-luna and Gemini-3.6-flash at 72&ndash;78%. Thinking effort mainly shortens
+                            episodes &mdash; 37 to 30 steps for GPT-5.6-sol, at 3.4&times; the wall-clock. Planning is not the gap:
+                            instruction following (&ge;98%) and subtask plans (&ge;97%) are near-saturated everywhere, while empty
+                            grasps climb from 6% to 26% down the ranking. The models miss on the centimetres.</p>
+                    </div>
+                </details>
+            </article>
 
-            <h5 class="res-head">Fine-tuned backbone scaling</h5>
-            <div class="figure-plain fig-anim mb-3 reveal">
-                <!-- fig:open_source -->
+            <article class="result">
+                <div class="result-head">
+                    <h3>Fine-tuned backbone scaling</h3>
+                    <p class="takeaway">Above 2B, capacity buys precision and costs latency &mdash; and on a moving target the latency wins.</p>
+                </div>
+                <div class="card-x reveal">
+                    <div class="fig-anim">
+                        <!-- fig:open_source -->
 <svg xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 439.2 152.64" xmlns="http://www.w3.org/2000/svg" version="1.1" id="fig-open_source" class="fig-svg" width="100%" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Fine-tuned backbone scaling">
  <defs>
   <style type="text/css">#fig-open_source *{stroke-linejoin: round; stroke-linecap: butt}</style>
@@ -8682,22 +8695,30 @@ L 108 36
  </defs>
 </svg>
 <!-- /fig:open_source -->
-            </div>
-            <p class="res-takeaway reveal" style="--rise-delay: .08s">
-                Above 2B, capacity buys precision and costs latency &mdash; and on a moving target the latency wins.
-            </p>
-            <p class="res-text mb-5">
-                Success is flat from 2B up &mdash; Qwen3.5 at 2B/4B/9B and InternVL3.5 at 2B/8B all within four points
-                (88&ndash;92%). The two smallest backbones emit valid units but hesitate, stretching episodes from 37.6
-                to 57.8 steps at 72&ndash;74%. Capacity pays where precision is the bottleneck: stacking and peg
-                insertion go 50%&nbsp;&rarr;&nbsp;65%&nbsp;&rarr;&nbsp;75% from 0.8B to 9B. The one reversal is the
-                rolling tennis ball, where 2B (80%) beats 0.8B (70%) and 9B (60%) &mdash; at 79&nbsp;ms per decision
-                the 9B model cannot track a moving target, against 39&nbsp;ms for 2B.
-            </p>
+                    </div>
+                </div>
+                <details class="more">
+                    <summary>More details</summary>
+                    <div class="more-body">
+                        <p>Success is flat from 2B up &mdash; Qwen3.5 at 2B/4B/9B and InternVL3.5 at 2B/8B all within four points
+                            (88&ndash;92%). The two smallest backbones emit valid units but hesitate, stretching episodes from 37.6
+                            to 57.8 steps at 72&ndash;74%. Capacity pays where precision is the bottleneck: stacking and peg
+                            insertion go 50%&nbsp;&rarr;&nbsp;65%&nbsp;&rarr;&nbsp;75% from 0.8B to 9B. The one reversal is the
+                            rolling tennis ball, where 2B (80%) beats 0.8B (70%) and 9B (60%) &mdash; at 79&nbsp;ms per decision
+                            the 9B model cannot track a moving target, against 39&nbsp;ms for 2B.</p>
+                    </div>
+                </details>
+            </article>
 
-            <h5 class="res-head">Harness plugin ablations</h5>
-            <div class="figure-plain fig-anim mb-3 reveal">
-                <!-- fig:plugins -->
+            <article class="result">
+                <div class="result-head">
+                    <h3>Harness plugin ablations</h3>
+                    <p class="takeaway">Default plugins buy raw success; optional ones buy reach on the cases that need them, at no
+                        cost to the rest.</p>
+                </div>
+                <div class="card-x reveal">
+                    <div class="fig-anim">
+                        <!-- fig:plugins -->
 <svg xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 439.2 298.8" xmlns="http://www.w3.org/2000/svg" version="1.1" id="fig-plugins" class="fig-svg" width="100%" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Harness plugin ablations">
  <defs>
   <style type="text/css">#fig-plugins *{stroke-linejoin: round; stroke-linecap: butt}</style>
@@ -11463,72 +11484,112 @@ z
  </defs>
 </svg>
 <!-- /fig:plugins -->
-            </div>
-            <p class="res-takeaway reveal" style="--rise-delay: .08s">
-                Default plugins buy raw success; optional ones buy reach on the cases that need them, at no cost to
-                the rest.
-            </p>
-            <p class="res-text mb-0">
-                Removing one default plugin at a time from the full 96% configuration: <strong>Multi-View Guidance</strong>
-                is worth 38 points, <strong>Subtask Planning</strong> 36, <strong>Proprioception</strong> 28,
-                <strong>Failure Recovery</strong> 24, and <strong>Action History</strong> 20 while cutting 23% of the
-                steps. The rest trade cost for reach: <strong>Action Chunking</strong> holds 96% with 19% fewer VLM
-                calls, and <strong>Adaptive Step</strong> reaches 96% in 30 steps, beating a fine 2&nbsp;cm step (82%)
-                and a coarse 4&nbsp;cm one (70%). <strong>Visual Prompt</strong> and <strong>Situated Planning</strong>
-                stay off by default, each lifting its target case from 35% to 85%.
-            </p>
-
+                    </div>
+                </div>
+                <details class="more">
+                    <summary>More details</summary>
+                    <div class="more-body">
+                        <p>Removing one default plugin at a time from the full 96% configuration: <strong>Multi-View Guidance</strong>
+                            is worth 38 points, <strong>Subtask Planning</strong> 36, <strong>Proprioception</strong> 28,
+                            <strong>Failure Recovery</strong> 24, and <strong>Action History</strong> 20 while cutting 23% of the
+                            steps. The rest trade cost for reach: <strong>Action Chunking</strong> holds 96% with 19% fewer VLM
+                            calls, and <strong>Adaptive Step</strong> reaches 96% in 30 steps, beating a fine 2&nbsp;cm step (82%)
+                            and a coarse 4&nbsp;cm one (70%). <strong>Visual Prompt</strong> and <strong>Situated Planning</strong>
+                            stay off by default, each lifting its target case from 35% to 85%.</p>
+                    </div>
+                </details>
+            </article>
         </div>
     </section>
 
-    <!-- ================= BIBTEX ================= -->
-    <section class="py-5 bg-body-tertiary">
-        <div class="container" style="max-width: 820px;">
-            <h2 class="section-title">BibTeX</h2>
-            <div class="section-rule"></div>
-            <pre class="bibtex mb-0">@article{chen2026show,
+    <!-- ================= CITE ================= -->
+    <section class="sec" id="cite">
+        <div class="wrap measure">
+            <div class="sec-head">
+                <h2 class="sec-title">BibTeX</h2>
+            </div>
+            <div class="bib">
+                <button class="tool" type="button" id="copyBib"><svg viewBox="0 0 24 24"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V6a2 2 0 0 1 2-2h9"/></svg><span class="lbl" id="copyLbl">Copy</span></button>
+                <pre class="bibtex" id="bibtex">@article{chen2026show,
   title={Show-harness: Just a vlm agent can play robots},
   author={Chen, Yanzhe and Bai, Zechen and Cao, Zhijun and Zeng, Wenzheng and Lin, Kevin Qinghong and Lin, Yiqi and Liang, Guoqiang and Ma, Kevin Yuchen and Huang, Qiming and Shou, Mike Zheng},
   journal={arXiv preprint arXiv:2609.10522},
   year={2026}
 }</pre>
+            </div>
         </div>
     </section>
+    </main>
 
-    <footer class="py-4 mt-auto border-top">
-        <div class="container text-center subtitle small">
-            Show Lab, National University of Singapore
+    <footer>
+        <div class="wrap">
+            <span>Show Lab, National University of Singapore</span>
+            <span><a href="https://github.com/showlab/Show-Harness" target="_blank" rel="noopener">GitHub</a> &nbsp;&middot;&nbsp; <a href="#top">Back to top &uarr;</a></span>
         </div>
     </footer>
 
-    <script src="./assets/dist/js/bootstrap.bundle.min.js"></script>
-    <script>
-        window.onerror = (m, src, line) => { document.title = "JSERR line " + line + ": " + m; };
+    <!-- figure viewer -->
+    <div class="lb" id="lb" role="dialog" aria-modal="true" aria-label="Figure viewer">
+        <div class="lb-bar"><span>Pinch or scroll to explore</span><button class="tool" type="button" id="lbClose"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg><span>Close</span></button></div>
+        <div class="lb-scroll"><div class="lb-content" id="lbContent"></div></div>
+    </div>
 
-        /* ---------------- scroll reveal ----------------
-           Figures and stat cards rise into place the first time they are
-           scrolled to, then stop being watched. */
+    <script>
+        const REDUCED = matchMedia("(prefers-reduced-motion: reduce)");
+        const PHONE = matchMedia("(max-width: 640px)");
+
+        /* ---------------- top bar, progress, scrollspy ---------------- */
+        (() => {
+            const bar = document.getElementById("topbar");
+            const prog = document.getElementById("progress");
+            const links = [...document.querySelectorAll("#toplinks a")];
+            const strip = document.getElementById("toplinks");
+            const hero = document.querySelector(".hero .links");
+            let ticking = false;
+            const onScroll = () => {
+                if (ticking) return;
+                ticking = true;
+                requestAnimationFrame(() => {
+                    const h = document.documentElement;
+                    const max = h.scrollHeight - h.clientHeight;
+                    prog.style.transform = `scaleX(${max > 0 ? h.scrollTop / max : 0})`;
+                    bar.classList.toggle("is-on", hero.getBoundingClientRect().bottom < 0);
+                    ticking = false;
+                });
+            };
+            addEventListener("scroll", onScroll, { passive: true });
+            onScroll();
+
+            const byId = new Map(links.map(a => [a.getAttribute("href").slice(1), a]));
+            const spy = new IntersectionObserver(es => {
+                for (const e of es) {
+                    if (!e.isIntersecting) continue;
+                    const a = byId.get(e.target.id);
+                    if (!a) continue;
+                    links.forEach(l => l.classList.toggle("is-on", l === a));
+                    // keep the active link in view inside the phone's scrolling strip
+                    const r = a.offsetLeft - (strip.clientWidth - a.offsetWidth) / 2;
+                    strip.scrollTo({ left: r, behavior: REDUCED.matches ? "auto" : "smooth" });
+                }
+            }, { rootMargin: "-45% 0px -50% 0px" });
+            byId.forEach((_, id) => { const s = document.getElementById(id); if (s) spy.observe(s); });
+        })();
+
+        /* ---------------- scroll reveal (media only) ---------------- */
         const riseIO = new IntersectionObserver((entries, obs) => {
             for (const e of entries) {
                 if (!e.isIntersecting) continue;
                 e.target.classList.add("is-in");
                 obs.unobserve(e.target);
             }
-        }, { rootMargin: "0px 0px -10% 0px", threshold: 0.06 });
+        }, { rootMargin: "0px 0px -8% 0px", threshold: 0.05 });
 
-        /* Inside a figure, each tagged artist needs an origin to grow from and
-           a delay so the panel reads across instead of snapping in. Origins are
-           set once, up front: changing transform-origin at the same moment the
-           transform starts would make the element jump. */
+        /* Inside a matplotlib figure, each tagged artist gets an origin to grow
+           from and a delay, so a panel reads across instead of snapping in. */
         function armFigure(fig) {
             const svg = fig.querySelector("svg.fig-svg");
-            if (!svg) return;                       // still an <img>: nothing to animate
+            if (!svg) return;
             const vb = svg.viewBox.baseVal;
-
-            // The clip rectangle a bar carries is squared off at the axis
-            // baseline, while the bar's own path runs a couple of points below
-            // it to hide the rounded corner -- so the clip, not the bounding
-            // box, is where the bar should grow from.
             const baseline = el => {
                 const p = el.querySelector("[clip-path]");
                 const m = p && /url\(#([^)]+)\)/.exec(p.getAttribute("clip-path"));
@@ -11539,82 +11600,397 @@ z
                     return b && b.height ? b.y + b.height : null;
                 } catch { return null; }
             };
-
             const grow = [...svg.querySelectorAll('[id*="-sp-bar-"],[id*="-sp-hbar-"],[id*="-sp-seg-"]')];
             const order = [];
             for (const el of grow) {
                 let bb;
                 try { bb = el.getBBox(); } catch { continue; }
-                if (el.id.includes("-sp-bar-")) {
-                    el.style.transformOrigin = `${bb.x + bb.width / 2}px ${baseline(el) ?? bb.y + bb.height}px`;
-                } else {
-                    el.style.transformOrigin = `${bb.x}px ${bb.y + bb.height / 2}px`;
-                }
+                if (el.id.includes("-sp-bar-")) el.style.transformOrigin = `${bb.x + bb.width / 2}px ${baseline(el) ?? bb.y + bb.height}px`;
+                else el.style.transformOrigin = `${bb.x}px ${bb.y + bb.height / 2}px`;
                 order.push([el, bb]);
             }
-            // read down the panel rows first, then left to right within a row
             const band = vb.height / 8;
             order.sort((a, b) =>
-                (Math.round((a[1].y + a[1].height / 2) / band) - Math.round((b[1].y + b[1].height / 2) / band))
-                || (a[1].x - b[1].x));
+                (Math.round((a[1].y + a[1].height / 2) / band) - Math.round((b[1].y + b[1].height / 2) / band)) || (a[1].x - b[1].x));
             order.forEach(([el], i) => el.style.setProperty("--d", `${Math.min(i * 45, 900)}ms`));
-
             for (const el of svg.querySelectorAll('[id*="-sp-knob-"]')) {
                 let bb;
                 try { bb = el.getBBox(); } catch { continue; }
                 el.style.transformOrigin = `${bb.x + bb.width / 2}px ${bb.y + bb.height / 2}px`;
-                // travel is a bit over one knob width, which is the track it sits in
                 el.style.setProperty("--slide", `${-1.3 * bb.width}px`);
                 el.style.setProperty("--d", `${Math.min(order.length * 45, 900) + 120}ms`);
             }
         }
-
-        document.querySelectorAll(".fig-anim").forEach(armFigure);
+        document.querySelectorAll(".fig-anim").forEach(f => { armFigure(f); riseIO.observe(f); });
         document.querySelectorAll(".reveal").forEach(el => riseIO.observe(el));
 
-        /* Action units: hover previews, click pins. The panel keeps a fixed
-           minimum height so previewing never shifts the page under the cursor. */
+        /* ---------------- live illustrations ----------------
+           The three drawings are fetched and inlined so their parts can be
+           choreographed; if that fails (e.g. opened from disk) they fall back
+           to a plain <img>, which looks exactly the same, only still. */
+        const pulses = new Map();          // fig -> running pulse animations
+        const timers = new WeakMap();
+
+        function prepMethod(box) {
+            const svg = box.querySelector("svg");
+            for (const p of svg.querySelectorAll(".flow .draw")) p.style.setProperty("--len", p.getTotalLength().toFixed(1));
+        }
+
+        // light pulses running round the loop (1) -> (2) -> (3) -> (4) -> (5)
+        const PULSE_PLAN = { // key: [start, end] in ms of one 5.2 s cycle
+            f1: [0, 450], f2: [450, 900], f3: [900, 2150], m1: [900, 2150], m2: [1500, 2150],
+            f4: [2150, 2550], a1: [2550, 2850], a2: [2550, 2850], f6: [2850, 3500], f5: [2850, 3950],
+        };
+        const CYCLE = 5200;
+        function startPulses(box) {
+            if (REDUCED.matches || pulses.has(box)) return;
+            const anims = [];
+            for (const p of box.querySelectorAll(".flow .pulse, .flow .pulse-glow")) {
+                const span = PULSE_PLAN[p.dataset.k];
+                if (!span) continue;
+                const L = p.getTotalLength();
+                const dash = p.classList.contains("pulse") ? 120 : 170;
+                p.style.strokeDasharray = `${dash} ${L + dash * 2}`;
+                const off0 = dash, off1 = -L;
+                anims.push(p.animate([
+                    { offset: 0, strokeDashoffset: off0 },
+                    { offset: span[0] / CYCLE, strokeDashoffset: off0, easing: "cubic-bezier(.45,0,.55,1)" },
+                    { offset: span[1] / CYCLE, strokeDashoffset: off1 },
+                    { offset: 1, strokeDashoffset: off1 },
+                ], { duration: CYCLE, iterations: Infinity }));
+            }
+            pulses.set(box, anims);
+        }
+        function stopPulses(box) { (pulses.get(box) || []).forEach(a => a.cancel()); pulses.delete(box); }
+
+        function play(box) {
+            clearTimeout(timers.get(box));
+            if (REDUCED.matches) { box.classList.add("is-in", "is-loop"); return; }
+            box.classList.add("is-in");
+            timers.set(box, setTimeout(() => {
+                box.classList.add("is-loop");
+                if (box.dataset.kind === "method") startPulses(box);
+            }, +box.dataset.total || 2000));
+        }
+        function replay(box) {
+            stopPulses(box);
+            box.classList.remove("is-in", "is-loop");
+            box.getBoundingClientRect();   // commit the reset before restarting
+            requestAnimationFrame(() => requestAnimationFrame(() => play(box)));
+        }
+
+        const liveIO = new IntersectionObserver(es => {
+            for (const e of es) {
+                const box = e.target;
+                if (e.isIntersecting) {
+                    box.classList.remove("is-paused");
+                    if (!box.classList.contains("is-in")) play(box);
+                    (pulses.get(box) || []).forEach(a => a.play());
+                } else {
+                    box.classList.add("is-paused");
+                    (pulses.get(box) || []).forEach(a => a.pause());
+                }
+            }
+        }, { threshold: .3 });
+
+        async function mount(box) {
+            const url = box.dataset.svg, alt = box.dataset.alt || "";
+            try {
+                const r = await fetch(url);
+                if (!r.ok) throw new Error(r.status);
+                let txt = await r.text();
+                txt = txt.slice(txt.indexOf("<svg"));
+                const tpl = document.createElement("template");
+                tpl.innerHTML = txt;
+                const svg = tpl.content.querySelector("svg");
+                svg.removeAttribute("width");
+                svg.removeAttribute("height");
+                svg.setAttribute("role", "img");
+                svg.setAttribute("aria-label", alt);
+                box.classList.add("is-static");     // settle the hidden start state without transitions
+                box.replaceChildren(svg);
+            } catch {
+                box.innerHTML = `<img src="${url}" alt="${alt}">`;
+                box.dataset.ready = "";
+                box.classList.add("is-in");
+                return;
+            }
+            box.dataset.ready = "";
+            if (box.dataset.kind === "method") prepMethod(box);
+            box.getBoundingClientRect();
+            requestAnimationFrame(() => box.classList.remove("is-static"));
+            addTools(box, true);
+            liveIO.observe(box);
+        }
+
+        /* ---------------- figure tools: replay, enlarge ---------------- */
+        const ICON_REPLAY = '<svg viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v5h5"/></svg>';
+        const ICON_ZOOM = '<svg viewBox="0 0 24 24"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>';
+        function addTools(box, live) {
+            const card = box.closest(".card-x");
+            if (!card || card.querySelector(".fig-tools")) return;
+            const t = document.createElement("div");
+            t.className = "fig-tools";
+            if (live) t.innerHTML += `<button class="tool" type="button" data-act="replay">${ICON_REPLAY}<span class="lbl">Replay</span></button>`;
+            t.innerHTML += `<button class="tool" type="button" data-act="zoom">${ICON_ZOOM}<span class="lbl">Enlarge</span></button>`;
+            t.addEventListener("click", e => {
+                const b = e.target.closest("button");
+                if (!b) return;
+                if (b.dataset.act === "replay") replay(box);
+                else openLightbox(box);
+            });
+            card.appendChild(t);
+        }
+        document.querySelectorAll(".fig-anim").forEach(f => addTools(f, false));
+
+        const lb = document.getElementById("lb"), lbContent = document.getElementById("lbContent");
+        let lastFocus = null;
+        function openLightbox(box) {
+            const src = box.querySelector("svg, img");
+            if (!src) return;
+            const clone = src.cloneNode(true);
+            const holder = document.createElement("div");
+            // show the finished drawing, without replaying the entrance
+            holder.className = (box.classList.contains("fig-live") ? "fig-live is-in is-static" : "fig-anim is-in");
+            if (box.dataset.kind) holder.dataset.kind = box.dataset.kind;
+            holder.dataset.ready = "";
+            holder.appendChild(clone);
+            lbContent.replaceChildren(holder);
+            lbContent.classList.toggle("wide", PHONE.matches);
+            lastFocus = document.activeElement;
+            lb.classList.add("is-open");
+            document.body.classList.add("lb-lock");
+            document.getElementById("lbClose").focus();
+        }
+        function closeLightbox() {
+            lb.classList.remove("is-open");
+            document.body.classList.remove("lb-lock");
+            setTimeout(() => lbContent.replaceChildren(), 250);
+            lastFocus?.focus?.();
+        }
+        document.getElementById("lbClose").addEventListener("click", closeLightbox);
+        lb.addEventListener("click", e => { if (e.target === lb || e.target.classList.contains("lb-scroll")) closeLightbox(); });
+        addEventListener("keydown", e => { if (e.key === "Escape" && lb.classList.contains("is-open")) closeLightbox(); });
+
+        document.querySelectorAll(".fig-live[data-svg]").forEach(mount);
+
+        /* ---------------- stats: numbers count up, bars fill ---------------- */
+        (() => {
+            const box = document.getElementById("stats");
+            if (REDUCED.matches) { box.classList.remove("armed"); return; }
+            const nums = [...box.querySelectorAll("[data-count]")];
+            new IntersectionObserver((es, obs) => {
+                if (!es.some(e => e.isIntersecting)) return;
+                obs.disconnect();
+                box.classList.add("is-in");
+                const t0 = performance.now(), dur = 1100;
+                const step = t => {
+                    const k = Math.min(1, (t - t0) / dur), ease = 1 - Math.pow(1 - k, 3);
+                    nums.forEach(n => { n.firstChild.nodeValue = String(Math.round(+n.dataset.count * ease)); });
+                    if (k < 1) requestAnimationFrame(step);
+                };
+                requestAnimationFrame(step);
+            }, { threshold: .35 }).observe(box);
+        })();
+
+        /* ---------------- 01: unit pad and the stage that acts it out ---------------- */
         (() => {
             const rows = document.getElementById("unitRows");
             const out = document.getElementById("unitDesc");
-            if (!rows || !out) return;
+            const label = document.getElementById("stageUnit");
+            const svg = document.getElementById("stageSvg");
+            if (!rows || !svg) return;
             const chips = [...rows.querySelectorAll(".unit-chip")];
             const idle = out.innerHTML;
-            let pinned = null;
-
-            const paint = (chip) => {
-                chips.forEach(c => c.classList.toggle("is-on", c === chip));
-                out.innerHTML = chip
-                    ? `<code>${chip.dataset.unit}</code> &mdash; ${chip.dataset.desc}`
-                    : idle;
-            };
-            const pin = (chip) => {
-                pinned = pinned === chip ? null : chip;
-                chips.forEach(c => c.setAttribute("aria-pressed", String(c === pinned)));
-                paint(pinned);
+            const NS = "http://www.w3.org/2000/svg";
+            const el = (tag, attrs, parent) => {
+                const n = document.createElementNS(NS, tag);
+                for (const k in attrs) n.setAttribute(k, attrs[k]);
+                if (parent) parent.appendChild(n);
+                return n;
             };
 
-            // run the flash once, when the list first scrolls into view
-            const io = new IntersectionObserver((es, obs) => {
-                for (const e of es) {
-                    if (!e.isIntersecting) continue;
-                    obs.disconnect();
-                    chips.forEach((c, i) => setTimeout(() => {
-                        c.classList.add("flash");
-                        c.addEventListener("animationend", () => c.classList.remove("flash"), {once: true});
-                    }, i * 70));
+            // an oblique floor: lateral axis runs across, depth runs up and to the right
+            const F = { x0: 52, y0: 206, w: 236, dx: 56, dy: -72 };
+            const floor = document.getElementById("stFloor");
+            el("path", { d: `M${F.x0} ${F.y0}h${F.w}l${F.dx} ${F.dy}h${-F.w}z`, fill: "url(#st-floor)", stroke: "#c5d2e0" }, floor);
+            for (let i = 1; i < 6; i++) {
+                const t = i / 6;
+                el("path", { d: `M${F.x0 + F.dx * t} ${F.y0 + F.dy * t}h${F.w}`, stroke: "#c9d5e2", "stroke-width": 1 }, floor);
+                el("path", { d: `M${F.x0 + F.w * t} ${F.y0}l${F.dx} ${F.dy}`, stroke: "#c9d5e2", "stroke-width": 1 }, floor);
+            }
+            const P0 = { x: 196, y: 174 }, H0 = 70;
+
+            // the gripper, drawn about its fingertip centre
+            const drawGripper = (g, ghost) => {
+                const c = ghost ? { fill: "none", stroke: "#8da2b8", "stroke-dasharray": "3 3" } : null;
+                const s = (base) => Object.assign(base, c || {});
+                el("rect", s({ x: -4.5, y: -96, width: 9, height: 50, rx: 3, fill: "#d3dbe4", stroke: "#97a3b1" }), g);
+                el("rect", s({ x: -25, y: -50, width: 50, height: 20, rx: 6, fill: "#eef2f6", stroke: "#97a3b1" }), g);
+                el("rect", s({ x: -14, y: -46, width: 28, height: 4, rx: 2, fill: "#0071BC", stroke: "none" }), g);
+                const fingers = el("g", { class: "fingers" }, g);
+                const fl = el("g", {}, fingers), fr = el("g", {}, fingers);
+                el("rect", s({ x: -22, y: -31, width: 8, height: 30, rx: 3, fill: "#c9d3dd", stroke: "#8a96a4" }), fl);
+                el("rect", s({ x: 14, y: -31, width: 8, height: 30, rx: 3, fill: "#c9d3dd", stroke: "#8a96a4" }), fr);
+                return { fingers, fl, fr };
+            };
+            const gripOuter = document.getElementById("stGrip");
+            const grip = el("g", {}, gripOuter);          // animated; the outer one only places it
+            const parts = drawGripper(grip, false);
+            parts.fingers.style.transformBox = "fill-box";
+            parts.fingers.style.transformOrigin = "center";
+            const ghost = document.getElementById("stGhost");
+            drawGripper(ghost, true);
+            const shadow = document.getElementById("stShadow");
+            const trail = document.getElementById("stTrail");
+            const badge = document.getElementById("stBadge");
+            const place = (g, x, y) => g.setAttribute("transform", `translate(${x} ${y})`);
+            place(gripOuter, P0.x, P0.y - H0); place(ghost, P0.x, P0.y - H0);
+            shadow.setAttribute("cx", P0.x); shadow.setAttribute("cy", P0.y);
+            shadow.style.transformBox = "fill-box";
+            shadow.style.transformOrigin = "center";
+
+            // one bounded step per unit, in screen space
+            const lat = 38, dep = { x: F.dx / 3.2, y: F.dy / 3.2 }, up = 34;
+            const MOVES = {
+                MV_FWD: { fx: dep.x, fy: dep.y }, MV_BACK: { fx: -dep.x, fy: -dep.y },
+                MV_LEFT: { fx: -lat, fy: 0 }, MV_RIGHT: { fx: lat, fy: 0 },
+                MV_UP: { h: up }, MV_DOWN: { h: -up },
+            };
+            let anims = [];
+            const stopAll = () => { anims.forEach(a => a.cancel()); anims = []; trail.setAttribute("opacity", 0); ghost.setAttribute("opacity", 0); badge.setAttribute("opacity", 0); badge.replaceChildren(); };
+            const loop = (node, frames, opts = {}) => {
+                const a = node.animate(frames, Object.assign({ duration: 1800, iterations: Infinity, easing: "ease-in-out" }, opts));
+                anims.push(a);
+                return a;
+            };
+            const tf = (x, y, extra = "") => `translate(${x}px, ${y}px) ${extra}`;
+
+            function act(unit) {
+                stopAll();
+                label.textContent = unit;
+                if (REDUCED.matches) return;
+                const m = MOVES[unit];
+                if (m) {
+                    const fx = m.fx || 0, fy = m.fy || 0, h = m.h || 0;
+                    ghost.setAttribute("opacity", .9);
+                    const x0 = 0, y0 = 0, x1 = fx, y1 = fy - h;
+                    // the gripper's own transform attribute places it; CSS transform moves it on top of that
+                    const k = [
+                        { offset: 0, transform: tf(x0, y0) }, { offset: .12, transform: tf(x0, y0) },
+                        { offset: .42, transform: tf(x1, y1) }, { offset: .78, transform: tf(x1, y1) },
+                        { offset: 1, transform: tf(x0, y0) }];
+                    loop(grip, k);
+                    loop(shadow, [
+                        { offset: 0, transform: "translate(0px,0px) scale(1)" }, { offset: .12, transform: "translate(0px,0px) scale(1)" },
+                        { offset: .42, transform: `translate(${fx}px,${fy}px) scale(${1 - h / 120})` }, { offset: .78, transform: `translate(${fx}px,${fy}px) scale(${1 - h / 120})` },
+                        { offset: 1, transform: "translate(0px,0px) scale(1)" }]);
+                    const sx = P0.x, sy = P0.y - H0 + 8;
+                    const len = Math.hypot(x1, y1);
+                    const ux = x1 / len, uy = y1 / len;
+                    // the arrow sits beside the path so the gripper does not cover it
+                    const nx = -uy * 34, ny = ux * 34;
+                    trail.setAttribute("d", `M${sx + nx + ux * 4} ${sy + ny + uy * 4}L${sx + nx + x1 - ux * 4} ${sy + ny + y1 - uy * 4}`);
+                    loop(trail, [{ offset: 0, opacity: 0 }, { offset: .12, opacity: 0 }, { offset: .3, opacity: 1 }, { offset: .78, opacity: 1 }, { offset: .9, opacity: 0 }, { offset: 1, opacity: 0 }]);
+                    loop(trail, [{ strokeDashoffset: 20 }, { strokeDashoffset: 0 }], { duration: 600, easing: "linear" });
+                    return;
                 }
-            }, {threshold: .5});
-            io.observe(rows);
+                if (unit === "GRASP" || unit === "RELEASE") {
+                    const shut = [{ transform: "translateX(0px)" }, { transform: "translateX(9px)" }];
+                    const k = unit === "GRASP"
+                        ? [{ offset: 0, t: 0 }, { offset: .2, t: 0 }, { offset: .45, t: 1 }, { offset: .8, t: 1 }, { offset: 1, t: 0 }]
+                        : [{ offset: 0, t: 1 }, { offset: .2, t: 1 }, { offset: .45, t: 0 }, { offset: .8, t: 0 }, { offset: 1, t: 1 }];
+                    loop(parts.fl, k.map(f => ({ offset: f.offset, transform: `translateX(${f.t * 9}px)` })));
+                    loop(parts.fr, k.map(f => ({ offset: f.offset, transform: `translateX(${-f.t * 9}px)` })));
+                    return;
+                }
+                if (unit === "ROTATE_CW" || unit === "ROTATE_CCW") {
+                    const s = unit === "ROTATE_CW" ? 1 : -1;
+                    // a yaw turn, seen side-on: the fingers swing through the plane and back out
+                    loop(parts.fingers, [
+                        { offset: 0, transform: "scaleX(1)" }, { offset: .15, transform: "scaleX(1)" },
+                        { offset: .45, transform: "scaleX(.25)" }, { offset: .75, transform: "scaleX(1)" }, { offset: 1, transform: "scaleX(1)" }],
+                        { duration: 1800 });
+                    const cx = P0.x, cy = P0.y - H0 - 40;
+                    el("ellipse", { cx, cy, rx: 40, ry: 11, fill: "none", stroke: "#0071BC", "stroke-width": 2.2, "stroke-dasharray": "190 60", "stroke-linecap": "round" }, badge);
+                    const tipX = cx + s * 30, tipY = cy + 8;
+                    el("path", { d: `M${tipX - s * 9} ${tipY - 6}L${tipX} ${tipY}L${tipX - s * 10} ${tipY + 5}`, fill: "none", stroke: "#0071BC", "stroke-width": 2.2, "stroke-linecap": "round", "stroke-linejoin": "round" }, badge);
+                    badge.style.transformBox = "fill-box"; badge.style.transformOrigin = "center";
+                    badge.setAttribute("opacity", 1);
+                    loop(badge, [{ transform: "rotate(0deg)", opacity: .35 }, { transform: "rotate(0deg)", opacity: 1, offset: .45 }, { transform: "rotate(0deg)", opacity: .35 }]);
+                    return;
+                }
+                if (unit === "DONE") {
+                    const cx = P0.x + 44, cy = P0.y - H0 - 62;
+                    el("circle", { cx, cy, r: 15, fill: "#67A651" }, badge);
+                    el("path", { d: `M${cx - 6.5} ${cy + .5}l4.5 4.5l8.5 -9`, fill: "none", stroke: "#fff", "stroke-width": 3, "stroke-linecap": "round", "stroke-linejoin": "round" }, badge);
+                    badge.style.transformBox = "fill-box"; badge.style.transformOrigin = "center";
+                    badge.setAttribute("opacity", 1);
+                    loop(badge, [{ offset: 0, transform: "scale(0)", opacity: 0 }, { offset: .25, transform: "scale(1.15)", opacity: 1 }, { offset: .35, transform: "scale(1)" }, { offset: .85, transform: "scale(1)", opacity: 1 }, { offset: 1, transform: "scale(.6)", opacity: 0 }], { easing: "ease-out" });
+                    return;
+                }
+                if (unit === "STILL") {
+                    const cx = P0.x, cy = P0.y - H0 - 20;
+                    const ring = el("circle", { cx, cy, r: 30, fill: "none", stroke: "#0071BC", "stroke-width": 2 }, badge);
+                    el("rect", { x: cx + 40, y: cy - 58, width: 6, height: 18, rx: 2, fill: "#0071BC" }, badge);
+                    el("rect", { x: cx + 51, y: cy - 58, width: 6, height: 18, rx: 2, fill: "#0071BC" }, badge);
+                    ring.style.transformBox = "fill-box"; ring.style.transformOrigin = "center";
+                    badge.setAttribute("opacity", 1);
+                    loop(ring, [{ transform: "scale(.7)", opacity: .9 }, { transform: "scale(1.6)", opacity: 0 }], { easing: "ease-out", duration: 1600 });
+                }
+            }
 
+            let pinned = null, hover = null, auto = 0, autoTimer = null, visible = false;
+            const show = (chip, describe) => {
+                chips.forEach(c => c.classList.toggle("is-on", c === chip && describe));
+                if (describe) out.innerHTML = chip ? `<code>${chip.dataset.unit}</code> &mdash; ${chip.dataset.desc}` : idle;
+                act(chip.dataset.unit);
+            };
+            // with nothing chosen, the stage walks through the vocabulary on its own
+            const tick = () => {
+                if (pinned || hover || !visible) return;
+                const chip = chips[auto % chips.length];
+                chips.forEach(c => c.classList.toggle("is-auto", c === chip));
+                show(chip, false);
+                auto++;
+            };
+            const runAuto = on => {
+                clearInterval(autoTimer);
+                if (on && !REDUCED.matches) { tick(); autoTimer = setInterval(tick, 2400); }
+            };
+            const settle = () => {
+                const chip = hover || pinned;
+                chips.forEach(c => c.classList.remove("is-auto"));
+                if (chip) { show(chip, true); runAuto(false); }
+                else { chips.forEach(c => c.classList.remove("is-on")); out.innerHTML = idle; runAuto(visible); }
+            };
             chips.forEach(chip => {
-                chip.addEventListener("click", () => pin(chip));
-                chip.addEventListener("mouseenter", () => paint(chip));
-                chip.addEventListener("focus", () => paint(chip));
-                chip.addEventListener("mouseleave", () => paint(pinned));
-                chip.addEventListener("blur", () => paint(pinned));
+                chip.addEventListener("click", () => {
+                    pinned = pinned === chip ? null : chip;
+                    chips.forEach(c => c.setAttribute("aria-pressed", String(c === pinned)));
+                    hover = null;
+                    settle();
+                });
+                chip.addEventListener("mouseenter", () => { if (PHONE.matches) return; hover = chip; settle(); });
+                chip.addEventListener("mouseleave", () => { if (hover === chip) { hover = null; settle(); } });
+                chip.addEventListener("focus", () => { if (chip.matches(":focus-visible")) { hover = chip; settle(); } });
+                chip.addEventListener("blur", () => { if (hover === chip) { hover = null; settle(); } });
             });
+            new IntersectionObserver(([e]) => {
+                visible = e.isIntersecting;
+                if (!pinned && !hover) runAuto(visible);
+                anims.forEach(a => visible ? a.play() : a.pause());
+            }, { threshold: .25 }).observe(svg);
+            act("MV_FWD");
         })();
+
+        /* ---------------- BibTeX copy ---------------- */
+        document.getElementById("copyBib").addEventListener("click", async () => {
+            const lbl = document.getElementById("copyLbl");
+            try { await navigator.clipboard.writeText(document.getElementById("bibtex").textContent); lbl.textContent = "Copied"; }
+            catch { lbl.textContent = "Select & copy"; }
+            setTimeout(() => { lbl.textContent = "Copy"; }, 1600);
+        });
 
         /* ---------------- demo deck ----------------
            This manifest is rewritten by page/tools/gallery.py -- do not edit it
@@ -11636,12 +12012,11 @@ z
             a_wild:  ["C0806", "C0808", "C0815"],
         };
 
-        // Card size is a per-shelf choice, not something to infer from the count:
-        // a crowded shelf goes four across, everything else stays at three.
+        // Card size is a per-shelf choice: a crowded shelf goes four across,
+        // everything else three. Phones show two across either way.
         const CAT_COLS = { f_table: 4, f_env: 4 };
 
-        // Only the long-horizon rollouts carry a task line; elsewhere the shelf
-        // note already says what the clips are, and a label per tile just repeats it.
+        // Only the long-horizon rollouts carry a task line.
         const CLIP_TASK = {
             C0747: "Find the block &mdash; it may be hidden under any of the cups",
             C0753: "Sort the letters onto the left plate, the blocks onto the right",
@@ -11649,9 +12024,7 @@ z
         };
 
         // A few captures were shot more than once. The extra take rides along on
-        // the tile of the one that shipped instead of taking a shelf slot of its
-        // own -- it is in the manifest, but no shelf lists it, so clicking the
-        // tile is the only way to reach it.
+        // the tile of the one that shipped; clicking the tile flips to it.
         const CLIP_ALT = { C0758: "C0754" };
 
         const BY_ID = Object.fromEntries(CLIPS.map(c => [c.file.split("_")[0], c]));
@@ -11670,31 +12043,16 @@ z
             ]],
         ];
 
-        // What each shelf is evidence for, tied to the rows it comes from in the
-        // paper. This replaces a single blurb over the whole gallery, which could
-        // only describe the gallery rather than any of the settings in it.
+        // One line per shelf: what the clips are evidence for.
         const CAT_NOTES = {
-            f_table: "The Cross-Task rows: ten object&ndash;receptacle pairings on the Franka, including Teddy and " +
-                     "Chess, which are never seen in fine-tuning. Zero-shot averages 89% here and the fine-tuned " +
-                     "2B model 86%, against 57% for the strongest baseline.",
-            f_long:  "Episodes that run for hundreds of units rather than a dozen. Subtask state and failure " +
-                     "recovery live in the harness, so a mis-grasp is retried instead of ending the run &mdash; " +
-                     "14 of 50 zero-shot episodes succeed only after such a retry.",
-            f_env:   "The Cross-Environment rows: a changed backdrop, dimmed light, and a table crowded with " +
-                     "objects the task never mentions. Nothing is retrained between them; zero-shot holds 100% " +
-                     "and the fine-tuned model 88%.",
-            a_table: "The Cross-Embodiment rows. Same vocabulary, same model, same prompts as the Franka &mdash; " +
-                     "only the interpreter is swapped for a 6-DoF arm. Zero-shot scores 45/50 and the fine-tuned " +
-                     "model 42/50 across the five Plate tasks.",
-            a_dual:  "Both arms are decided in one model call, sharing the vocabulary plus <code>STILL</code> to " +
-                     "hold an arm in place. Joint prediction lifts the dual-arm average from 50% to 80% and " +
-                     "removes all four collisions that two independent agents produce.",
-            a_wild:  "Outside the lab, with no new data and no re-tuning: an office whiteboard, an open-air deck, " +
-                     "uncontrolled light and background.",
+            f_table: "Ten object&ndash;receptacle pairings on the Franka, including Teddy and Chess, never seen in fine-tuning.",
+            f_long:  "Episodes that run for hundreds of units; a mis-grasp is retried instead of ending the run.",
+            f_env:   "A changed backdrop, dimmed light and a crowded table &mdash; nothing retrained between them.",
+            a_table: "Same vocabulary, model and prompts as the Franka &mdash; only the interpreter is swapped for a 6-DoF arm.",
+            a_dual:  "Both arms decided in one model call, with <code>STILL</code> to hold an arm in place.",
+            a_wild:  "Outside the lab, with no new data and no re-tuning.",
         };
 
-        // The biggest shelf is 16 clips, so a page holds all of it; the arrows
-        // stay for whatever gets added later.
         const PER_PAGE = 16;
         const countOf = k => CAT_CLIPS[k].length;
 
@@ -11722,8 +12080,7 @@ z
         let pages = [], index = 0, deckVisible = false;
         let group = 0, cat = GROUPS[0][1][0][0];
 
-        // 16 clips on one page means 16 decoders if they all run, so a clip plays
-        // only while its own card is actually on screen.
+        // a clip plays only while its own card is actually on screen
         const onScreen = new WeakSet();
         const cardIO = new IntersectionObserver(es => {
             for (const e of es) {
@@ -11732,12 +12089,8 @@ z
             pump();
         }, { threshold: .25 });
 
-        // One row: the two embodiments, with the active one's shelves unfolded in
-        // place right after it. Two rows of pills read as two unrelated filters.
-        // The tab row is built once and afterwards only has classes toggled on it.
-        // Rebuilding it per click restarted every entrance animation, so the whole
-        // row flickered even when just one shelf changed. Both capsules exist all
-        // along; the inactive one is folded to zero width.
+        // The tab row is built once and afterwards only has classes toggled on it,
+        // so switching a shelf never restarts every entrance animation.
         const tabRefs = { parents: [], folds: [], subs: new Map() };
 
         function buildTabs() {
@@ -11756,17 +12109,10 @@ z
                 tabsBox.appendChild(b);
                 tabRefs.parents.push(b);
 
-                // a fold that animates between zero and its natural width, so the
-                // shelves appear to unfold out of the embodiment they belong to
                 const fold = document.createElement("span");
                 fold.className = "deck-fold";
                 const box = document.createElement("span");
                 box.className = "deck-subgroup";
-                const elbow = document.createElement("span");
-                elbow.className = "deck-elbow";
-                elbow.textContent = "\u203A";
-                elbow.setAttribute("aria-hidden", "true");
-                box.appendChild(elbow);
                 for (const [key, label] of subs) {
                     const c = document.createElement("button");
                     c.type = "button";
@@ -11802,6 +12148,10 @@ z
                 const on = key === cat;
                 btn.classList.toggle("is-on", on);
                 btn.setAttribute("aria-selected", String(on));
+                if (on && PHONE.matches) {
+                    const strip = btn.parentElement;
+                    strip.scrollTo({ left: btn.offsetLeft - 8, behavior: "smooth" });
+                }
             });
         }
 
@@ -11816,12 +12166,7 @@ z
                 at = (at + 1) % files.length;
                 const file = files[at];
                 v.poster = clipPoster(file);
-                if (v.dataset.src) {
-                    // prime() has not reached this tile yet; leave the fetch to it
-                    // rather than starting a second one here.
-                    v.dataset.src = clipSrc(file);
-                    return;
-                }
+                if (v.dataset.src) { v.dataset.src = clipSrc(file); return; }
                 v.src = clipSrc(file);
                 v.load();
                 const p = v.play();
@@ -11836,8 +12181,8 @@ z
         function makeRow(page, key) {
             const row = document.createElement("div");
             row.className = CAT_COLS[key] === 4
-                ? "row row-cols-2 row-cols-sm-3 row-cols-lg-4 g-3"
-                : "row row-cols-1 row-cols-sm-2 row-cols-lg-3 g-3";
+                ? "row row-cols-2 row-cols-sm-3 row-cols-lg-4 g-2 g-md-3"
+                : "row row-cols-2 row-cols-lg-3 g-2 g-md-3";
             page.forEach((c, ci) => {
                 const id = c.file.split("_")[0];
                 const alt = BY_ID[CLIP_ALT[id]];
@@ -11857,13 +12202,10 @@ z
             return row;
         }
 
-        // DOM only -- no priming, no playback. Measuring a shelf and showing it go
-        // through the same code so the measurement cannot drift from the render.
         function renderGrid() {
             const items = CAT_CLIPS[cat].map(id => BY_ID[id]).filter(Boolean);
             pages = [];
-            for (let i = 0; i < items.length; i += PER_PAGE)
-                pages.push(items.slice(i, i + PER_PAGE));
+            for (let i = 0; i < items.length; i += PER_PAGE) pages.push(items.slice(i, i + PER_PAGE));
             track.innerHTML = "";
             for (const page of pages) {
                 const slide = document.createElement("div");
@@ -11877,7 +12219,6 @@ z
             noteBox.innerHTML = CAT_NOTES[cat] || "";
             renderGrid();
             for (const v of track.querySelectorAll("video")) cardIO.observe(v);
-
             dotsBox.innerHTML = "";
             pages.forEach((_, i) => {
                 const d = document.createElement("button");
@@ -11894,13 +12235,8 @@ z
             go(0);
         }
 
-        const CALM = matchMedia("(prefers-reduced-motion: reduce)");
-
-        // Swapping shelves replaces every tile at once, so the grid fades out and
-        // back rather than blinking. The tabs answer the click immediately -- only
-        // the grid is worth a transition, and a pill that waits 180 ms feels broken.
         function swapTo(mutate) {
-            if (CALM.matches) { mutate(); syncTabs(); build(); return; }
+            if (REDUCED.matches) { mutate(); syncTabs(); build(); return; }
             track.classList.add("is-out");
             mutate();
             syncTabs();
@@ -11911,18 +12247,13 @@ z
             }, 180);
         }
 
-        // A shelf of 12 tiles is two rows taller than one of 3. Rather than measure
-        // that difference -- offsetHeight read anywhere near a DOM change in this
-        // grid comes back mid-layout and far too small -- an invisible copy of the
-        // tallest shelf sits in the flow and sets the height, with the real track
-        // laid over it. CSS does the sizing, so it is right at every window width
-        // and there is nothing to keep in sync.
+        // An invisible copy of the tallest shelf holds the box open, so switching
+        // shelves never moves anything below the deck, at any window width.
         function tallestShelf() {
             let best = null, score = -1;
             for (const [, subs] of GROUPS) {
                 for (const [key] of subs) {
-                    const cols = CAT_COLS[key] === 4 ? 4 : 3;
-                    // a row is 1/cols of the width tall, so rows/cols ranks the shelves
+                    const cols = PHONE.matches ? 2 : (CAT_COLS[key] === 4 ? 4 : 3);
                     const s = Math.ceil(CAT_CLIPS[key].length / cols) / cols;
                     if (s > score) { score = s; best = key; }
                 }
@@ -11930,18 +12261,19 @@ z
             return best;
         }
 
-        (() => {
+        let ballast = null;
+        function placeBallast() {
+            ballast?.remove();
             const key = tallestShelf();
-            const ballast = document.createElement("div");
+            ballast = document.createElement("div");
             ballast.className = "deck-ballast";
             ballast.setAttribute("aria-hidden", "true");
             ballast.appendChild(makeRow(CAT_CLIPS[key].map(id => BY_ID[id]).filter(Boolean), key));
-            for (const v of ballast.querySelectorAll("video")) {
-                v.removeAttribute("poster");
-                v.removeAttribute("data-src");
-            }
+            for (const v of ballast.querySelectorAll("video")) { v.removeAttribute("poster"); v.removeAttribute("data-src"); }
             viewport.insertBefore(ballast, track);
-        })();
+        }
+        placeBallast();
+        PHONE.addEventListener("change", placeBallast);
 
         function prime(i) {
             const slide = track.children[i];
